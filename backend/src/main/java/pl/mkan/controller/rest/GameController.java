@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.mkan.controller.dto.ChessBoardDTO;
+import pl.mkan.controller.dto.BoardDTO;
 import pl.mkan.service.GameService;
 
 @RestController
@@ -16,7 +16,7 @@ public class GameController {
     private final GameService gameService;
 
     @PostMapping(value = "/game")
-    public ResponseEntity<ChessBoardDTO> game(ChessBoardDTO board) {
+    public ResponseEntity<BoardDTO> game(BoardDTO board) {
         return ResponseEntity.ok(gameService.move(board));
     }
 }
