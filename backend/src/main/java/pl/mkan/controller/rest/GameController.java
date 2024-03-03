@@ -2,6 +2,7 @@ package pl.mkan.controller.rest;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,5 +19,10 @@ public class GameController {
     @PostMapping(value = "/game")
     public ResponseEntity<BoardDTO> game(BoardDTO board) {
         return ResponseEntity.ok(gameService.move(board));
+    }
+
+    @GetMapping(value = "/game")
+    public ResponseEntity<BoardDTO> newGame() {
+        return ResponseEntity.ok(gameService.newBoard());
     }
 }

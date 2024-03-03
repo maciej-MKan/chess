@@ -9,6 +9,10 @@ import java.util.List;
 @Service
 public class GameService {
     public BoardDTO move(BoardDTO board) {
+        return null;
+    }
+
+    public BoardDTO newBoard() {
         return new BoardDTO(BoardTools.generateStartingPosition());
     }
 }
