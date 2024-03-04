@@ -1,5 +1,6 @@
 package pl.mkan.controller.rest;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ public class GameController {
     private final GameService gameService;
 
     @PostMapping(value = "/game")
-    public ResponseEntity<BoardDTO> game(BoardDTO board) {
+    public ResponseEntity<BoardDTO> game(@Valid BoardDTO board) {
         return ResponseEntity.ok(gameService.move(board));
     }
 
