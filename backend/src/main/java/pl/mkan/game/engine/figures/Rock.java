@@ -1,7 +1,6 @@
 package pl.mkan.game.engine.figures;
 
 import lombok.AllArgsConstructor;
-import pl.mkan.game.engine.Figure;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
 

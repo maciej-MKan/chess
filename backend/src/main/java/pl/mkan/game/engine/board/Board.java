@@ -1,6 +1,8 @@
-package pl.mkan.game.engine;
+package pl.mkan.game.engine.board;
 
-import pl.mkan.game.engine.figures.BoardRow;
+import pl.mkan.game.engine.Move;
+import pl.mkan.game.engine.board.BoardRow;
+import pl.mkan.game.engine.figures.Figure;
 import pl.mkan.game.engine.figures.None;
 
 import java.util.ArrayList;

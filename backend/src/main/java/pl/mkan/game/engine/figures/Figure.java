@@ -1,4 +1,7 @@
-package pl.mkan.game.engine;
+package pl.mkan.game.engine.figures;
+
+import pl.mkan.game.engine.FigureColor;
+import pl.mkan.game.engine.FigureMove;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package pl.mkan.game;
 
-import pl.mkan.game.engine.Board;
+import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.Move;
 import pl.mkan.game.engine.figures.Rock;

@@ -6,7 +6,7 @@ import pl.mkan.game.engine.FigureMove;
 
 import java.util.List;
 @AllArgsConstructor
-public class Pawn implements Figure {
+public class Bishop implements Figure {
 
     private final FigureColor color;
     @Override
@@ -21,13 +21,10 @@ public class Pawn implements Figure {
 
     @Override
     public String toString() {
-        return getColorSymbol() + "P";
+        return getColorSymbol() + "B";
     }
 
     private String getColorSymbol() {
         return (color == FigureColor.WHITE) ? "W" : "B";
     }
 }
-
-
-
