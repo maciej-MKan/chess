@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
 
+import java.util.ArrayList;
 import java.util.List;
 @AllArgsConstructor
 public class King implements Figure {
@@ -16,7 +17,20 @@ public class King implements Figure {
 
     @Override
     public List<FigureMove> getPossibleMoves() {
-        return null;
+        List<FigureMove> moves = new ArrayList<>();
+        addKingMoves(moves, true);
+        addKingMoves(moves, false);
+        return moves;
+    }
+
+    private void addKingMoves(List<FigureMove> moves, boolean haveToCapture) {
+        moves.add(new FigureMove(-1, -1, false, haveToCapture, false));
+        moves.add(new FigureMove(-1, 1, false, haveToCapture, false));
+        moves.add(new FigureMove(1, -1, false, haveToCapture, false));
+        moves.add(new FigureMove(0, 1, false, haveToCapture, false));
+        moves.add(new FigureMove(1, 0, false, haveToCapture, false));
+        moves.add(new FigureMove(0, -1, false, haveToCapture, false));
+        moves.add(new FigureMove(-1, 0, false, haveToCapture, false));
     }
 
     @Override
