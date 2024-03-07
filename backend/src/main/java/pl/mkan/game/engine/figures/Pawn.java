@@ -22,6 +22,10 @@ public class Pawn implements Figure {
         moves.add(new FigureMove(0, 2, true, false, true));
         moves.add(new FigureMove(-1, 1, true, true, false));
         moves.add(new FigureMove(1, 1, true, true, false));
+        moves.add(new FigureMove(0, -1, true, false, false));
+        moves.add(new FigureMove(0, -2, true, false, true));
+        moves.add(new FigureMove(-1, -1, true, true, false));
+        moves.add(new FigureMove(1, -1, true, true, false));
         return moves;
     }
 
