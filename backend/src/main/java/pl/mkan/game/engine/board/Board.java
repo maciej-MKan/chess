@@ -1,6 +1,7 @@
 package pl.mkan.game.engine.board;
 
 import pl.mkan.game.engine.FigureColor;
+import pl.mkan.game.engine.FigureFactory;
 import pl.mkan.game.engine.Move;
 import pl.mkan.game.engine.figures.*;
 
@@ -12,6 +13,7 @@ public class Board {
     private final List<BoardRow> rows = new ArrayList<>();
     private BoardOrientation boardOrientation = BoardOrientation.WHITE_ON_TOP;
     private FigureColor whoseMove = FigureColor.WHITE;
+    private boolean gameWithComputer;
 
     public Board() {
         for (int row = 0; row < 8; row++) {
@@ -19,12 +21,13 @@ public class Board {
         }
     }
 
-    public Board(BoardOrientation boardOrientation) {
+    public Board(BoardOrientation boardOrientation, boolean gameWithComputer) {
         this();
         this.boardOrientation = boardOrientation;
+        this.gameWithComputer = gameWithComputer;
     }
 
-    public void init(){
+    public void init() {
         FigureColor color = (boardOrientation == BoardOrientation.WHITE_ON_TOP) ? FigureColor.WHITE : FigureColor.BLACK;
         setBeginningRoofFigures(0, color);
         setPawns(color, 1);
@@ -48,8 +51,13 @@ public class Board {
         setFigure(0, row, new Rook(color));
         setFigure(1, row, new Knight(color));
         setFigure(2, row, new Bishop(color));
-        setFigure(3, row, new Queen(color));
-        setFigure(4, row, new King(color));
+        if (boardOrientation == BoardOrientation.BLACK_ON_TOP) {
+            setFigure(3, row, new Queen(color));
+            setFigure(4, row, new King(color));
+        } else {
+            setFigure(3, row, new King(color));
+            setFigure(4, row, new Queen(color));
+        }
         setFigure(5, row, new Bishop(color));
         setFigure(6, row, new Knight(color));
         setFigure(7, row, new Rook(color));
@@ -59,12 +67,21 @@ public class Board {
         return rows.get(row).getCols().get(col);
     }
 
+    public boolean isGameWithComputer() {
+        return gameWithComputer;
+    }
+
+    public BoardOrientation getBoardOrientation() {
+        return boardOrientation;
+    }
+
     public void setFigure(int col, int row, Figure figure) {
         rows.get(row).getCols().set(col, figure);
     }
 
     public boolean move(Move move) {
-        boolean result = true;
+        boolean result;
+        result = isTargetOnBoard(move);
         result = result && checkIfMovingFigure(move);
         result = result && checkFigureColor(move);
         result = result && targetFieldIsEmptyOrEnemy(move);
@@ -76,6 +93,10 @@ public class Board {
             whoseMove = oppositeColor(whoseMove);
         }
         return result;
+    }
+
+    private boolean isTargetOnBoard(Move move) {
+        return move.getDestCol() >= 0 && move.getDestCol() < 8 && move.getDestRow() >= 0 && move.getDestRow() < 8;
     }
 
     private boolean targetFieldIsEmptyOrEnemy(Move move) {
@@ -92,21 +113,19 @@ public class Board {
                 .filter(pm -> pm.getColumn() == deltaCol)
                 .filter(pm -> pm.getRow() == deltaRow)
                 .filter(pm -> pm.isHaveToCapture() == isCapture)
-                .filter(pm -> !pm.isOnlyInColorDirection() || isMoveInColorDirection)
-                .findFirst()
-                .isPresent();
+                .anyMatch(pm -> !pm.isOnlyInColorDirection() || isMoveInColorDirection);
     }
 
     private boolean checkMoveInColorDirection(Move move) {
         boolean isMoveInColorDirection;
-        if (boardOrientation == BoardOrientation.WHITE_ON_TOP){
-            if (getFigure(move.getSourceCol(), move.getSourceRow()).getColor() == FigureColor.WHITE){
+        if (boardOrientation == BoardOrientation.WHITE_ON_TOP) {
+            if (getFigure(move.getSourceCol(), move.getSourceRow()).getColor() == FigureColor.WHITE) {
                 isMoveInColorDirection = move.getDestRow() > move.getSourceRow();
             } else {
                 isMoveInColorDirection = move.getDestRow() < move.getSourceRow();
             }
         } else {
-            if (getFigure(move.getSourceCol(), move.getSourceRow()).getColor() == FigureColor.WHITE){
+            if (getFigure(move.getSourceCol(), move.getSourceRow()).getColor() == FigureColor.WHITE) {
                 isMoveInColorDirection = move.getDestRow() < move.getSourceRow();
             } else {
                 isMoveInColorDirection = move.getDestRow() > move.getSourceRow();
@@ -120,7 +139,8 @@ public class Board {
     }
 
     private boolean checkIfMovingFigure(Move move) {
-        return !(getFigure(move.getSourceCol(), move.getSourceRow()) instanceof None);
+        Figure figure = getFigure(move.getSourceCol(), move.getSourceRow());
+        return !(figure instanceof None);
     }
 
     @Override
@@ -132,5 +152,20 @@ public class Board {
         s += "|--|--|--|--|--|--|--|--|\n";
         s += "Next move: " + whoseMove;
         return s;
+    }
+
+    public Board deepCopy() {
+        Board newBoard = new Board(boardOrientation, gameWithComputer);
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Figure figure = getFigure(col, row);
+                if (!(figure instanceof None)) {
+                    Figure newFigure = FigureFactory.createFigureCopy(figure);
+                    newBoard.setFigure(col, row, newFigure);
+                }
+            }
+        }
+        newBoard.whoseMove = whoseMove;
+        return newBoard;
     }
 }
