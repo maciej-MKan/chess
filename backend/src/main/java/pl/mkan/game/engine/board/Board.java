@@ -2,6 +2,7 @@ package pl.mkan.game.engine.board;
 
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureFactory;
+import pl.mkan.game.engine.FigureMove;
 import pl.mkan.game.engine.Move;
 import pl.mkan.game.engine.figures.*;
 
@@ -113,8 +114,27 @@ public class Board {
                 .filter(pm -> pm.getColumn() == deltaCol)
                 .filter(pm -> pm.getRow() == deltaRow)
                 .filter(pm -> pm.isHaveToCapture() == isCapture)
+                .filter(pm -> pm.isCanJump() || isPathClear(move))
                 .anyMatch(pm -> !pm.isOnlyInColorDirection() || isMoveInColorDirection);
     }
+
+    private boolean isPathClear(Move move) {
+        boolean result = true;
+        int deltaCol = Integer.compare(move.getDestCol(), move.getSourceCol());
+        int deltaRow = Integer.compare(move.getDestRow(), move.getSourceRow());
+        int currentCol = move.getSourceCol() + deltaCol;
+        int currentRow = move.getSourceRow() + deltaRow;
+
+        while (currentCol != move.getDestCol() || currentRow != move.getDestRow()){
+            if(!(getFigure(currentCol, currentRow) instanceof None)) {
+                result = false;
+            }
+            currentCol += deltaCol;
+            currentRow += deltaRow;
+        }
+        return result;
+    }
+
 
     private boolean checkMoveInColorDirection(Move move) {
         boolean isMoveInColorDirection;
