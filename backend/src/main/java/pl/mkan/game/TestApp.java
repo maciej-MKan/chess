@@ -10,14 +10,18 @@ public class TestApp {
     public static void main(String[] args) {
         Board board = new Board(BoardOrientation.BLACK_ON_TOP, true);
         board.init();
-        while(true){
+        while (true) {
             System.out.println(board);
             Move move = UserDialogs.getNextMove();
-            if (board.move(move)){
-                if (board.isGameWithComputer()){
+            if (board.checkMove(move)) {
+                board.move(move);
+                if (board.isGameWithComputer()) {
                     Move computenMove = AI.getBestMove(board);
+                    System.out.println("Computer move: " + computenMove);
                     board.move(computenMove);
                 }
+            } else {
+                System.out.println("bad move");
             }
         }
 

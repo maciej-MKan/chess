@@ -5,7 +5,7 @@ import pl.mkan.game.engine.FigureMove;
 
 import java.util.List;
 
-public class None implements Figure {
+public class None extends Figure {
     @Override
     public FigureColor getColor() {
         return FigureColor.NONE;

@@ -7,7 +7,7 @@ import pl.mkan.game.engine.FigureMove;
 import java.util.ArrayList;
 import java.util.List;
 @AllArgsConstructor
-public class Bishop implements Figure {
+public class Bishop extends Figure {
 
     private final FigureColor color;
     @Override

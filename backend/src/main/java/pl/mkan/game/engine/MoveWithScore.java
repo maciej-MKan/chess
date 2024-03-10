@@ -1,4 +1,6 @@
 package pl.mkan.game.engine;
 
-public record MoveWithScore(Move move, Score score) {
+import java.util.Map;
+
+public record MoveWithScore(Move move, Map<FigureColor, Integer> score) {
 }

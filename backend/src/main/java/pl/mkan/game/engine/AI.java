@@ -9,6 +9,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import static pl.mkan.game.engine.board.Utils.oppositeColor;
+
 public class AI {
     public static Move getBestMove(Board board) {
         FigureColor computerColor = (board.getBoardOrientation() == BoardOrientation.WHITE_ON_TOP) ?
@@ -21,25 +23,27 @@ public class AI {
                 }
             }
         }
-        Integer best = allPossibleMoves.stream()
-                .map(move -> (move.score().blackScore() - move.score().whiteScore()))
-                .max(Comparator.comparingInt(dif -> dif))
-                .get();
-        return null;
+        MoveWithScore best = allPossibleMoves.stream()
+                .max(Comparator.comparingInt(
+                        move -> (move.score().get(computerColor) - move.score().get(oppositeColor(computerColor)))
+                ))
+                .orElse(allPossibleMoves.get(0));
+        return best.move();
     }
 
     private static void addPossibleMoves(int col, int row, List<MoveWithScore> allPossibleMoves, Board board) {
         for (FigureMove potentialMove : board.getFigure(col, row).getPossibleMoves()) {
             Board testBoard = board.deepCopy();
             Move moveToCheck = new Move(col, row, potentialMove.getColumn() + col, potentialMove.getRow() + row);
-            if (testBoard.move(moveToCheck)){
-                Score score = calcScore(testBoard);
+            if (testBoard.checkMove(moveToCheck)){
+                testBoard.move(moveToCheck);
+                Map<FigureColor, Integer> score = calcScore(testBoard);
                 allPossibleMoves.add(new MoveWithScore(moveToCheck, score));
             }
         }
     }
 
-    private static Score calcScore(Board board) {
+    private static Map<FigureColor, Integer> calcScore(Board board) {
         int whiteScore = 0;
         int blackScore = 0;
         for (int col = 0; col < 8; col++) {
@@ -53,7 +57,10 @@ public class AI {
                 }
             }
         }
-        return new Score(whiteScore, blackScore);
+        return Map.of(
+                FigureColor.WHITE, whiteScore,
+                FigureColor.BLACK, blackScore
+        );
     }
 
     private static int calcScoreForFigure(Figure figure) {

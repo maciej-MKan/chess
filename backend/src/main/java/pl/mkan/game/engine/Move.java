@@ -1,31 +1,18 @@
 package pl.mkan.game.engine;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class Move {
     private final int sourceCol;
     private final int sourceRow;
     private final int destCol;
     private final int destRow;
-
-    public int getSourceCol() {
-        return sourceCol;
-    }
-
-    public int getSourceRow() {
-        return sourceRow;
-    }
-
-    public int getDestCol() {
-        return destCol;
-    }
-
-    public int getDestRow() {
-        return destRow;
-    }
-
-    public Move(int sourceCol, int sourceRow, int destCol, int destRow) {
-        this.sourceCol = sourceCol;
-        this.sourceRow = sourceRow;
-        this.destCol = destCol;
-        this.destRow = destRow;
+    
+    @Override
+    public String toString() {
+        return " " + sourceCol + sourceRow + destCol + destRow;
     }
 }

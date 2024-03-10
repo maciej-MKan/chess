@@ -1,5 +1,6 @@
 package pl.mkan.game.engine.board;
 
+import lombok.Getter;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureFactory;
 import pl.mkan.game.engine.FigureMove;
@@ -9,11 +10,15 @@ import pl.mkan.game.engine.figures.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static pl.mkan.game.engine.board.Utils.oppositeColor;
+
 public class Board {
 
     private final List<BoardRow> rows = new ArrayList<>();
+    @Getter
     private BoardOrientation boardOrientation = BoardOrientation.WHITE_ON_TOP;
     private FigureColor whoseMove = FigureColor.WHITE;
+    @Getter
     private boolean gameWithComputer;
 
     public Board() {
@@ -44,10 +49,6 @@ public class Board {
         }
     }
 
-    private FigureColor oppositeColor(FigureColor color) {
-        return (color == FigureColor.WHITE) ? FigureColor.BLACK : FigureColor.WHITE;
-    }
-
     private void setBeginningRoofFigures(int row, FigureColor color) {
         setFigure(0, row, new Rook(color));
         setFigure(1, row, new Knight(color));
@@ -68,31 +69,25 @@ public class Board {
         return rows.get(row).getCols().get(col);
     }
 
-    public boolean isGameWithComputer() {
-        return gameWithComputer;
-    }
-
-    public BoardOrientation getBoardOrientation() {
-        return boardOrientation;
-    }
-
     public void setFigure(int col, int row, Figure figure) {
         rows.get(row).getCols().set(col, figure);
     }
 
-    public boolean move(Move move) {
+    public void move(Move move) {
+            Figure figure = getFigure(move.getSourceCol(), move.getSourceRow());
+            figure.setMoved();
+            setFigure(move.getDestCol(), move.getDestRow(), figure);
+            setFigure(move.getSourceCol(), move.getSourceRow(), new None());
+            whoseMove = oppositeColor(whoseMove);
+    }
+
+    public boolean checkMove(Move move){
         boolean result;
         result = isTargetOnBoard(move);
         result = result && checkIfMovingFigure(move);
         result = result && checkFigureColor(move);
         result = result && targetFieldIsEmptyOrEnemy(move);
         result = result && isValidMove(move);
-        if (result) {
-            Figure figure = getFigure(move.getSourceCol(), move.getSourceRow());
-            setFigure(move.getDestCol(), move.getDestRow(), figure);
-            setFigure(move.getSourceCol(), move.getSourceRow(), new None());
-            whoseMove = oppositeColor(whoseMove);
-        }
         return result;
     }
 
@@ -107,10 +102,12 @@ public class Board {
 
     private boolean isValidMove(Move move) {
         boolean isCapture = !(getFigure(move.getDestCol(), move.getDestRow()) instanceof None);
+        boolean isFirstMove = getFigure(move.getSourceCol(), move.getSourceRow()).isFirstMove();
         int deltaCol = move.getDestCol() - move.getSourceCol();
         int deltaRow = move.getDestRow() - move.getSourceRow();
         boolean isMoveInColorDirection = checkMoveInColorDirection(move);
         return getFigure(move.getSourceCol(), move.getSourceRow()).getPossibleMoves().stream()
+                .filter(pm -> !pm.isHaveToBeFirstMove() || pm.isHaveToBeFirstMove() == isFirstMove)
                 .filter(pm -> pm.getColumn() == deltaCol)
                 .filter(pm -> pm.getRow() == deltaRow)
                 .filter(pm -> pm.isHaveToCapture() == isCapture)

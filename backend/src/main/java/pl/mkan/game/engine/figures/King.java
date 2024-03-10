@@ -7,7 +7,7 @@ import pl.mkan.game.engine.FigureMove;
 import java.util.ArrayList;
 import java.util.List;
 @AllArgsConstructor
-public class King implements Figure {
+public class King extends Figure {
 
     private final FigureColor color;
     @Override

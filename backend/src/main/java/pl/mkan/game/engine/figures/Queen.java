@@ -7,7 +7,7 @@ import pl.mkan.game.engine.FigureMove;
 import java.util.ArrayList;
 import java.util.List;
 @AllArgsConstructor
-public class Queen implements Figure {
+public class Queen extends Figure {
 
     private final FigureColor color;
     @Override
@@ -24,6 +24,7 @@ public class Queen implements Figure {
     }
 
     private void addQueenMoves(List<FigureMove> moves, boolean haveToCapture) {
+
         for (int delta =-7; delta < 8; delta++) {
             if (delta == 0) continue;
             moves.add(new FigureMove(delta, delta, false, haveToCapture, false));
@@ -34,11 +35,11 @@ public class Queen implements Figure {
         }
         for (int col = -7; col < 8; col++) {
             if (col == 0) continue;
-            moves.add(new FigureMove(col, 0, true, haveToCapture, false));
+            moves.add(new FigureMove(col, 0, false, haveToCapture, false));
         }
         for (int row = -7; row < 8; row++) {
             if (row == 0) continue;
-            moves.add(new FigureMove(0, row, true, haveToCapture, false));
+            moves.add(new FigureMove(0, row, false, haveToCapture, false));
         }
     }
 

@@ -8,18 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-public class Rook implements Figure {
+public class Rook extends Figure {
 
     private final FigureColor color;
 
     private void addRookMoves(List<FigureMove> moves, boolean haveToCapture) {
         for (int col = -7; col < 8; col++) {
             if (col == 0) continue;
-            moves.add(new FigureMove(col, 0, true, haveToCapture, false));
+            moves.add(new FigureMove(col, 0, false, haveToCapture, false));
         }
         for (int row = -7; row < 8; row++) {
             if (row == 0) continue;
-            moves.add(new FigureMove(0, row, true, haveToCapture, false));
+            moves.add(new FigureMove(0, row, false, haveToCapture, false));
         }
     }
 

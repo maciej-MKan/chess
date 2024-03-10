@@ -1,15 +1,18 @@
 package pl.mkan.game.engine.figures;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
 
 import java.util.ArrayList;
 import java.util.List;
-@AllArgsConstructor
-public class Pawn implements Figure {
+
+@RequiredArgsConstructor
+public class Pawn extends Figure {
 
     private final FigureColor color;
+
     @Override
     public FigureColor getColor() {
         return color;
