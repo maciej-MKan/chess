@@ -17,6 +17,7 @@ public class Board {
     private final List<BoardRow> rows = new ArrayList<>();
     @Getter
     private BoardOrientation boardOrientation = BoardOrientation.WHITE_ON_TOP;
+    @Getter
     private FigureColor whoseMove = FigureColor.WHITE;
     @Getter
     private boolean gameWithComputer;
