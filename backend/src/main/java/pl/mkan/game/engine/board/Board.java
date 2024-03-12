@@ -3,7 +3,6 @@ package pl.mkan.game.engine.board;
 import lombok.Getter;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureFactory;
-import pl.mkan.game.engine.FigureMove;
 import pl.mkan.game.engine.Move;
 import pl.mkan.game.engine.figures.*;
 
@@ -21,6 +20,7 @@ public class Board {
     private FigureColor whoseMove = FigureColor.WHITE;
     @Getter
     private boolean gameWithComputer;
+    private Board prevBoard;
 
     public Board() {
         for (int row = 0; row < 8; row++) {
@@ -75,14 +75,19 @@ public class Board {
     }
 
     public void move(Move move) {
-            Figure figure = getFigure(move.getSourceCol(), move.getSourceRow());
-            figure.setMoved();
-            setFigure(move.getDestCol(), move.getDestRow(), figure);
-            setFigure(move.getSourceCol(), move.getSourceRow(), new None());
-            whoseMove = oppositeColor(whoseMove);
+        prevBoard = deepCopy();
+        Figure figure = getFigure(move.getSourceCol(), move.getSourceRow());
+        figure.setMoved();
+        setFigure(move.getDestCol(), move.getDestRow(), figure);
+        setFigure(move.getSourceCol(), move.getSourceRow(), new None());
+        whoseMove = oppositeColor(whoseMove);
     }
 
-    public boolean checkMove(Move move){
+    public void backMove() {
+        recoverBoard(prevBoard);
+    }
+
+    public boolean checkMove(Move move) {
         boolean result;
         result = isTargetOnBoard(move);
         result = result && checkIfMovingFigure(move);
@@ -123,8 +128,8 @@ public class Board {
         int currentCol = move.getSourceCol() + deltaCol;
         int currentRow = move.getSourceRow() + deltaRow;
 
-        while (currentCol != move.getDestCol() || currentRow != move.getDestRow()){
-            if(!(getFigure(currentCol, currentRow) instanceof None)) {
+        while (currentCol != move.getDestCol() || currentRow != move.getDestRow()) {
+            if (!(getFigure(currentCol, currentRow) instanceof None)) {
                 result = false;
             }
             currentCol += deltaCol;
@@ -186,4 +191,13 @@ public class Board {
         newBoard.whoseMove = whoseMove;
         return newBoard;
     }
+
+    private void recoverBoard(Board board) {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                setFigure(col, row, board.getFigure(col, row));
+            }
+        }
+    }
+
 }

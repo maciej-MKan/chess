@@ -4,30 +4,109 @@ import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.figures.*;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import static pl.mkan.game.engine.board.Utils.oppositeColor;
 
 public class AI {
-    public static Move getBestMove(Board board, FigureColor color, int depth) {
 
-        List<MoveWithScore> allPossibleMoves = generatePossibleMoves(board, color);
-        MoveWithScore best = getBestMoveWithScore(board, color, depth, allPossibleMoves);
-        return best.move();
+    private static final int MAX_DEPTH = 2;
+    private static final int alpha = Integer.MIN_VALUE;
+    private static final int beta = Integer.MAX_VALUE;
+
+    private static int search(Board board, FigureColor movingColor, int depth, int alpha, int beta){
+        int best_score = Integer.MIN_VALUE;
+        int move_score;
+
+        List<Move> possibleMoves = generatePossibleMoves(board, movingColor);
+
+        for(Move move : possibleMoves){
+            board.move(move);
+
+            if (depth == 0){
+                move_score = evaluateBoard(board, movingColor);
+            } else {
+                move_score = - search(board, oppositeColor(movingColor), depth - 1, -alpha, -beta);
+            }
+
+            board.backMove();
+
+            if (move_score > best_score) best_score = move_score;
+            if (best_score > alpha) alpha = best_score;
+            if (alpha >= beta) return alpha;
+        }
+        return best_score;
     }
 
-    private static MoveWithScore getBestMoveWithScore(Board board, FigureColor color, int depth, List<MoveWithScore> allPossibleMoves) {
-        return allPossibleMoves.parallelStream()
-                .max(Comparator.comparingInt(
-                        move -> getBestScoring(move, board, color, depth)
-                ))
-                .orElse(allPossibleMoves.get(0));
+    public static Move getBestMove(Board board, FigureColor color) {
+        int score = search(board, color, MAX_DEPTH, alpha, beta);
+        System.out.println(score);
+//        Move bestMove = null;
+//        int alpha = Integer.MIN_VALUE;
+//        int beta = Integer.MAX_VALUE;
+//
+//        for (int depth = 1; depth <= MAX_DEPTH; depth++) {
+//            int maxEval = Integer.MIN_VALUE;
+//            List<Move> possibleMoves = generatePossibleMoves(board, color);
+//            Move localBestMove = null;
+//
+//            for (Move move : possibleMoves) {
+//                Board testBoard = board.deepCopy();
+//                testBoard.move(move);
+//                int eval = minimax(testBoard, oppositeColor(color), depth - 1, alpha, beta, false);
+//                if (eval > maxEval) {
+//                    maxEval = eval;
+//                    localBestMove = move;
+//                }
+//            }
+//
+//            if (localBestMove != null) {
+//                bestMove = localBestMove;
+//            }
+//        }
+
+        return null;
     }
 
-    private static List<MoveWithScore> generatePossibleMoves(Board board, FigureColor activeColor) {
-        List<MoveWithScore> allPossibleMoves = new ArrayList<>();
+    private static int minimax(Board board, FigureColor activeColor, int depth, int alpha, int beta, boolean maximizingPlayer) {
+        if (depth == 0) {
+            return evaluateBoard(board, activeColor);
+        }
+
+        List<Move> possibleMoves = generatePossibleMoves(board, activeColor);
+
+        if (maximizingPlayer) {
+            int maxEval = Integer.MIN_VALUE;
+            for (Move move : possibleMoves) {
+                Board testBoard = board.deepCopy();
+                testBoard.move(move);
+                int eval = minimax(testBoard, oppositeColor(activeColor), depth - 1, alpha, beta, false);
+                maxEval = Math.max(maxEval, eval);
+                alpha = Math.max(alpha, eval);
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+            return maxEval;
+        } else {
+            int minEval = Integer.MAX_VALUE;
+            for (Move move : possibleMoves) {
+                Board testBoard = board.deepCopy();
+                testBoard.move(move);
+                int eval = minimax(testBoard, oppositeColor(activeColor), depth - 1, alpha, beta, true);
+                minEval = Math.min(minEval, eval);
+                beta = Math.min(beta, eval);
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+            return minEval;
+        }
+    }
+
+    private static List<Move> generatePossibleMoves(Board board, FigureColor activeColor) {
+        List<Move> allPossibleMoves = new ArrayList<>();
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 if (board.getFigure(col, row).getColor() == activeColor) {
@@ -38,64 +117,38 @@ public class AI {
         return allPossibleMoves;
     }
 
-    private static int getBestScoring(MoveWithScore move, Board board, FigureColor activeColor, int depth) {
-//        if (depth == 0) {
-//            return move.score().get(activeColor) - move.score().get(oppositeColor(activeColor));
-//        }
-
-        Board testBoard = board.deepCopy();
-        testBoard.move(move.move());
-        List<MoveWithScore> allPossibleMoves = generatePossibleMoves(testBoard, oppositeColor(activeColor));
-        MoveWithScore bestOppositeMove = allPossibleMoves.parallelStream()
-                .max(Comparator.comparingInt(
-                        nextMove -> nextMove.score().get(oppositeColor(activeColor)) - nextMove.score().get(activeColor))
-                )
-                .orElse(allPossibleMoves.get(0));
-//        MoveWithScore bestOppositeMove = getBestMoveWithScore(testBoard, oppositeColor(activeColor), depth - 1, allPossibleMoves);
-        testBoard.move(bestOppositeMove.move());
-        allPossibleMoves = generatePossibleMoves(testBoard, activeColor);
-        MoveWithScore bestMove = allPossibleMoves.parallelStream()
-                .max(Comparator.comparingInt(
-                        nextMove -> nextMove.score().get(activeColor) - nextMove.score().get(oppositeColor(activeColor)))
-                )
-                .orElse(allPossibleMoves.get(0));
-
-        return bestMove.score().get(activeColor) - bestMove.score().get(oppositeColor(activeColor));
-    }
-
-    private static void addPossibleMoves(int col, int row, List<MoveWithScore> allPossibleMoves, Board board) {
+    private static void addPossibleMoves(int col, int row, List<Move> allPossibleMoves, Board board) {
         for (FigureMove potentialMove : board.getFigure(col, row).getPossibleMoves()) {
             Board testBoard = board.deepCopy();
             Move moveToCheck = new Move(col, row, potentialMove.getColumn() + col, potentialMove.getRow() + row);
             if (testBoard.checkMove(moveToCheck)) {
-                testBoard.move(moveToCheck);
-                Map<FigureColor, Integer> score = calcScore(testBoard);
-                allPossibleMoves.add(new MoveWithScore(moveToCheck, score));
+                allPossibleMoves.add(moveToCheck);
             }
         }
     }
 
-    private static Map<FigureColor, Integer> calcScore(Board board) {
-        int whiteScore = 0;
-        int blackScore = 0;
-        for (int col = 0; col < 8; col++) {
-            for (int row = 0; row < 8; row++) {
+    private static int evaluateBoard(Board board, FigureColor activeColor) {
+        int playerScore = 0;
+        int opponentScore = 0;
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
                 Figure figure = board.getFigure(col, row);
-                int score = calcScoreForFigure(figure);
-                if (figure.getColor() == FigureColor.WHITE) {
-                    whiteScore += score;
-                } else if (figure.getColor() == FigureColor.BLACK) {
-                    blackScore += score;
+                if (!(figure instanceof None)) {
+                    int figureValue = getFigureValue(figure);
+                    if (figure.getColor() == activeColor) {
+                        playerScore += figureValue;
+                    } else {
+                        opponentScore += figureValue;
+                    }
                 }
             }
         }
-        return Map.of(
-                FigureColor.WHITE, whiteScore,
-                FigureColor.BLACK, blackScore
-        );
+
+        return opponentScore - playerScore;
     }
 
-    private static int calcScoreForFigure(Figure figure) {
+    private static int getFigureValue(Figure figure) {
         Map<Class<? extends Figure>, Integer> figureScores = Map.of(
                 Pawn.class, 1,
                 Bishop.class, 5,

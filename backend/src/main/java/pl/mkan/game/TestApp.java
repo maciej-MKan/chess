@@ -16,7 +16,7 @@ public class TestApp {
             if (board.checkMove(move)) {
                 board.move(move);
                 if (board.isGameWithComputer()) {
-                    Move computenMove = AI.getBestMove(board, board.getWhoseMove(), 0);
+                    Move computenMove = AI.getBestMove(board, board.getWhoseMove());
                     System.out.println("Computer move: " + computenMove);
                     board.move(computenMove);
                 }
