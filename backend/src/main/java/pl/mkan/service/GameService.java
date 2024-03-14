@@ -2,6 +2,8 @@ package pl.mkan.service;
 
 import org.springframework.stereotype.Service;
 import pl.mkan.controller.dto.BoardDTO;
+import pl.mkan.controller.dto.mapper.BoardDTTOMapper;
+import pl.mkan.game.engine.board.Board;
 import pl.mkan.service.tools.BoardTools;
 
 @Service
@@ -11,6 +13,9 @@ public class GameService {
     }
 
     public BoardDTO newBoard() {
-        return new BoardDTO(BoardTools.generateStartingPosition());
+        Board engineBoard = new Board();
+        engineBoard.init();
+
+        return new BoardDTO(BoardDTTOMapper.map(engineBoard));
     }
 }
