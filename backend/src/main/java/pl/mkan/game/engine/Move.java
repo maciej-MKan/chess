@@ -15,4 +15,5 @@ public class Move {
     public String toString() {
         return " " + sourceCol + sourceRow + destCol + destRow;
     }
+
 }
