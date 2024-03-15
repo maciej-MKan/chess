@@ -9,6 +9,7 @@ import pl.mkan.service.tools.BoardTools;
 @Service
 public class GameService {
     public BoardDTO move(BoardDTO board) {
+        System.out.println(BoardDTTOMapper.map(board.pieces()));
         return null;
     }
 

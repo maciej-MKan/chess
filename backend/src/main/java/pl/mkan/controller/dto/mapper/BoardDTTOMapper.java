@@ -50,4 +50,38 @@ public class BoardDTTOMapper {
 
         return figureMapper.get(figure.getClass());
     }
+
+    public static Board map(List<PieceDTO> pieces) {
+        Board board = new Board();
+        for (PieceDTO piece : pieces){
+            board.setFigure(piece.position().column(), piece.position().row(), mapPiece(piece));
+        }
+        return board;
+    }
+
+    private static Figure mapPiece(PieceDTO piece) {
+        Figure figure;
+
+        Map<PieceType, Class<? extends Figure>> figureMapper = Map.of(
+                PieceType.PAWN, Pawn.class,
+                PieceType.BISHOP, Bishop.class,
+                PieceType.KNIGHT, Knight.class,
+                PieceType.ROOK, Rook.class,
+                PieceType.QUEEN, Queen.class,
+                PieceType.KING, King.class
+        );
+
+        FigureColor color = mapColor(piece.color());
+        Class<? extends Figure> figureClass = figureMapper.get(piece.type());
+        try {
+            figure = figureClass.getDeclaredConstructor(FigureColor.class).newInstance(color);
+        } catch (Exception e) {
+            return new None();
+        }
+        return figure;
+    }
+
+    private static FigureColor mapColor(PieceColor color) {
+        return color == PieceColor.BLACK ? FigureColor.BLACK : FigureColor.WHITE;
+    }
 }

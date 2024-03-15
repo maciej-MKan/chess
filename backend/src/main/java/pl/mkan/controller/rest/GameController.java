@@ -3,10 +3,7 @@ package pl.mkan.controller.rest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.mkan.controller.dto.BoardDTO;
 import pl.mkan.service.GameService;
 
@@ -18,7 +15,7 @@ public class GameController {
     private final GameService gameService;
 
     @PostMapping(value = "/game")
-    public ResponseEntity<BoardDTO> game(@Valid BoardDTO board) {
+    public ResponseEntity<BoardDTO> game(@RequestBody @Valid BoardDTO board) {
         return ResponseEntity.ok(gameService.move(board));
     }
 
