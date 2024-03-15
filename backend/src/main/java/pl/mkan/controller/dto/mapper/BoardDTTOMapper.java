@@ -8,22 +8,26 @@ import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.figures.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class BoardDTTOMapper {
 
-    static List<PieceDTO> pieces;
     public static List<PieceDTO> map(Board engineBoard) {
+        List<PieceDTO> pieces = new ArrayList<>();
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 Figure figure = engineBoard.getFigure(col, row);
                 if (!(figure instanceof None)) {
-                    pieces.add(new PieceDTO(mapPiece(figure), mapColor(figure.getColor()), new PositionDTO(row, col)));
+                    PieceType type = mapPiece(figure);
+                    PieceColor color = mapColor(figure.getColor());
+                    PositionDTO position = new PositionDTO(row, col);
+                    pieces.add(new PieceDTO(type, color, position));
                 }
             }
         }
-        return null;
+        return pieces;
     }
 
     private static PieceColor mapColor(FigureColor color) {
@@ -44,6 +48,6 @@ public class BoardDTTOMapper {
                 King.class, PieceType.KING
         );
 
-        return figureMapper.get(figure);
+        return figureMapper.get(figure.getClass());
     }
 }
