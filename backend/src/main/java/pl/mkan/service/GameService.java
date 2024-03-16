@@ -2,21 +2,23 @@ package pl.mkan.service;
 
 import org.springframework.stereotype.Service;
 import pl.mkan.controller.dto.BoardDTO;
-import pl.mkan.controller.dto.mapper.BoardDTTOMapper;
+import pl.mkan.controller.dto.mapper.BoardDTOMapper;
 import pl.mkan.game.engine.board.Board;
-import pl.mkan.service.tools.BoardTools;
 
 @Service
 public class GameService {
     public BoardDTO move(BoardDTO board) {
-        System.out.println(BoardDTTOMapper.map(board.pieces()));
-        return null;
+        Board engineBoard = BoardDTOMapper.map(board.pieces());
+        System.out.println(engineBoard);
+        engineBoard.AIMove();
+        System.out.println(engineBoard);
+        return new BoardDTO(BoardDTOMapper.map(engineBoard));
     }
 
     public BoardDTO newBoard() {
         Board engineBoard = new Board();
         engineBoard.init();
 
-        return new BoardDTO(BoardDTTOMapper.map(engineBoard));
+        return new BoardDTO(BoardDTOMapper.map(engineBoard));
     }
 }

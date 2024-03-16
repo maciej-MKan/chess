@@ -1,6 +1,7 @@
 package pl.mkan.game.engine.board;
 
 import lombok.Getter;
+import pl.mkan.game.engine.AI;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureFactory;
 import pl.mkan.game.engine.Move;
@@ -31,6 +32,7 @@ public class Board {
     public Board(BoardOrientation boardOrientation, boolean gameWithComputer) {
         this();
         this.boardOrientation = boardOrientation;
+        this.whoseMove = boardOrientation == BoardOrientation.WHITE_ON_TOP ? FigureColor.WHITE : FigureColor.BLACK;
         this.gameWithComputer = gameWithComputer;
     }
 
@@ -83,6 +85,14 @@ public class Board {
         whoseMove = oppositeColor(whoseMove);
     }
 
+    public void AIMove() {
+        FigureColor computerColor = boardOrientation == BoardOrientation.WHITE_ON_TOP ? FigureColor.WHITE : FigureColor.BLACK;
+
+        if (whoseMove != computerColor) throw new RuntimeException("Is not computer turn");
+        Move bestMove = AI.getBestMove(this, computerColor);
+        move(bestMove);
+    }
+
     public void backMove() {
         recoverBoard(prevBoard);
     }
@@ -102,8 +112,7 @@ public class Board {
     }
 
     private boolean targetFieldIsEmptyOrEnemy(Move move) {
-        return (getFigure(move.getDestCol(), move.getDestRow()) instanceof None) ||
-                (getFigure(move.getDestCol(), move.getDestRow()).getColor() != whoseMove);
+        return (getFigure(move.getDestCol(), move.getDestRow()) instanceof None) || (getFigure(move.getDestCol(), move.getDestRow()).getColor() != whoseMove);
     }
 
     private boolean isValidMove(Move move) {
@@ -112,13 +121,7 @@ public class Board {
         int deltaCol = move.getDestCol() - move.getSourceCol();
         int deltaRow = move.getDestRow() - move.getSourceRow();
         boolean isMoveInColorDirection = checkMoveInColorDirection(move);
-        return getFigure(move.getSourceCol(), move.getSourceRow()).getPossibleMoves().stream()
-                .filter(pm -> !pm.isHaveToBeFirstMove() || pm.isHaveToBeFirstMove() == isFirstMove)
-                .filter(pm -> pm.getColumn() == deltaCol)
-                .filter(pm -> pm.getRow() == deltaRow)
-                .filter(pm -> pm.isHaveToCapture() == isCapture)
-                .filter(pm -> pm.isCanJump() || isPathClear(move))
-                .anyMatch(pm -> !pm.isOnlyInColorDirection() || isMoveInColorDirection);
+        return getFigure(move.getSourceCol(), move.getSourceRow()).getPossibleMoves().stream().filter(pm -> !pm.isHaveToBeFirstMove() || pm.isHaveToBeFirstMove() == isFirstMove).filter(pm -> pm.getColumn() == deltaCol).filter(pm -> pm.getRow() == deltaRow).filter(pm -> pm.isHaveToCapture() == isCapture).filter(pm -> pm.isCanJump() || isPathClear(move)).anyMatch(pm -> !pm.isOnlyInColorDirection() || isMoveInColorDirection);
     }
 
     private boolean isPathClear(Move move) {
@@ -168,13 +171,13 @@ public class Board {
 
     @Override
     public String toString() {
-        String s = "|--|--|--|--|--|--|--|--|\n";
+        StringBuilder s = new StringBuilder("|--|--|--|--|--|--|--|--|\n");
         for (int row = 0; row < 8; row++) {
-            s += rows.get(row).toString();
+            s.append(rows.get(row).toString());
         }
-        s += "|--|--|--|--|--|--|--|--|\n";
-        s += "Next move: " + whoseMove;
-        return s;
+        s.append("|--|--|--|--|--|--|--|--|\n");
+        s.append("Next move: ").append(whoseMove);
+        return s.toString();
     }
 
     public Board deepCopy() {

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class BoardDTTOMapper {
+public class BoardDTOMapper {
 
     public static List<PieceDTO> map(Board engineBoard) {
         List<PieceDTO> pieces = new ArrayList<>();
@@ -20,10 +20,7 @@ public class BoardDTTOMapper {
             for (int col = 0; col < 8; col++) {
                 Figure figure = engineBoard.getFigure(col, row);
                 if (!(figure instanceof None)) {
-                    PieceType type = mapPiece(figure);
-                    PieceColor color = mapColor(figure.getColor());
-                    PositionDTO position = new PositionDTO(row, col);
-                    pieces.add(new PieceDTO(type, color, position));
+                    pieces.add(new PieceDTO(mapPiece(figure), mapColor(figure.getColor()), new PositionDTO(row, col)));
                 }
             }
         }
@@ -31,11 +28,7 @@ public class BoardDTTOMapper {
     }
 
     private static PieceColor mapColor(FigureColor color) {
-        if (color == FigureColor.BLACK) {
-            return PieceColor.BLACK;
-        } else {
-            return PieceColor.WHITE;
-        }
+        return color == FigureColor.BLACK ? PieceColor.BLACK : PieceColor.WHITE;
     }
 
     private static PieceType mapPiece(Figure figure) {
@@ -53,7 +46,7 @@ public class BoardDTTOMapper {
 
     public static Board map(List<PieceDTO> pieces) {
         Board board = new Board();
-        for (PieceDTO piece : pieces){
+        for (PieceDTO piece : pieces) {
             board.setFigure(piece.position().column(), piece.position().row(), mapPiece(piece));
         }
         return board;
