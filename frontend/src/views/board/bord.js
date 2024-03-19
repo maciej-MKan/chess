@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Square} from "./components/Square";
 import './Chessboard.css'
 import {initGame} from "../../api/game";
+import {isEmpty} from "../utils";
 
 const Chessboard = () => {
 
@@ -26,14 +27,20 @@ const Chessboard = () => {
     }, [selectedPiece]);
 
     useEffect(() => {
-        if (Object.keys(selectedSquare).length !== 0 && Object.keys(selectedPiece).length !== 0){
+        if (!isEmpty(selectedSquare) && !isEmpty(selectedPiece)){
             movePiece();
         }
     }, [selectedSquare, selectedPiece]);
 
     const findPiece = (row, column) => bordState.pieces.find(piece => piece.position.row === row && piece.position.column === column);
     const onSquareClick = (row, column) => {
-        findPiece(row, column) ? setSelectedPiece({row, column}) : setSelectedSquare({row, column});
+        if (!isEmpty(selectedSquare) && row === selectedSquare.row && column === selectedSquare.column){
+            setSelectedSquare({})
+        } else if (!isEmpty(selectedPiece) && row === selectedPiece.row && column === selectedPiece.column){
+            setSelectedPiece({})
+        } else {
+            findPiece(row, column) ? setSelectedPiece({row, column}) : setSelectedSquare({row, column});
+        }
     }
     const checkSquareSelected = (row, column) => {
         return selectedSquare.row === row && selectedSquare.column === column;
