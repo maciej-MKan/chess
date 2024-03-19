@@ -20,7 +20,6 @@ public class GameController {
     }
 
     @GetMapping(value = "/game")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<BoardDTO> newGame() {
         return ResponseEntity.ok(gameService.newBoard());
     }
