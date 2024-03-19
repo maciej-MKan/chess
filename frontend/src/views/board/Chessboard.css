@@ -20,6 +20,14 @@
     background-color: #b58863;
 }
 
+.white_blink {
+    background-color: rgba(240, 217, 181, 0.5);
+}
+
+.black_blink {
+    background-color: rgba(181, 136, 99, 0.5);
+}
+
 .piece_black {
     width: 80%;
     height: 80%;
@@ -31,11 +39,33 @@
     justify-content: center;
 }
 
+.piece_black_blink {
+    width: 80%;
+    height: 80%;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.50);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .piece_white {
     width: 80%;
     height: 80%;
     color: black;
     background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.piece_white_blink {
+    width: 80%;
+    height: 80%;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.5);
     border-radius: 50%;
     display: flex;
     align-items: center;
