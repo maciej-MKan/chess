@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Square} from "./components/Square";
 import './Chessboard.css'
-import {initGame} from "../../api/game";
+import {getComputerMove, initGame} from "../../api/game";
 import {isEmpty} from "../utils";
 
 const Chessboard = () => {
@@ -28,9 +28,10 @@ const Chessboard = () => {
 
     useEffect(() => {
         if (!isEmpty(selectedSquare) && !isEmpty(selectedPiece)){
-            movePiece();
+            playerMove();
         }
     }, [selectedSquare, selectedPiece]);
+
 
     const findPiece = (row, column) => bordState.pieces.find(piece => piece.position.row === row && piece.position.column === column);
     const onSquareClick = (row, column) => {
@@ -49,12 +50,27 @@ const Chessboard = () => {
     const checkPieceSelected = (row, column) => {
         return selectedPiece.row === row && selectedPiece.column === column;
     }
-
-    const movePiece = () => {
+    const playerMove = () => {
         console.log("move " + selectedPiece.row + " " + selectedPiece.column + " to " + selectedSquare.row + " " + selectedSquare.column);
+        const piece = findPiece(selectedPiece.row, selectedPiece.column);
+        piece.position.row = selectedSquare.row;
+        piece.position.column = selectedSquare.column;
+        console.log(bordState);
         setSelectedPiece({});
         setSelectedSquare({});
+        computerMove();
     }
+    const computerMove = () => {
+        getComputerMove(bordState)
+            .then(response => {
+                console.log("response: " + response);
+                setBordState(response);
+            })
+            .catch((error) => {
+                console.log("error " + error);
+                setError(error.toString())
+            });
+    };
     const renderSquare = (row, column, piece) => {
         const isBlack = (row + column) % 2 === 1;
         const isSelected = checkSquareSelected(row, column);
@@ -80,7 +96,7 @@ const Chessboard = () => {
         return board;
     };
 
-    return <div className="chessboard">{bordState? renderBoard() : error}</div>;
+    return <div className="chessboard">{(error !== " ") ? error : bordState? renderBoard() : error}</div>;
 };
 
 export default Chessboard;
