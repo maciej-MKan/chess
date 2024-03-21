@@ -1,11 +1,6 @@
-import React, {useState} from "react";
+import React from "react";
 
 export const Piece = ({ type, color, selected}) => {
-    // const [selected, setSelected] = useState(false);
-
-    // const onClick = () => {
-    //     setSelected(!selected);
-    // }
     return (
         <div
             className={`piece ${type.toLowerCase()} ${'piece_' + color.toLowerCase() + (selected ? '_blink' : '')}`}

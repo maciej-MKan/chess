@@ -6,12 +6,15 @@ import {isEmpty} from "../utils";
 
 const Chessboard = () => {
 
+    const playerColor = 'BLACK';
     const [bordState, setBordState] = useState();
     const [error, setError] = useState(" ");
-    const [selectedSquare, setSelectedSquare] = useState({})
-    const [selectedPiece, setSelectedPiece] = useState({})
+    const [waitApi, setWaitApi] = useState(false);
+    const [selectedSquare, setSelectedSquare] = useState({});
+    const [selectedPiece, setSelectedPiece] = useState({});
 
     useEffect(() => {
+        setWaitApi(true)
         initGame()
             .then((boardData) => {
                 setBordState(boardData);
@@ -19,7 +22,8 @@ const Chessboard = () => {
             .catch((error) => {
                 console.log("error " + error);
                 setError(error.toString())
-            });
+            })
+            .finally(() => setWaitApi(false));
     }, []);
 
     useEffect(() => {
@@ -40,7 +44,8 @@ const Chessboard = () => {
         } else if (!isEmpty(selectedPiece) && row === selectedPiece.row && column === selectedPiece.column){
             setSelectedPiece({})
         } else {
-            findPiece(row, column) ? setSelectedPiece({row, column}) : setSelectedSquare({row, column});
+            const piece = findPiece(row, column);
+            (piece && piece.color === playerColor) ? setSelectedPiece({row, column}) : setSelectedSquare({row, column});
         }
     }
     const checkSquareSelected = (row, column) => {
@@ -61,15 +66,16 @@ const Chessboard = () => {
         computerMove();
     }
     const computerMove = () => {
+        setWaitApi(true);
         getComputerMove(bordState)
             .then(response => {
-                console.log("response: " + response);
                 setBordState(response);
             })
             .catch((error) => {
                 console.log("error " + error);
                 setError(error.toString())
-            });
+            })
+            .finally( () => setWaitApi(false));
     };
     const renderSquare = (row, column, piece) => {
         const isBlack = (row + column) % 2 === 1;
@@ -79,7 +85,9 @@ const Chessboard = () => {
             key={`${row}-${column}`}
             color={isBlack ? 'black' : 'white'}
             piece={piece}
-            onClick={() => onSquareClick(row, column)}
+            onClick={() => {
+                if (!waitApi) onSquareClick(row, column);
+            }}
             selected={isSelected}
             selectedPiece={isSelectedPiece}
         />;
@@ -96,7 +104,12 @@ const Chessboard = () => {
         return board;
     };
 
-    return <div className="chessboard">{(error !== " ") ? error : bordState? renderBoard() : error}</div>;
+    return (
+        <div>
+            <div className="chessboard">{(error !== " ") ? error : bordState? renderBoard() : error}</div>
+            {waitApi && <div className='loadingLabel'>Wait for API response</div>}
+        </div>
+    );
 };
 
 export default Chessboard;
