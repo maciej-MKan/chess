@@ -3,8 +3,12 @@ package pl.mkan.game.engine;
 import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.figures.*;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
 import static pl.mkan.game.engine.board.Utils.oppositeColor;
 
 public class AI {
@@ -51,27 +55,6 @@ public class AI {
                 .orElseThrow(() -> new RuntimeException("sth wrong"));
     }
 
-    private static List<Move> generatePossibleMoves(Board board, FigureColor activeColor) {
-        List<Move> allPossibleMoves = new ArrayList<>();
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                if (board.getFigure(col, row).getColor() == activeColor) {
-                    addPossibleMoves(col, row, allPossibleMoves, board);
-                }
-            }
-        }
-        return allPossibleMoves;
-    }
-
-    private static void addPossibleMoves(int col, int row, List<Move> allPossibleMoves, Board board) {
-        for (FigureMove potentialMove : board.getFigure(col, row).getPossibleMoves()) {
-            Board testBoard = board.deepCopy();
-            Move moveToCheck = new Move(col, row, potentialMove.getColumn() + col, potentialMove.getRow() + row);
-            if (testBoard.checkMove(moveToCheck)) {
-                allPossibleMoves.add(moveToCheck);
-            }
-        }
-    }
 
     private static int evaluateBoard(Board board, FigureColor activeColor) {
         int playerScore = 0;
