@@ -1,5 +1,6 @@
 package pl.mkan.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.mkan.controller.dto.AvailableMovesDTO;
 import pl.mkan.controller.dto.BoardDTO;
@@ -15,13 +16,14 @@ import java.util.stream.Collectors;
 
 import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
 
+@Slf4j
 @Service
 public class GameService {
     public BoardDTO getMove(BoardDTO board) {
         Board engineBoard = BoardDTOMapper.map(board.pieces());
-        System.out.println(engineBoard);
+        log.info(engineBoard.toString());
         engineBoard.AIMove();
-        System.out.println(engineBoard);
+        log.info(engineBoard.toString());
         return new BoardDTO(BoardDTOMapper.map(engineBoard));
     }
 
