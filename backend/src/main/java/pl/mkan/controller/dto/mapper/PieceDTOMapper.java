@@ -39,9 +39,10 @@ public class PieceDTOMapper {
         );
 
         FigureColor color = mapColor(piece.color());
+        int id = piece.id();
         Class<? extends Figure> figureClass = figureMapper.get(piece.type());
         try {
-            figure = figureClass.getDeclaredConstructor(FigureColor.class).newInstance(color);
+            figure = figureClass.getDeclaredConstructor(int.class, FigureColor.class).newInstance(id, color);
         } catch (Exception e) {
             return new None();
         }

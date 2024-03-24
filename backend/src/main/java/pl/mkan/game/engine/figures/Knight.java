@@ -1,15 +1,19 @@
 package pl.mkan.game.engine.figures;
 
-import lombok.AllArgsConstructor;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
 
 import java.util.ArrayList;
 import java.util.List;
-@AllArgsConstructor
 public class Knight extends Figure {
 
     private final FigureColor color;
+
+    public Knight(int id, FigureColor color) {
+        super.id = id;
+        this.color = color;
+    }
+
     @Override
     public FigureColor getColor() {
         return color;

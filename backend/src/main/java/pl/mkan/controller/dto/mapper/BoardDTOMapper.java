@@ -18,9 +18,13 @@ public class BoardDTOMapper {
                 Figure figure = engineBoard.getFigure(col, row);
                 if (!(figure instanceof None)) {
                     pieces.add(
-                            new PieceDTO(PieceDTOMapper.mapPiece(figure),
+                            new PieceDTO(
+                                    figure.getId(),
+                                    PieceDTOMapper.mapPiece(figure),
                                     PieceDTOMapper.mapColor(figure.getColor()),
-                                    new PositionDTO(row, col))
+                                    new PositionDTO(row, col),
+                                    !figure.isFirstMove()
+                            )
                     );
                 }
             }

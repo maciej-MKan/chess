@@ -8,6 +8,7 @@ import java.util.List;
 
 @Getter
 public abstract class Figure {
+    int id;
     private boolean firstMove = true;
     public abstract FigureColor getColor();
     public abstract List<FigureMove> getPossibleMoves();

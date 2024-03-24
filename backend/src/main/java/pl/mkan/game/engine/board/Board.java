@@ -48,24 +48,24 @@ public class Board {
 
     private void setPawns(FigureColor color, int row) {
         for (int col = 0; col < 8; col++) {
-            setFigure(col, row, new Pawn(color));
+            setFigure(col, row, new Pawn(((row + 1) * 10) + col + 1, color));
         }
     }
 
     private void setBeginningRoofFigures(int row, FigureColor color) {
-        setFigure(0, row, new Rook(color));
-        setFigure(1, row, new Knight(color));
-        setFigure(2, row, new Bishop(color));
+        setFigure(0, row, new Rook(((row + 1) * 10) + 1, color));
+        setFigure(1, row, new Knight(((row + 1) * 10) + 2, color));
+        setFigure(2, row, new Bishop(((row + 1) * 10) + 3, color));
         if (boardOrientation == BoardOrientation.BLACK_ON_TOP) {
-            setFigure(3, row, new Queen(color));
-            setFigure(4, row, new King(color));
+            setFigure(3, row, new Queen(((row + 1) * 10) + 4, color));
+            setFigure(4, row, new King(((row + 1) * 10) + 5, color));
         } else {
-            setFigure(3, row, new King(color));
-            setFigure(4, row, new Queen(color));
+            setFigure(3, row, new King(((row + 1) * 10) + 4, color));
+            setFigure(4, row, new Queen(((row + 1) * 10) + 5, color));
         }
-        setFigure(5, row, new Bishop(color));
-        setFigure(6, row, new Knight(color));
-        setFigure(7, row, new Rook(color));
+        setFigure(5, row, new Bishop(((row + 1) * 10) + 6, color));
+        setFigure(6, row, new Knight(((row + 1) * 10) + 7, color));
+        setFigure(7, row, new Rook(((row + 1) * 10) + 8, color));
     }
 
     public Figure getFigure(int col, int row) {
