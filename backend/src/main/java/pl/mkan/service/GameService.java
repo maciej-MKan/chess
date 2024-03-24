@@ -34,6 +34,7 @@ public class GameService {
 
     public AvailableMovesDTO calculateAvailableMoves(BoardDTO board) {
         Board engineBoard = BoardDTOMapper.map(board.pieces());
+        engineBoard.switchWhoseMove();
         List<Move> possibleMoves = generatePossibleMoves(engineBoard, engineBoard.getWhoseMove());
 
         Map<Figure, List<Move>> figureMovesMap = possibleMoves.stream()

@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {Square} from "./components/Square";
 import './Chessboard.css'
-import {getComputerMove, initGame} from "../../api/game";
+import {getAvailableMoves, getComputerMove, initGame} from "../../api/game";
 import {isEmpty} from "../utils";
 
 const Chessboard = () => {
 
     const playerColor = 'BLACK';
     const [bordState, setBordState] = useState();
+    const [availableMoves, setAvailableMoves] = useState({});
     const [error, setError] = useState(" ");
     const [waitApi, setWaitApi] = useState(false);
     const [selectedSquare, setSelectedSquare] = useState({});
@@ -19,12 +20,26 @@ const Chessboard = () => {
             .then((boardData) => {
                 setBordState(boardData);
             })
+            .then(() => fetchAvailableMoves())
             .catch((error) => {
                 console.log("error " + error);
                 setError(error.toString())
             })
             .finally(() => setWaitApi(false));
     }, []);
+
+    const fetchAvailableMoves = () => {
+        if (bordState && !isEmpty(bordState)) {
+            getAvailableMoves(bordState)
+                .then((availableMovesData) =>
+                    setAvailableMoves(availableMovesData.availableMoves)
+                )
+                .catch((error) => {
+                    console.log("error " + error);
+                    setError(error.toString())
+                })
+        }
+    };
 
     useEffect(() => {
         setSelectedSquare({});
@@ -55,11 +70,22 @@ const Chessboard = () => {
     const checkPieceSelected = (row, column) => {
         return selectedPiece.row === row && selectedPiece.column === column;
     }
+
+    const checkSquareActive = (row, column) => {
+        if (findPiece(row, column)?.color === playerColor) return true;
+        if (!isEmpty(selectedPiece)) {
+            const id = findPiece(selectedPiece.row, selectedPiece.column)?.id;
+            return (availableMoves[id]?.some(move => move.row === row && move.column === column));
+        }
+        return false;
+    };
     const playerMove = () => {
         console.log("move " + selectedPiece.row + " " + selectedPiece.column + " to " + selectedSquare.row + " " + selectedSquare.column);
         const piece = findPiece(selectedPiece.row, selectedPiece.column);
         piece.position.row = selectedSquare.row;
         piece.position.column = selectedSquare.column;
+        piece.moved = true;
+        console.log(piece.moved)
         console.log(bordState);
         setSelectedPiece({});
         setSelectedSquare({});
@@ -71,6 +97,7 @@ const Chessboard = () => {
             .then(response => {
                 setBordState(response);
             })
+            .then(() => fetchAvailableMoves())
             .catch((error) => {
                 console.log("error " + error);
                 setError(error.toString())
@@ -81,15 +108,17 @@ const Chessboard = () => {
         const isBlack = (row + column) % 2 === 1;
         const isSelected = checkSquareSelected(row, column);
         const isSelectedPiece = checkPieceSelected(row, column);
+        const isActive = checkSquareActive(row, column);
         return <Square
             key={`${row}-${column}`}
             color={isBlack ? 'black' : 'white'}
             piece={piece}
             onClick={() => {
-                if (!waitApi) onSquareClick(row, column);
+                if (!waitApi && isActive) onSquareClick(row, column);
             }}
             selected={isSelected}
             selectedPiece={isSelectedPiece}
+            active={isActive}
         />;
     };
 

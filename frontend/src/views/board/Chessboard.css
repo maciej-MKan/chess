@@ -35,6 +35,14 @@
     background-color: rgba(181, 136, 99, 0.5);
 }
 
+.white_active {
+    background-color: rgba(240, 217, 181, 0.5);
+}
+
+.black_active {
+    background-color: rgba(181, 136, 99, 0.5);
+}
+
 .piece_black {
     width: 80%;
     height: 80%;

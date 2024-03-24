@@ -82,6 +82,10 @@ public class Board {
         figure.setMoved();
         setFigure(move.getDestCol(), move.getDestRow(), figure);
         setFigure(move.getSourceCol(), move.getSourceRow(), new None());
+        switchWhoseMove();
+    }
+
+    public void switchWhoseMove() {
         whoseMove = oppositeColor(whoseMove);
     }
 

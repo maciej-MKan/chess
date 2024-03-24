@@ -1,6 +1,5 @@
 package pl.mkan.controller.dto.mapper;
 
-import pl.mkan.controller.dto.PieceDTO;
 import pl.mkan.controller.dto.PositionDTO;
 import pl.mkan.game.engine.Move;
 import pl.mkan.game.engine.figures.Figure;
@@ -13,20 +12,12 @@ public class MovesDTOMapper {
     public static Map<Integer, List<PositionDTO>> map(Map<Figure, List<Move>> figureMovesMap) {
 
         return figureMovesMap.entrySet().stream()
-                .map(entry -> Map.entry(new PieceDTO(
-                                entry.getKey().getId(),
-                                PieceDTOMapper.mapPiece(entry.getKey()),
-                                PieceDTOMapper.mapColor(entry.getKey().getColor()),
-                                new PositionDTO(
-                                        entry.getValue().stream().findAny().orElseThrow().getSourceCol(),
-                                        entry.getValue().stream().findAny().orElseThrow().getSourceRow()
-
-                                ),
-                                !entry.getKey().isFirstMove()),
+                .map(entry -> Map.entry(
+                        entry.getKey().getId(),
                         entry.getValue().stream()
-                                .map(move -> new PositionDTO(move.getDestCol(), move.getDestRow()))
+                                .map(move -> new PositionDTO(move.getDestRow(), move.getDestCol()))
                                 .toList()
                 ))
-                .collect(Collectors.toMap((entry -> entry.getKey().id()), (Map.Entry::getValue)));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
