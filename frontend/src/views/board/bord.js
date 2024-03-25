@@ -19,8 +19,8 @@ const Chessboard = () => {
         initGame()
             .then((boardData) => {
                 setBordState(boardData);
+                fetchAvailableMoves(boardData);
             })
-            .then(() => fetchAvailableMoves())
             .catch((error) => {
                 console.log("error " + error);
                 setError(error.toString())
@@ -28,9 +28,10 @@ const Chessboard = () => {
             .finally(() => setWaitApi(false));
     }, []);
 
-    const fetchAvailableMoves = () => {
-        if (bordState && !isEmpty(bordState)) {
-            getAvailableMoves(bordState)
+    const fetchAvailableMoves = (board) => {
+        console.log('try get available moves' + board)
+        if (board && !isEmpty(board)) {
+            getAvailableMoves(board)
                 .then((availableMovesData) =>
                     setAvailableMoves(availableMovesData.availableMoves)
                 )
@@ -94,10 +95,10 @@ const Chessboard = () => {
     const computerMove = () => {
         setWaitApi(true);
         getComputerMove(bordState)
-            .then(response => {
-                setBordState(response);
+            .then(boardData => {
+                setBordState(boardData);
+                fetchAvailableMoves(boardData);
             })
-            .then(() => fetchAvailableMoves())
             .catch((error) => {
                 console.log("error " + error);
                 setError(error.toString())
