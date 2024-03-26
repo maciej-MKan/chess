@@ -78,10 +78,10 @@ public class Board {
 
     public void move(Move move) {
         prevBoard = deepCopy();
-        Figure figure = getFigure(move.getSourceCol(), move.getSourceRow());
+        Figure figure = getFigure(move.sourceCol(), move.sourceRow());
         figure.setMoved();
-        setFigure(move.getDestCol(), move.getDestRow(), figure);
-        setFigure(move.getSourceCol(), move.getSourceRow(), new None());
+        setFigure(move.destCol(), move.destRow(), figure);
+        setFigure(move.sourceCol(), move.sourceRow(), new None());
         switchWhoseMove();
     }
 
@@ -112,30 +112,37 @@ public class Board {
     }
 
     private boolean isTargetOnBoard(Move move) {
-        return move.getDestCol() >= 0 && move.getDestCol() < 8 && move.getDestRow() >= 0 && move.getDestRow() < 8;
+        return move.destCol() >= 0 && move.destCol() < 8 && move.destRow() >= 0 && move.destRow() < 8;
     }
 
     private boolean targetFieldIsEmptyOrEnemy(Move move) {
-        return (getFigure(move.getDestCol(), move.getDestRow()) instanceof None) || (getFigure(move.getDestCol(), move.getDestRow()).getColor() != whoseMove);
+        return (getFigure(move.destCol(), move.destRow()) instanceof None) || (getFigure(move.destCol(), move.destRow()).getColor() != whoseMove);
     }
 
     private boolean isValidMove(Move move) {
-        boolean isCapture = !(getFigure(move.getDestCol(), move.getDestRow()) instanceof None);
-        boolean isFirstMove = getFigure(move.getSourceCol(), move.getSourceRow()).isFirstMove();
-        int deltaCol = move.getDestCol() - move.getSourceCol();
-        int deltaRow = move.getDestRow() - move.getSourceRow();
+        boolean isCapture = !(getFigure(move.destCol(), move.destRow()) instanceof None);
+        boolean isFirstMove = getFigure(move.sourceCol(), move.sourceRow()).isFirstMove();
+        int deltaCol = move.destCol() - move.sourceCol();
+        int deltaRow = move.destRow() - move.sourceRow();
         boolean isMoveInColorDirection = checkMoveInColorDirection(move);
-        return getFigure(move.getSourceCol(), move.getSourceRow()).getPossibleMoves().stream().filter(pm -> !pm.isHaveToBeFirstMove() || pm.isHaveToBeFirstMove() == isFirstMove).filter(pm -> pm.getColumn() == deltaCol).filter(pm -> pm.getRow() == deltaRow).filter(pm -> pm.isHaveToCapture() == isCapture).filter(pm -> pm.isCanJump() || isPathClear(move)).anyMatch(pm -> !pm.isOnlyInColorDirection() || isMoveInColorDirection);
+        return getFigure(move.sourceCol(), move.sourceRow())
+                .getPossibleMoves().stream()
+                .filter(pm -> !pm.isHaveToBeFirstMove() || (pm.isHaveToBeFirstMove() == isFirstMove))
+                .filter(pm -> pm.getColumn() == deltaCol)
+                .filter(pm -> pm.getRow() == deltaRow)
+                .filter(pm -> pm.isHaveToCapture() == isCapture)
+                .filter(pm -> pm.isCanJump() || isPathClear(move))
+                .anyMatch(pm -> !pm.isOnlyInColorDirection() || isMoveInColorDirection);
     }
 
     private boolean isPathClear(Move move) {
         boolean result = true;
-        int deltaCol = Integer.compare(move.getDestCol(), move.getSourceCol());
-        int deltaRow = Integer.compare(move.getDestRow(), move.getSourceRow());
-        int currentCol = move.getSourceCol() + deltaCol;
-        int currentRow = move.getSourceRow() + deltaRow;
+        int deltaCol = Integer.compare(move.destCol(), move.sourceCol());
+        int deltaRow = Integer.compare(move.destRow(), move.sourceRow());
+        int currentCol = move.sourceCol() + deltaCol;
+        int currentRow = move.sourceRow() + deltaRow;
 
-        while (currentCol != move.getDestCol() || currentRow != move.getDestRow()) {
+        while (currentCol != move.destCol() || currentRow != move.destRow()) {
             if (!(getFigure(currentCol, currentRow) instanceof None)) {
                 result = false;
             }
@@ -149,27 +156,27 @@ public class Board {
     private boolean checkMoveInColorDirection(Move move) {
         boolean isMoveInColorDirection;
         if (boardOrientation == BoardOrientation.WHITE_ON_TOP) {
-            if (getFigure(move.getSourceCol(), move.getSourceRow()).getColor() == FigureColor.WHITE) {
-                isMoveInColorDirection = move.getDestRow() > move.getSourceRow();
+            if (getFigure(move.sourceCol(), move.sourceRow()).getColor() == FigureColor.WHITE) {
+                isMoveInColorDirection = move.destRow() > move.sourceRow();
             } else {
-                isMoveInColorDirection = move.getDestRow() < move.getSourceRow();
+                isMoveInColorDirection = move.destRow() < move.sourceRow();
             }
         } else {
-            if (getFigure(move.getSourceCol(), move.getSourceRow()).getColor() == FigureColor.WHITE) {
-                isMoveInColorDirection = move.getDestRow() < move.getSourceRow();
+            if (getFigure(move.sourceCol(), move.sourceRow()).getColor() == FigureColor.WHITE) {
+                isMoveInColorDirection = move.destRow() < move.sourceRow();
             } else {
-                isMoveInColorDirection = move.getDestRow() > move.getSourceRow();
+                isMoveInColorDirection = move.destRow() > move.sourceRow();
             }
         }
         return isMoveInColorDirection;
     }
 
     private boolean checkFigureColor(Move move) {
-        return getFigure(move.getSourceCol(), move.getSourceRow()).getColor() == whoseMove;
+        return getFigure(move.sourceCol(), move.sourceRow()).getColor() == whoseMove;
     }
 
     private boolean checkIfMovingFigure(Move move) {
-        Figure figure = getFigure(move.getSourceCol(), move.getSourceRow());
+        Figure figure = getFigure(move.sourceCol(), move.sourceRow());
         return !(figure instanceof None);
     }
 
@@ -191,6 +198,7 @@ public class Board {
                 Figure figure = getFigure(col, row);
                 if (!(figure instanceof None)) {
                     Figure newFigure = FigureFactory.createFigureCopy(figure);
+                    if (!figure.isFirstMove()) newFigure.setMoved();
                     newBoard.setFigure(col, row, newFigure);
                 }
             }

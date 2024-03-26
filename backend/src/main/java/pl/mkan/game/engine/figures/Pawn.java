@@ -12,6 +12,7 @@ public class Pawn extends Figure {
 
     public Pawn(int id, FigureColor color) {
         super.id = id;
+        super.firstMove = true;
         this.color = color;
     }
 

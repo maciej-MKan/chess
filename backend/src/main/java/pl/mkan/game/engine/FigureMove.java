@@ -39,27 +39,27 @@ public class FigureMove {
         this.canJump = canJump;
     }
 
-    public boolean isCanJump() {
-        return canJump;
-    }
-
-    public boolean isOnlyInColorDirection() {
-        return onlyInColorDirection;
-    }
-
-    public boolean isHaveToCapture() {
-        return haveToCapture;
-    }
-
-    public boolean isHaveToBeFirstMove() {
-        return haveToBeFirstMove;
-    }
-
     public int getColumn() {
-        return column;
+        return this.column;
     }
 
     public int getRow() {
-        return row;
+        return this.row;
+    }
+
+    public boolean isOnlyInColorDirection() {
+        return this.onlyInColorDirection;
+    }
+
+    public boolean isHaveToCapture() {
+        return this.haveToCapture;
+    }
+
+    public boolean isHaveToBeFirstMove() {
+        return this.haveToBeFirstMove;
+    }
+
+    public boolean isCanJump() {
+        return this.canJump;
     }
 }

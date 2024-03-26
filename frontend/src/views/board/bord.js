@@ -49,7 +49,7 @@ const Chessboard = () => {
     useEffect(() => {
         if (!isEmpty(selectedSquare) && !isEmpty(selectedPiece)){
             playerMove();
-        }
+        } // eslint-disable-next-line
     }, [selectedSquare, selectedPiece]);
 
 

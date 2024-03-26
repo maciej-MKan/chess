@@ -15,7 +15,7 @@ public class MovesDTOMapper {
                 .map(entry -> Map.entry(
                         entry.getKey().getId(),
                         entry.getValue().stream()
-                                .map(move -> new PositionDTO(move.getDestRow(), move.getDestCol()))
+                                .map(move -> new PositionDTO(move.destRow(), move.destCol()))
                                 .toList()
                 ))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

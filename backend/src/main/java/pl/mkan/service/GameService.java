@@ -21,9 +21,9 @@ import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
 public class GameService {
     public BoardDTO getMove(BoardDTO board) {
         Board engineBoard = BoardDTOMapper.map(board.pieces());
-        log.info(engineBoard.toString());
+        log.info("Board state before move:\n{}", engineBoard);
         engineBoard.AIMove();
-        log.info(engineBoard.toString());
+        log.info("Board state after move:\n{}", engineBoard);
         return new BoardDTO(BoardDTOMapper.map(engineBoard));
     }
 
@@ -41,7 +41,7 @@ public class GameService {
 
         Map<Figure, List<Move>> figureMovesMap = possibleMoves.stream()
                 .collect(
-                        Collectors.groupingBy(move -> engineBoard.getFigure(move.getSourceCol(), move.getSourceRow()))
+                        Collectors.groupingBy(move -> engineBoard.getFigure(move.sourceCol(), move.sourceRow()))
                 );
         return new AvailableMovesDTO(MovesDTOMapper.map(figureMovesMap));
     }
