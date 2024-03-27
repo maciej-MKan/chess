@@ -21,8 +21,14 @@ dependencies {
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	runtimeOnly 'org.springframework.boot:spring-boot-docker-compose'
 
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.slf4j:slf4j-api:2.0.5'
+	testImplementation 'io.rest-assured:rest-assured:5.3.0'
+	testImplementation 'org.testng:testng:7.7.1'
 }
 
 tasks.named('test') {
