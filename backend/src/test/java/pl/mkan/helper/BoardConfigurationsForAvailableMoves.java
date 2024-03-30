@@ -7,10 +7,10 @@ public class BoardConfigurationsForAvailableMoves {
         return Stream.of(
                 new Object[]{
                         "{\"pieces\": [{\"id\": 11, \"type\": \"ROOK\", \"color\": \"BLACK\", \"position\": {\"row\": 0, \"column\": 0}, \"moved\": true}]}",
-                        28},
+                        14},
                 new Object[]{
                         "{\"pieces\": [{\"id\": 11, \"type\": \"KNIGHT\", \"color\": \"BLACK\", \"position\": {\"row\": 2, \"column\": 5}, \"moved\": false}]}",
-                        16}
+                        8}
         );
     }
 }

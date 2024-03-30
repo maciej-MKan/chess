@@ -36,7 +36,7 @@ public class ApiTest {
     }
 
     @ParameterizedTest
-    @MethodSource("pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardPawnConfig")
+    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardPawnConfig" })
     public void getAvailableMoves(String requestBody, int expectedMovesCount) {
         given()
                 .contentType(ContentType.JSON)
@@ -45,6 +45,7 @@ public class ApiTest {
                 .post("http://localhost:" + port + API_PATH + "/game/available_moves")
                 .then()
                 .statusCode(200)
+                .log().body()
                 .body("availableMoves.11.size()", equalTo(expectedMovesCount));
     }
 

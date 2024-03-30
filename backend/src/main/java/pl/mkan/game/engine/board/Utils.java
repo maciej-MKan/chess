@@ -5,7 +5,9 @@ import pl.mkan.game.engine.FigureMove;
 import pl.mkan.game.engine.Move;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Utils {
     public static FigureColor oppositeColor(FigureColor color) {
@@ -25,12 +27,15 @@ public class Utils {
     }
 
     private static void addPossibleMoves(int col, int row, List<Move> allPossibleMoves, Board board) {
-        for (FigureMove potentialMove : board.getFigure(col, row).getPossibleMoves()) {
+        List<FigureMove> possibleMoves = board.getFigure(col, row).getPossibleMoves();
+        Set<Move> moves = new HashSet<>();
+        for (FigureMove potentialMove : possibleMoves) {
             Board testBoard = board.deepCopy();
             Move moveToCheck = new Move(col, row, potentialMove.getColumn() + col, potentialMove.getRow() + row);
             if (testBoard.checkMove(moveToCheck)) {
-                allPossibleMoves.add(moveToCheck);
+                moves.add(moveToCheck);
             }
         }
+        allPossibleMoves.addAll(moves);
     }
 }
