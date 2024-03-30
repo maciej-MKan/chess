@@ -2,6 +2,8 @@ package pl.mkan.integration;
 
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -31,6 +33,19 @@ public class ApiTest {
                 .body("pieces.find { it.id == 12 }.color", equalTo("WHITE"))
                 .body("pieces.find { it.id == 13 }.position.row", equalTo(0))
                 .body("pieces.find { it.id == 13 }.position.column", equalTo(2));
+    }
+
+    @ParameterizedTest
+    @MethodSource("pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardPawnConfig")
+    public void getAvailableMoves(String requestBody, int expectedMovesCount) {
+        given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("http://localhost:" + port + API_PATH + "/game/available_moves")
+                .then()
+                .statusCode(200)
+                .body("availableMoves.11.size()", equalTo(expectedMovesCount));
     }
 
 }
