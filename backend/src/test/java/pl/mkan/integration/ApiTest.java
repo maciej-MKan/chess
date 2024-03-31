@@ -38,7 +38,7 @@ public class ApiTest {
 
     @ParameterizedTest
     @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardPawnConfig" })
-    public void getAvailableMoves(String requestBody, int expectedMovesCount) {
+    public void getPawnAvailableMoves(String requestBody, int expectedMovesCount) {
         Response response = given()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
@@ -47,9 +47,129 @@ public class ApiTest {
 
         if (expectedMovesCount > 0)
             response
-                .then()
-                .statusCode(200)
-                .log().body()
+                    .then()
+                    .statusCode(200)
+                    .log().body()
+                    .body("availableMoves.11", hasSize(expectedMovesCount));
+        else {
+            response
+                    .then()
+                    .statusCode(200)
+                    .log().body()
+                    .body("availableMoves.11", nullValue());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardRookConfig" })
+    public void getRookAvailableMoves(String requestBody, int expectedMovesCount) {
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("http://localhost:" + port + API_PATH + "/game/available_moves");
+
+        if (expectedMovesCount > 0)
+            response
+                    .then()
+                    .statusCode(200)
+                    .log().body()
+                    .body("availableMoves.11", hasSize(expectedMovesCount));
+        else {
+            response
+                    .then()
+                    .statusCode(200)
+                    .log().body()
+                    .body("availableMoves.11", nullValue());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardKnightConfig" })
+    public void getKnightAvailableMoves(String requestBody, int expectedMovesCount) {
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("http://localhost:" + port + API_PATH + "/game/available_moves");
+
+        if (expectedMovesCount > 0)
+            response
+                    .then()
+                    .statusCode(200)
+                    .log().body()
+                    .body("availableMoves.11", hasSize(expectedMovesCount));
+        else {
+            response
+                    .then()
+                    .statusCode(200)
+                    .log().body()
+                    .body("availableMoves.11", nullValue());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardBishopConfig" })
+    public void getBishopAvailableMoves(String requestBody, int expectedMovesCount) {
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("http://localhost:" + port + API_PATH + "/game/available_moves");
+
+        if (expectedMovesCount > 0)
+            response
+                    .then()
+                    .statusCode(200)
+                    .log().body()
+                    .body("availableMoves.11", hasSize(expectedMovesCount));
+        else {
+            response
+                    .then()
+                    .statusCode(200)
+                    .log().body()
+                    .body("availableMoves.11", nullValue());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardQueenConfig" })
+    public void getQueenAvailableMoves(String requestBody, int expectedMovesCount) {
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("http://localhost:" + port + API_PATH + "/game/available_moves");
+
+        if (expectedMovesCount > 0)
+            response
+                    .then()
+                    .statusCode(200)
+                    .log().body()
+                    .body("availableMoves.11", hasSize(expectedMovesCount));
+        else {
+            response
+                    .then()
+                    .statusCode(200)
+                    .log().body()
+                    .body("availableMoves.11", nullValue());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardKingConfig" })
+    public void getKingAvailableMoves(String requestBody, int expectedMovesCount) {
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("http://localhost:" + port + API_PATH + "/game/available_moves");
+
+        if (expectedMovesCount > 0)
+            response
+                    .then()
+                    .statusCode(200)
+                    .log().body()
                     .body("availableMoves.11", hasSize(expectedMovesCount));
         else {
             response
