@@ -1,6 +1,7 @@
 package pl.mkan.integration;
 
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -10,7 +11,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static pl.mkan.controller.rest.GameController.API_PATH;
 
 @ActiveProfiles("test")
@@ -38,15 +39,25 @@ public class ApiTest {
     @ParameterizedTest
     @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardPawnConfig" })
     public void getAvailableMoves(String requestBody, int expectedMovesCount) {
-        given()
+        Response response = given()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
-                .post("http://localhost:" + port + API_PATH + "/game/available_moves")
+                .post("http://localhost:" + port + API_PATH + "/game/available_moves");
+
+        if (expectedMovesCount > 0)
+            response
                 .then()
                 .statusCode(200)
                 .log().body()
-                .body("availableMoves.11.size()", equalTo(expectedMovesCount));
+                    .body("availableMoves.11", hasSize(expectedMovesCount));
+        else {
+            response
+                    .then()
+                    .statusCode(200)
+                    .log().body()
+                    .body("availableMoves.11", nullValue());
+        }
     }
 
 }
