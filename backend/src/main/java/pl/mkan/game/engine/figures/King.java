@@ -30,6 +30,7 @@ public class King extends Figure {
     private void addKingMoves(List<FigureMove> moves, boolean haveToCapture) {
         moves.add(new FigureMove(-1, -1, false, haveToCapture, false));
         moves.add(new FigureMove(-1, 1, false, haveToCapture, false));
+        moves.add(new FigureMove(1, 1, false, haveToCapture, false));
         moves.add(new FigureMove(1, -1, false, haveToCapture, false));
         moves.add(new FigureMove(0, 1, false, haveToCapture, false));
         moves.add(new FigureMove(1, 0, false, haveToCapture, false));
