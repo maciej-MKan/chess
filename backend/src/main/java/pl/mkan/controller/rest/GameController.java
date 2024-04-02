@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.mkan.controller.dto.AvailableMovesDTO;
 import pl.mkan.controller.dto.BoardDTO;
+import pl.mkan.controller.dto.GameOverDTO;
 import pl.mkan.service.GameService;
 
 @Slf4j
@@ -33,5 +34,11 @@ public class GameController {
     public ResponseEntity<AvailableMovesDTO> getAvailableMoves(@RequestBody @Valid BoardDTO board) {
         log.info("Handle POST request at '/game/available_moves' with object [{}]", board);
         return ResponseEntity.ok(gameService.calculateAvailableMoves(board));
+    }
+
+    @PostMapping(value = "/game/game_over")
+    public ResponseEntity<GameOverDTO> checkGameOver(@RequestBody @Valid BoardDTO board) {
+        log.info("Handle game over request with state [{}]", board);
+        return ResponseEntity.ok(gameService.checkGameOver(board));
     }
 }

@@ -4,6 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.mkan.controller.dto.AvailableMovesDTO;
 import pl.mkan.controller.dto.BoardDTO;
+import pl.mkan.controller.dto.GameOverDTO;
+import pl.mkan.controller.dto.PieceDTO;
+import pl.mkan.controller.dto.enums.PieceType;
 import pl.mkan.controller.dto.mapper.BoardDTOMapper;
 import pl.mkan.controller.dto.mapper.MovesDTOMapper;
 import pl.mkan.game.engine.Move;
@@ -44,5 +47,16 @@ public class GameService {
                         Collectors.groupingBy(move -> engineBoard.getFigure(move.sourceCol(), move.sourceRow()))
                 );
         return new AvailableMovesDTO(MovesDTOMapper.map(figureMovesMap));
+    }
+
+    public GameOverDTO checkGameOver(BoardDTO board) {
+        List<PieceDTO> kingsOnBoard = board.pieces().stream()
+                .filter(pieceDTO -> pieceDTO.type().equals(PieceType.KING))
+                .toList();
+
+        if (kingsOnBoard.size() == 1) {
+            return new GameOverDTO(true, kingsOnBoard.get(0).color());
+        }
+        return new GameOverDTO(false, null);
     }
 }
