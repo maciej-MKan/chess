@@ -48,7 +48,32 @@ export const getAvailableMoves = async (bordState) => {
             return {};
         }
     } catch (error) {
-        console.log('Error fetching computer move: ', error);
+        console.log('Error fetching available moves: ', error);
+        throw error;
+    }
+};
+
+export const getGameState = async (boardState) => {
+    const url = 'http://localhost:8080/api/game/game_over';
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(boardState),
+        });
+        if (response.ok) {
+            return await response.json();
+        } else {
+            return {
+                isGameOver: false,
+                winner: null
+            }
+        }
+    } catch (error) {
+        console.log('Error fetching game state: ', error) ;
         throw error;
     }
 };

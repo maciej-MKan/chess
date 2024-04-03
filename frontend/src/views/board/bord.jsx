@@ -1,16 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {Square} from "./components/Square";
 import './Chessboard.css'
-import {getAvailableMoves, getComputerMove, initGame} from "../../api/game";
+import {getAvailableMoves, getComputerMove, getGameState, initGame} from "../../api/game";
 import {isEmpty} from "../utils";
 
 const Chessboard = () => {
 
     const playerColor = 'BLACK';
-    const [bordState, setBordState] = useState();
+    const [boardState, setBoardState] = useState();
     const [availableMoves, setAvailableMoves] = useState({});
     const [error, setError] = useState(" ");
     const [waitApi, setWaitApi] = useState(false);
+    const [gameOver, setGameOver] = useState(false);
+    const [winner, setWinner] = useState(null)
     const [selectedSquare, setSelectedSquare] = useState({});
     const [selectedPiece, setSelectedPiece] = useState({});
 
@@ -18,7 +20,7 @@ const Chessboard = () => {
         setWaitApi(true)
         initGame()
             .then((boardData) => {
-                setBordState(boardData);
+                setBoardState(boardData);
                 fetchAvailableMoves(boardData);
             })
             .catch((error) => {
@@ -28,12 +30,31 @@ const Chessboard = () => {
             .finally(() => setWaitApi(false));
     }, []);
 
+    useEffect(() => {
+        if (boardState && !isEmpty(boardState)) {
+            getGameState(boardState)
+                .then((gameStateData) => {
+                    if (gameStateData.isGameOver) {
+                        setGameOver(true);
+                        setWinner(gameStateData.winner);
+                        setAvailableMoves({})
+                    }
+                        console.log('game over: ' + gameStateData.isGameOver);
+                    }
+                )
+                .catch((error) => {
+                    console.log("error " + error);
+                    setError(error.toString())
+                })
+        }
+    }, [boardState]);
+
     const fetchAvailableMoves = (board) => {
         console.log('try get available moves' + board)
-        if (board && !isEmpty(board)) {
+        if (board && !isEmpty(board) && !gameOver) {
             getAvailableMoves(board)
                 .then((availableMovesData) =>
-                    setAvailableMoves(availableMovesData.availableMoves)
+                    setAvailableMoves(!gameOver ? (availableMovesData.availableMoves) : {})
                 )
                 .catch((error) => {
                     console.log("error " + error);
@@ -47,17 +68,17 @@ const Chessboard = () => {
     }, [selectedPiece]);
 
     useEffect(() => {
-        if (!isEmpty(selectedSquare) && !isEmpty(selectedPiece)){
+        if (!isEmpty(selectedSquare) && !isEmpty(selectedPiece)) {
             playerMove();
         } // eslint-disable-next-line
     }, [selectedSquare, selectedPiece]);
 
 
-    const findPiece = (row, column) => bordState.pieces.find(piece => piece.position.row === row && piece.position.column === column);
+    const findPiece = (row, column) => boardState.pieces.find(piece => piece.position.row === row && piece.position.column === column);
     const onSquareClick = (row, column) => {
-        if (!isEmpty(selectedSquare) && row === selectedSquare.row && column === selectedSquare.column){
+        if (!isEmpty(selectedSquare) && row === selectedSquare.row && column === selectedSquare.column) {
             setSelectedSquare({})
-        } else if (!isEmpty(selectedPiece) && row === selectedPiece.row && column === selectedPiece.column){
+        } else if (!isEmpty(selectedPiece) && row === selectedPiece.row && column === selectedPiece.column) {
             setSelectedPiece({})
         } else {
             const piece = findPiece(row, column);
@@ -87,23 +108,23 @@ const Chessboard = () => {
         piece.position.column = selectedSquare.column;
         piece.moved = true;
         console.log(piece.moved)
-        console.log(bordState);
+        console.log(boardState);
         setSelectedPiece({});
         setSelectedSquare({});
         computerMove();
     }
     const computerMove = () => {
         setWaitApi(true);
-        getComputerMove(bordState)
+        getComputerMove(boardState)
             .then(boardData => {
-                setBordState(boardData);
+                setBoardState(boardData);
                 fetchAvailableMoves(boardData);
             })
             .catch((error) => {
                 console.log("error " + error);
                 setError(error.toString())
             })
-            .finally( () => setWaitApi(false));
+            .finally(() => setWaitApi(false));
     };
     const renderSquare = (row, column, piece) => {
         const isBlack = (row + column) % 2 === 1;
@@ -128,7 +149,7 @@ const Chessboard = () => {
         for (let row = 0; row < 8; row++) {
             for (let column = 0; column < 8; column++) {
                 const piece = findPiece(row, column);
-                board.push(renderSquare(row, column, piece? piece: null));
+                board.push(renderSquare(row, column, piece ? piece : null));
             }
         }
         return board;
@@ -136,8 +157,9 @@ const Chessboard = () => {
 
     return (
         <div>
-            <div className="chessboard">{(error !== " ") ? error : bordState? renderBoard() : error}</div>
+            <div className="chessboard">{(error !== " ") ? error : boardState ? renderBoard() : error}</div>
             {waitApi && <div className='loadingLabel'>Wait for API response</div>}
+            {gameOver && <div className='gameOver'>Game Over, the winner is {winner}</div>}
         </div>
     );
 };

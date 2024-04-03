@@ -11,6 +11,13 @@
     font-size: 40px;
 }
 
+.gameOver {
+    color: #53b618;
+    margin: 10px;
+    align-self: center;
+    font-size: 40px;
+}
+
 .square {
     width: 100px;
     height: 100px;
