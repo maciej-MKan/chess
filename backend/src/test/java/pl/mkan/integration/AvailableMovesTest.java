@@ -22,7 +22,7 @@ public class AvailableMovesTest {
     private int port;
 
     @ParameterizedTest
-    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardPawnConfig" })
+    @MethodSource({"pl.mkan.helper.BoardConfigForAvailableMoves#boardPawnConfig"})
     public void getPawnAvailableMoves(String requestBody, int expectedMovesCount) {
         Response response = given()
                 .contentType(ContentType.JSON)
@@ -46,7 +46,7 @@ public class AvailableMovesTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardRookConfig" })
+    @MethodSource({"pl.mkan.helper.BoardConfigForAvailableMoves#boardRookConfig"})
     public void getRookAvailableMoves(String requestBody, int expectedMovesCount) {
         Response response = given()
                 .contentType(ContentType.JSON)
@@ -70,7 +70,7 @@ public class AvailableMovesTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardKnightConfig" })
+    @MethodSource({"pl.mkan.helper.BoardConfigForAvailableMoves#boardKnightConfig"})
     public void getKnightAvailableMoves(String requestBody, int expectedMovesCount) {
         Response response = given()
                 .contentType(ContentType.JSON)
@@ -94,7 +94,7 @@ public class AvailableMovesTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardBishopConfig" })
+    @MethodSource({"pl.mkan.helper.BoardConfigForAvailableMoves#boardBishopConfig"})
     public void getBishopAvailableMoves(String requestBody, int expectedMovesCount) {
         Response response = given()
                 .contentType(ContentType.JSON)
@@ -118,7 +118,7 @@ public class AvailableMovesTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardQueenConfig" })
+    @MethodSource({"pl.mkan.helper.BoardConfigForAvailableMoves#boardQueenConfig"})
     public void getQueenAvailableMoves(String requestBody, int expectedMovesCount) {
         Response response = given()
                 .contentType(ContentType.JSON)
@@ -142,7 +142,7 @@ public class AvailableMovesTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"pl.mkan.helper.BoardConfigurationsForAvailableMoves#boardKingConfig" })
+    @MethodSource({"pl.mkan.helper.BoardConfigForAvailableMoves#boardKingConfig"})
     public void getKingAvailableMoves(String requestBody, int expectedMovesCount) {
         Response response = given()
                 .contentType(ContentType.JSON)

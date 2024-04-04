@@ -4,7 +4,7 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.stream.Stream;
 
-public class BoardConfigurationsForAvailableMoves {
+public class BoardConfigForAvailableMoves {
     public static Stream<Arguments> boardPawnConfig() {
         return Stream.of(
                 Arguments.of(

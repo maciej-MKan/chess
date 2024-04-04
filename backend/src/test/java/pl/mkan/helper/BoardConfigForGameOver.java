@@ -4,7 +4,7 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.stream.Stream;
 
-public class BoardConfigurationForGameOver {
+public class BoardConfigForGameOver {
 
     public static Stream<Arguments> boardWithGameOver() {
         return Stream.of(

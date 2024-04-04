@@ -21,7 +21,7 @@ public class GameOverTest {
     private int port;
 
     @ParameterizedTest
-    @MethodSource({"pl.mkan.helper.BoardConfigurationForGameOver#boardWithGameOver" })
+    @MethodSource({"pl.mkan.helper.BoardConfigForGameOver#boardWithGameOver"})
     public void assertGameIsOver(String requestBody, boolean isGameOver, String winner) {
         given()
                 .contentType(ContentType.JSON)
@@ -36,7 +36,7 @@ public class GameOverTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"pl.mkan.helper.BoardConfigurationForGameOver#boardWithOutGameOver" })
+    @MethodSource({"pl.mkan.helper.BoardConfigForGameOver#boardWithOutGameOver"})
     public void assertGameNotOver(String requestBody, boolean isGameOver) {
         given()
                 .contentType(ContentType.JSON)
