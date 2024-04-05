@@ -1,5 +1,6 @@
 package pl.mkan.game.engine;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.figures.*;
 
@@ -11,9 +12,10 @@ import java.util.Map;
 import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
 import static pl.mkan.game.engine.board.Utils.oppositeColor;
 
+@Slf4j
 public class AI {
 
-    private static final int MAX_DEPTH = 2;
+    private static final int MAX_DEPTH = 1;
     private static final int alpha = Integer.MIN_VALUE;
     private static final int beta = Integer.MAX_VALUE;
 
@@ -26,7 +28,7 @@ public class AI {
 
         for (Move move : possibleMoves) {
             board.move(move);
-            int move_score = search(board, movingColor, depth - 1, -beta, -alpha) * depth;
+            int move_score = -search(board, movingColor, depth - 1, -beta, -alpha);
             board.backMove();
 
             if (move_score > alpha) {
@@ -41,13 +43,20 @@ public class AI {
 
     public static Move getBestMove(Board board, FigureColor color) {
         Map<Move, Integer> moveScores = new HashMap<>();
+        List<Move> moves = generatePossibleMoves(board, color);
 
-        for (Move move : generatePossibleMoves(board, color)) {
+        for (Move move : moves) {
             Board testBoard = board.deepCopy();
             testBoard.move(move);
             int score = search(testBoard, oppositeColor(color), MAX_DEPTH, alpha, beta);
             moveScores.put(move, score);
         }
+
+        log.debug(
+                moveScores.entrySet().stream()
+                        .map(moveEntry -> "move " + moveEntry.getKey() + " has score " + moveEntry.getValue())
+                        .toString()
+        );
 
         return moveScores.entrySet().stream()
                 .max(Comparator.comparingInt(Map.Entry::getValue))
@@ -83,7 +92,8 @@ public class AI {
                 Bishop.class, 5,
                 Knight.class, 5,
                 Rook.class, 10,
-                Queen.class, 20
+                Queen.class, 20,
+                King.class, 100
         );
         return figureScores.getOrDefault(figure.getClass(), 0);
     }

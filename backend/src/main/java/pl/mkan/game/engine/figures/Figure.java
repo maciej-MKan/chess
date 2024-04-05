@@ -9,10 +9,10 @@ import java.util.List;
 @Getter
 public abstract class Figure {
     int id;
-    boolean firstMove;
+    boolean isFirstMove = true;
     public abstract FigureColor getColor();
     public abstract List<FigureMove> getPossibleMoves();
     public void setMoved(){
-        firstMove = false;
+        isFirstMove = false;
     }
 }

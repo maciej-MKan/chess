@@ -31,6 +31,11 @@ dependencies {
 	testImplementation 'org.testng:testng:7.7.1'
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }
+
+compileJava.options.encoding = 'UTF-8'
