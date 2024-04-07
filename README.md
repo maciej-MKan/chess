@@ -5,5 +5,6 @@
 </p>
 
 [![Java CI](https://github.com/maciej-MKan/chess/actions/workflows/build-gradle-project.yml/badge.svg)](https://github.com/maciej-MKan/chess/actions/workflows/build-gradle-project.yml)
+[![Java CI](https://github.com/maciej-MKan/chess/actions/workflows/build-docker-images.yml/badge.svg)](https://github.com/maciej-MKan/chess/actions/workflows/build-docker-images.yml)
 
 Welcome to the Chess Game project! This project allows you to play chess against a computer opponent... some day.
