@@ -1,7 +1,16 @@
+const backendUri = import.meta.env.VITE_BACKEND_URI
+const frontUri = import.meta.env.VITE_FRONTEND_URI
+
 export const initGame = async () => {
-    const url = `http://localhost:8080/api/game`;
+    const url = `${backendUri}/api/game`;
     try {
-        const response = await fetch(url);
+        const response = await fetch(url,{
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Origin' : `${frontUri}`
+            }
+        });
         return await response.json();
     } catch (error) {
         console.error('Error fetching init game: ', error);
@@ -10,13 +19,14 @@ export const initGame = async () => {
 };
 
 export const getComputerMove = async (bordState) => {
-    const url = `http://localhost:8080/api/game`;
+    const url = `${backendUri}/api/game`;
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Origin' : `${frontUri}`
             },
             body: JSON.stringify(bordState),
         });
@@ -32,13 +42,14 @@ export const getComputerMove = async (bordState) => {
 };
 
 export const getAvailableMoves = async (bordState) => {
-    const url = `http://localhost:8080/api/game/available_moves`;
+    const url = `${backendUri}/api/game/available_moves`;
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Origin' : `${frontUri}`
             },
             body: JSON.stringify(bordState),
         });
@@ -54,13 +65,14 @@ export const getAvailableMoves = async (bordState) => {
 };
 
 export const getGameState = async (boardState) => {
-    const url = 'http://localhost:8080/api/game/game_over';
+    const url = `${backendUri}/api/game/game_over`;
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Origin' : `${frontUri}`
             },
             body: JSON.stringify(boardState),
         });

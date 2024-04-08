@@ -1,14 +1,31 @@
 version: '3'
+
+networks:
+  inter-network:
+    driver: bridge
+
 services:
-  backend:
+  backend-java:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
       - "8089:8080"
+    networks:
+      - inter-network
+    environment:
+      SPRING_PROFILES_ACTIVE: "docker"
+      server.front: "http://localhost:3000"
 
-  frontend:
+  frontend-vite:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    depends_on: [backend]
+    depends_on:
+      - backend-java
+    ports: 
+      - 3000:5173
+    networks:
+      - inter-network
+    environment:
+      - VITE_BACKEND_URI=http://localhost:8080

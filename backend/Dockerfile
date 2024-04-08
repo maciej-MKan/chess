@@ -1,8 +1,7 @@
 FROM gradle:latest AS BUILD
 WORKDIR /usr/app/
 COPY . .
-RUN chmod +x ./gradlew
-RUN ./gradlew clean build -x test
+RUN gradle clean build -x test
 
 FROM eclipse-temurin:17
 WORKDIR /app

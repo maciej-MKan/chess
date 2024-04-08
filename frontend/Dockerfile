@@ -4,10 +4,13 @@ WORKDIR /app
 
 COPY package.json .
 
-RUN npm install
+RUN npm install -g npm@10.5.1
+RUN npm install -g typescript
 
 COPY . .
 
+RUN npm run build
+
 EXPOSE 5173
 
-RUN npm run build
+CMD [ "npm", "run", "serve" ]
