@@ -6,6 +6,7 @@ COPY package.json .
 
 RUN npm install -g npm@10.5.1
 RUN npm install -g typescript
+RUN npm install
 
 COPY . .
 
