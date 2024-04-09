@@ -18,8 +18,12 @@ services:
       server.front: "http://localhost:3000"
 
   frontend-vite:
+    environment:
+      BACKEND_URI: "http://localhost:8080"
     build:
       context: ./frontend
+      args:
+        - VITE_BACKEND_URI=${BACKEND_URI}
       dockerfile: Dockerfile
     depends_on:
       - backend-java
@@ -27,5 +31,3 @@ services:
       - 3000:5173
     networks:
       - inter-network
-    environment:
-      - VITE_BACKEND_URI=http://localhost:8080

@@ -2,6 +2,10 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+ARG VITE_BACKEND_URI
+
+ENV VITE_BACKEND_URI=$VITE_BACKEND_URI
+
 COPY package.json .
 
 RUN npm install -g npm@10.5.1
