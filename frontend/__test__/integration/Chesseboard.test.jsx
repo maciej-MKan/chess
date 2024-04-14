@@ -11,21 +11,31 @@ describe('Chess board test', () => {
         expect(screen.getByText(/Wait for API response/i)).toBeDefined();
 
     })
-    // test('renders chessboard after api response', () => {
-    //     global.fetch = vi.fn().mockRejectedValueOnce(new Error('Backend unavailable'));
-    //
-    //     expect(screen.getByText(/Backend unavailable/i)).toBeDefined();
-    // })
+    it('renders chessboard after api response', async () => {
+        global.fetch = vi.fn().mockResolvedValueOnce({
+                    ok: false,
+                    body: () => {
+                        return Promise.resolve(JSON.stringify(null));
+                    },
+                });
 
-    it('throws an error when fetch fails', async () => {
-        fetch.mockResolvedValueOnce({
-            ok: false
-        });
+        render(<Chessboard/>)
 
-        await initGame();
-
-        // render(<Chessboard/>);
-        expect(fetch).toHaveBeenCalled();
+        expect(await screen.getByText(/Backend unavailable/i)).toBeDefined();
     })
+
+    // it('throws an error when fetch fails', async () => {
+    //     fetch.mockResolvedValueOnce({
+    //         ok: false,
+    //         body: () => {
+    //             return Promise.resolve(JSON.stringify(null));
+    //         },
+    //     });
+    //
+    //     await initGame();
+    //
+    //     // render(<Chessboard/>);
+    //     expect(fetch).toHaveBeenCalled();
+    // })
 
 });
