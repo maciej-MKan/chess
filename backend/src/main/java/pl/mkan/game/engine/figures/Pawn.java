@@ -32,6 +32,8 @@ public class Pawn extends Figure {
         moves.add(new FigureMove(0, -2, true, false, true));
         moves.add(new FigureMove(-1, -1, true, true, false));
         moves.add(new FigureMove(1, -1, true, true, false));
+        moves.add(new FigureMove(0, 2, true, false, true, true));
+        moves.add(new FigureMove(0, -2, true, false, true, true));
         return moves;
     }
 
