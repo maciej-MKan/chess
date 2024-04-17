@@ -2,12 +2,10 @@ package pl.mkan.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pl.mkan.controller.dto.AvailableMovesDTO;
-import pl.mkan.controller.dto.BoardDTO;
-import pl.mkan.controller.dto.GameOverDTO;
-import pl.mkan.controller.dto.PieceDTO;
+import pl.mkan.controller.dto.*;
 import pl.mkan.controller.dto.enums.PieceType;
 import pl.mkan.controller.dto.mapper.BoardDTOMapper;
+import pl.mkan.controller.dto.mapper.MoveDTOMapper;
 import pl.mkan.controller.dto.mapper.MovesDTOMapper;
 import pl.mkan.game.engine.Move;
 import pl.mkan.game.engine.board.Board;
@@ -37,10 +35,12 @@ public class GameService {
         return new BoardDTO(BoardDTOMapper.map(engineBoard));
     }
 
-    public AvailableMovesDTO calculateAvailableMoves(BoardDTO board) {
-        Board engineBoard = BoardDTOMapper.map(board.pieces());
+    public AvailableMovesDTO calculateAvailableMoves(AvailableMovesRequestDTO gameState) {
+        Board engineBoard = BoardDTOMapper.map(gameState.boardState().pieces());
+        Move prevMove = MoveDTOMapper.map(gameState.prevMove());
         engineBoard.switchWhoseMove();
-        List<Move> possibleMoves = generatePossibleMoves(engineBoard, engineBoard.getWhoseMove());
+
+        List<Move> possibleMoves = generatePossibleMoves(engineBoard, engineBoard.getWhoseMove(), prevMove);
 
         Map<Figure, List<Move>> figureMovesMap = possibleMoves.stream()
                 .collect(

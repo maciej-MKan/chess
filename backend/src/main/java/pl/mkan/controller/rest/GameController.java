@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.mkan.controller.dto.AvailableMovesDTO;
+import pl.mkan.controller.dto.AvailableMovesRequestDTO;
 import pl.mkan.controller.dto.BoardDTO;
 import pl.mkan.controller.dto.GameOverDTO;
 import pl.mkan.service.GameService;
@@ -31,9 +32,9 @@ public class GameController {
     }
 
     @PostMapping(value = "/game/available_moves")
-    public ResponseEntity<AvailableMovesDTO> getAvailableMoves(@RequestBody @Valid BoardDTO board) {
-        log.info("Handle POST request at '/game/available_moves' with object [{}]", board);
-        return ResponseEntity.ok(gameService.calculateAvailableMoves(board));
+    public ResponseEntity<AvailableMovesDTO> getAvailableMoves(@RequestBody @Valid AvailableMovesRequestDTO request) {
+        log.info("Handle POST request at '/game/available_moves' with object [{}]", request);
+        return ResponseEntity.ok(gameService.calculateAvailableMoves(request));
     }
 
     @PostMapping(value = "/game/game_over")

@@ -101,14 +101,20 @@ public class Board {
         recoverBoard(prevBoard);
     }
 
-    public boolean checkMove(Move move) {
+    public boolean checkMove(Move move, Move prevMov) {
         boolean result;
         result = isTargetOnBoard(move);
         result = result && checkIfMovingFigure(move);
         result = result && checkFigureColor(move);
         result = result && targetFieldIsEmptyOrEnemy(move);
+        result = result && checkEnPassant(move, prevMov);
         result = result && isValidMove(move);
         return result;
+    }
+
+    private boolean checkEnPassant(Move move, Move prevMov) {
+
+        return true;
     }
 
     private boolean isTargetOnBoard(Move move) {
