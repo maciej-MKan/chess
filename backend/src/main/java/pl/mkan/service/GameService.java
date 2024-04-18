@@ -36,8 +36,11 @@ public class GameService {
     }
 
     public AvailableMovesDTO calculateAvailableMoves(AvailableMovesRequestDTO gameState) {
-        Board engineBoard = BoardDTOMapper.map(gameState.boardState().pieces());
-        Move prevMove = MoveDTOMapper.map(gameState.prevMove());
+        Board engineBoard = BoardDTOMapper.map(gameState.pieces());
+        Move prevMove = gameState.prevMove() != null ?
+                MoveDTOMapper.map(gameState.prevMove()) :
+                new Move(0, 0, 0, 0);
+
         engineBoard.switchWhoseMove();
 
         List<Move> possibleMoves = generatePossibleMoves(engineBoard, engineBoard.getWhoseMove(), prevMove);

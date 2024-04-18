@@ -37,6 +37,7 @@ public class GameController {
         return ResponseEntity.ok(gameService.calculateAvailableMoves(request));
     }
 
+
     @PostMapping(value = "/game/game_over")
     public ResponseEntity<GameOverDTO> checkGameOver(@RequestBody @Valid BoardDTO board) {
         log.info("Handle game over request with state [{}]", board);

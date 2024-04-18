@@ -2,5 +2,7 @@ package pl.mkan.controller.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 
-public record AvailableMovesRequestDTO(@NotEmpty BoardDTO boardState, MoveDTO prevMove) {
+import java.util.List;
+
+public record AvailableMovesRequestDTO(@NotEmpty List<PieceDTO> pieces, MoveDTO prevMove) {
 }
