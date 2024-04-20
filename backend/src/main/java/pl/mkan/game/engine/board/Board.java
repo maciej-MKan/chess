@@ -1,10 +1,7 @@
 package pl.mkan.game.engine.board;
 
 import lombok.Getter;
-import pl.mkan.game.engine.AI;
-import pl.mkan.game.engine.FigureColor;
-import pl.mkan.game.engine.FigureFactory;
-import pl.mkan.game.engine.Move;
+import pl.mkan.game.engine.*;
 import pl.mkan.game.engine.figures.*;
 
 import java.util.ArrayList;
@@ -113,7 +110,6 @@ public class Board {
     }
 
     private boolean checkEnPassant(Move move, Move prevMov) {
-
         return true;
     }
 
@@ -126,7 +122,9 @@ public class Board {
     }
 
     private boolean isValidMove(Move move) {
-        boolean isCapture = !(getFigure(move.destCol(), move.destRow()) instanceof None);
+        CoverOptions isCapture =
+                !(getFigure(move.destCol(), move.destRow()) instanceof None) ?
+                        CoverOptions.TRUE : CoverOptions.FALSE;
         boolean isFirstMove = getFigure(move.sourceCol(), move.sourceRow()).isFirstMove();
         int deltaCol = move.destCol() - move.sourceCol();
         int deltaRow = move.destRow() - move.sourceRow();

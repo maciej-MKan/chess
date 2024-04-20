@@ -1,10 +1,13 @@
 package pl.mkan.game.engine;
 
+import lombok.Getter;
+
+@Getter
 public class FigureMove {
     private final int column;
     private final int row;
     private final boolean onlyInColorDirection;
-    private final boolean haveToCapture;
+    private final CoverOptions haveToCapture;
     private final boolean haveToBeFirstMove;
     private final boolean canJump;
 
@@ -12,7 +15,7 @@ public class FigureMove {
             int column,
             int row,
             boolean onlyInColorDirection,
-            boolean haveToCapture,
+            CoverOptions haveToCapture,
             boolean haveToBeFirstMove
     ) {
         this.column = column;
@@ -27,7 +30,7 @@ public class FigureMove {
             int column,
             int row,
             boolean onlyInColorDirection,
-            boolean haveToCapture,
+            CoverOptions haveToCapture,
             boolean haveToBeFirstMove,
             boolean canJump
     ) {
@@ -39,27 +42,11 @@ public class FigureMove {
         this.canJump = canJump;
     }
 
-    public int getColumn() {
-        return this.column;
-    }
-
-    public int getRow() {
-        return this.row;
-    }
-
-    public boolean isOnlyInColorDirection() {
-        return this.onlyInColorDirection;
-    }
-
-    public boolean isHaveToCapture() {
+    public CoverOptions isHaveToCapture() {
         return this.haveToCapture;
     }
 
     public boolean isHaveToBeFirstMove() {
-        return this.haveToBeFirstMove;
-    }
-
-    public boolean isCanJump() {
-        return this.canJump;
+        return haveToBeFirstMove;
     }
 }

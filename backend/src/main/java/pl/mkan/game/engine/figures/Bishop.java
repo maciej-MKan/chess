@@ -1,5 +1,6 @@
 package pl.mkan.game.engine.figures;
 
+import pl.mkan.game.engine.CoverOptions;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
 
@@ -23,12 +24,12 @@ public class Bishop extends Figure {
     @Override
     public List<FigureMove> getPossibleMoves() {
         List<FigureMove> moves = new ArrayList<>();
-        addBishopMoves(moves, true);
-        addBishopMoves(moves, false);
+        addBishopMoves(moves, CoverOptions.TRUE);
+        addBishopMoves(moves, CoverOptions.FALSE);
         return moves;
     }
 
-    private void addBishopMoves(List<FigureMove> moves, boolean haveToCapture) {
+    private void addBishopMoves(List<FigureMove> moves, CoverOptions haveToCapture) {
         for (int delta = -7; delta < 8; delta++) {
             if (delta == 0) continue;
             moves.add(new FigureMove(delta, delta, false, haveToCapture, false));

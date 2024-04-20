@@ -1,5 +1,6 @@
 package pl.mkan.game.engine.figures;
 
+import pl.mkan.game.engine.CoverOptions;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
 
@@ -15,17 +16,6 @@ public class Rook extends Figure {
         this.color = color;
     }
 
-    private void addRookMoves(List<FigureMove> moves, boolean haveToCapture) {
-        for (int col = -7; col < 8; col++) {
-            if (col == 0) continue;
-            moves.add(new FigureMove(col, 0, false, haveToCapture, false));
-        }
-        for (int row = -7; row < 8; row++) {
-            if (row == 0) continue;
-            moves.add(new FigureMove(0, row, false, haveToCapture, false));
-        }
-    }
-
     @Override
     public FigureColor getColor() {
         return color;
@@ -34,9 +24,20 @@ public class Rook extends Figure {
     @Override
     public List<FigureMove> getPossibleMoves() {
         List<FigureMove> moves = new ArrayList<>();
-        addRookMoves(moves, true);
-        addRookMoves(moves, false);
+        addRookMoves(moves, CoverOptions.TRUE);
+        addRookMoves(moves, CoverOptions.FALSE);
         return moves;
+    }
+
+    private void addRookMoves(List<FigureMove> moves, CoverOptions haveToCapture) {
+        for (int col = -7; col < 8; col++) {
+            if (col == 0) continue;
+            moves.add(new FigureMove(col, 0, false, haveToCapture, false));
+        }
+        for (int row = -7; row < 8; row++) {
+            if (row == 0) continue;
+            moves.add(new FigureMove(0, row, false, haveToCapture, false));
+        }
     }
 
     @Override

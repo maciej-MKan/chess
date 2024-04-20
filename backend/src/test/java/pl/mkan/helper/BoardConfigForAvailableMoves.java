@@ -50,11 +50,10 @@ public class BoardConfigForAvailableMoves {
                         "{\"pieces\": [{\"id\": 11, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 6, \"column\": 0}, \"moved\": false}," +
                                 "{\"id\": 22, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 5, \"column\": 1}, \"moved\": false}]}",
                         2),
-//                Arguments.of(
-//                        "{\"pieces\": [{\"id\": 11, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 6, \"column\": 0}, \"moved\": false}," +
-//                                "{\"id\": 22, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 5, \"column\": 0}, \"moved\": false}]}",
-//                        0),
-//                need fix it
+                Arguments.of(
+                        "{\"pieces\": [{\"id\": 11, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 6, \"column\": 0}, \"moved\": false}," +
+                                "{\"id\": 22, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 5, \"column\": 0}, \"moved\": false}]}",
+                        0),
                 Arguments.of(
                         "{\"pieces\": [{\"id\": 11, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 6, \"column\": 0}, \"moved\": false}," +
                                 "{\"id\": 22, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 4, \"column\": 0}, \"moved\": false}]}",
@@ -66,7 +65,7 @@ public class BoardConfigForAvailableMoves {
                 Arguments.of(
                         "{\"pieces\": [{\"id\": 11, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 6, \"column\": 0}, \"moved\": false}," +
                                 "{\"id\": 22, \"type\": \"PAWN\", \"color\": \"WHITE\", \"position\": {\"row\": 5, \"column\": 0}, \"moved\": false}]}",
-                        1)
+                        0)
         );
     }
 
