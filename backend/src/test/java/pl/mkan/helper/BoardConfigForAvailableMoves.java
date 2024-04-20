@@ -65,7 +65,11 @@ public class BoardConfigForAvailableMoves {
                 Arguments.of(
                         "{\"pieces\": [{\"id\": 11, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 6, \"column\": 0}, \"moved\": false}," +
                                 "{\"id\": 22, \"type\": \"PAWN\", \"color\": \"WHITE\", \"position\": {\"row\": 5, \"column\": 0}, \"moved\": false}]}",
-                        0)
+                        0),
+                Arguments.of(
+                        "{\"pieces\": [{\"id\": 11, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 6, \"column\": 0}, \"moved\": false}], " +
+                                "\"prevMove\": {\"srcColumn\": 0, \"srcRow\": 0, \"destColumn\": 0, \"destRow\": 0}}",
+                        2)
         );
     }
 
