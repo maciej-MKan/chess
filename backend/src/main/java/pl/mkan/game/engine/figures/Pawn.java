@@ -33,10 +33,10 @@ public class Pawn extends Figure {
         moves.add(new FigureMove(0, -2, true, CoverOptions.FALSE, true));
         moves.add(new FigureMove(-1, -1, true, CoverOptions.TRUE, false));
         moves.add(new FigureMove(1, -1, true, CoverOptions.TRUE, false));
-        moves.add(new FigureMove(1, 1, true, CoverOptions.ENPASSANT, true));
-        moves.add(new FigureMove(-1, 1, true, CoverOptions.ENPASSANT, true));
-        moves.add(new FigureMove(1, -1, true, CoverOptions.ENPASSANT, true));
-        moves.add(new FigureMove(-1, -1, true, CoverOptions.ENPASSANT, true));
+        moves.add(new FigureMove(1, 1, true, CoverOptions.ENPASSANT, false));
+        moves.add(new FigureMove(-1, 1, true, CoverOptions.ENPASSANT, false));
+        moves.add(new FigureMove(1, -1, true, CoverOptions.ENPASSANT, false));
+        moves.add(new FigureMove(-1, -1, true, CoverOptions.ENPASSANT, false));
         return moves;
     }
 
