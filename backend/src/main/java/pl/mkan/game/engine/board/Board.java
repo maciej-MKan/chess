@@ -104,14 +104,14 @@ public class Board {
         result = result && checkIfMovingFigure(move);
         result = result && checkFigureColor(move);
         result = result && targetFieldIsEmptyOrEnemy(move);
-        result = result && checkEnPassant(move, prevMov);
-        result = result && isValidMove(move);
+//        result = result && checkEnPassant(move, prevMov);
+        result = result && isValidMove(move, prevMov);
         return result;
     }
 
-    private boolean checkEnPassant(Move move, Move prevMov) {
-        return true;
-    }
+//    private boolean checkEnPassant(Move move, Move prevMov) {
+//        return true;
+//    }
 
     private boolean isTargetOnBoard(Move move) {
         return move.destCol() >= 0 && move.destCol() < 8 && move.destRow() >= 0 && move.destRow() < 8;
@@ -121,10 +121,7 @@ public class Board {
         return (getFigure(move.destCol(), move.destRow()) instanceof None) || (getFigure(move.destCol(), move.destRow()).getColor() != whoseMove);
     }
 
-    private boolean isValidMove(Move move) {
-        CoverOptions isCapture =
-                !(getFigure(move.destCol(), move.destRow()) instanceof None) ?
-                        CoverOptions.TRUE : CoverOptions.FALSE;
+    private boolean isValidMove(Move move, Move prevMove) {
         boolean isFirstMove = getFigure(move.sourceCol(), move.sourceRow()).isFirstMove();
         int deltaCol = move.destCol() - move.sourceCol();
         int deltaRow = move.destRow() - move.sourceRow();
@@ -134,9 +131,26 @@ public class Board {
                 .filter(pm -> !pm.isHaveToBeFirstMove() || (pm.isHaveToBeFirstMove() == isFirstMove))
                 .filter(pm -> pm.getColumn() == deltaCol)
                 .filter(pm -> pm.getRow() == deltaRow)
-                .filter(pm -> pm.isHaveToCapture() == isCapture)
+                .filter(pm -> pm.isHaveToCapture() == isMoveWithCapture(move, prevMove))
                 .filter(pm -> pm.isCanJump() || isPathClear(move))
                 .anyMatch(pm -> !pm.isOnlyInColorDirection() || isMoveInColorDirection);
+    }
+
+    private CoverOptions isMoveWithCapture(Move move, Move prevMove) {
+        if (!(getFigure(move.destCol(), move.destRow()) instanceof None)) {
+            return CoverOptions.TRUE;
+        }
+        int deltaRow = prevMove.destRow() - prevMove.sourceRow();
+        if (
+                Math.abs(deltaRow) == 2 &&
+                        getFigure(prevMove.destCol(), prevMove.destRow()) instanceof Pawn &&
+                        Math.abs(prevMove.sourceCol() - move.sourceCol()) == 1 &&
+                        move.destCol() == prevMove.destCol() &&
+                        move.destRow() == prevMove.destRow() - (deltaRow / 2)
+        ) {
+            return CoverOptions.ENPASSANT;
+        }
+        return CoverOptions.FALSE;
     }
 
     private boolean isPathClear(Move move) {
