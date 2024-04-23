@@ -86,12 +86,13 @@ public class Board {
         whoseMove = oppositeColor(whoseMove);
     }
 
-    public void AIMove() {
+    public Move AIMove() {
         FigureColor computerColor = boardOrientation == BoardOrientation.WHITE_ON_TOP ? FigureColor.WHITE : FigureColor.BLACK;
 
         if (whoseMove != computerColor) throw new RuntimeException("Is not computer turn");
         Move bestMove = AI.getBestMove(this, computerColor);
         move(bestMove);
+        return bestMove;
     }
 
     public void backMove() {

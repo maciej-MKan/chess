@@ -240,7 +240,7 @@ public class BoardConfigForComputerMove {
                                             "type": "PAWN",
                                             "color": "BLACK",
                                             "position": {
-                                                "row": 6,
+                                                "row": 5,
                                                 "column": 6
                                             },
                                             "moved": false
@@ -335,7 +335,13 @@ public class BoardConfigForComputerMove {
                                             },
                                             "moved": false
                                         }
-                                    ]
+                                    ],
+                                "move": {
+                                        "srcColumn": 6,
+                                        "srcRow": 6,
+                                        "destColumn": 6,
+                                        "destRow": 5
+                                    }
                                 }""",
                         11, 6, 0)
         );

@@ -23,16 +23,16 @@ public class GameService {
     public BoardDTO getMove(BoardDTO board) {
         Board engineBoard = BoardDTOMapper.map(board.pieces());
         log.info("Board state before move:\n{}", engineBoard);
-        engineBoard.AIMove();
+        Move move = engineBoard.AIMove();
         log.info("Board state after move:\n{}", engineBoard);
-        return new BoardDTO(BoardDTOMapper.map(engineBoard));
+        return new BoardDTO(BoardDTOMapper.map(engineBoard), MoveDTOMapper.map(move));
     }
 
     public BoardDTO makeNewBoard() {
         Board engineBoard = new Board();
         engineBoard.init();
 
-        return new BoardDTO(BoardDTOMapper.map(engineBoard));
+        return new BoardDTO(BoardDTOMapper.map(engineBoard), null);
     }
 
     public AvailableMovesDTO calculateAvailableMoves(AvailableMovesRequestDTO gameState) {

@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static pl.mkan.controller.rest.GameController.API_PATH;
 
 @ActiveProfiles("test")
@@ -29,8 +30,10 @@ public class ComputerMoveTest {
                 .post("http://localhost:" + port + API_PATH + "/game")
                 .then()
                 .statusCode(200)
+                .log().body()
                 .body("pieces.find { it.id ==" + movedId + " }.moved", equalTo(true))
                 .body("pieces.find { it.id ==" + movedId + " }.position.row", equalTo(expectedRow))
-                .body("pieces.find { it.id ==" + movedId + " }.position.column", equalTo(expectedCol));
+                .body("pieces.find { it.id ==" + movedId + " }.position.column", equalTo(expectedCol))
+                .body("move", notNullValue());
     }
 }
