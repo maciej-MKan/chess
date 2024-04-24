@@ -86,6 +86,19 @@ public class Board {
         whoseMove = oppositeColor(whoseMove);
     }
 
+    public void checkEnPassant(Move move) {
+        Figure figure = getFigure(move.destCol(), move.destRow());
+        int deltaColumn = move.sourceCol() - move.destCol();
+        if ((figure instanceof Pawn) && (deltaColumn != 0)) {
+            takeOffCoveredPawn();
+            //toDo: checking en passant and take off covered pawn logic
+        }
+    }
+
+    private void takeOffCoveredPawn() {
+
+    }
+
     public Move AIMove() {
         FigureColor computerColor = boardOrientation == BoardOrientation.WHITE_ON_TOP ? FigureColor.WHITE : FigureColor.BLACK;
 
@@ -105,14 +118,10 @@ public class Board {
         result = result && checkIfMovingFigure(move);
         result = result && checkFigureColor(move);
         result = result && targetFieldIsEmptyOrEnemy(move);
-//        result = result && checkEnPassant(move, prevMov);
         result = result && isValidMove(move, prevMov);
         return result;
     }
 
-//    private boolean checkEnPassant(Move move, Move prevMov) {
-//        return true;
-//    }
 
     private boolean isTargetOnBoard(Move move) {
         return move.destCol() >= 0 && move.destCol() < 8 && move.destRow() >= 0 && move.destRow() < 8;

@@ -22,6 +22,7 @@ import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
 public class GameService {
     public BoardDTO getMove(BoardDTO board) {
         Board engineBoard = BoardDTOMapper.map(board.pieces());
+        engineBoard.checkEnPassant(MoveDTOMapper.map(board.move()));
         log.info("Board state before move:\n{}", engineBoard);
         Move move = engineBoard.AIMove();
         log.info("Board state after move:\n{}", engineBoard);
