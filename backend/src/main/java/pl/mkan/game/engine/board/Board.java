@@ -87,16 +87,20 @@ public class Board {
     }
 
     public void checkEnPassant(Move move) {
-        Figure figure = getFigure(move.destCol(), move.destRow());
+        Figure moveingFigure = getFigure(move.destCol(), move.destRow());
         int deltaColumn = move.sourceCol() - move.destCol();
-        if ((figure instanceof Pawn) && (deltaColumn != 0)) {
-            takeOffCoveredPawn();
-            //toDo: checking en passant and take off covered pawn logic
+        Figure adjacentFigure = getFigure(move.destCol(), move.sourceRow());
+        if ((moveingFigure instanceof Pawn) && (deltaColumn != 0) && isOpponentPawn(adjacentFigure, moveingFigure)) {
+            takeOffCoveredPawn(move.destCol(), move.sourceRow());
         }
     }
 
-    private void takeOffCoveredPawn() {
+    private boolean isOpponentPawn(Figure adjacentFigure, Figure moveingFigure) {
+        return (adjacentFigure instanceof Pawn) && (adjacentFigure.getColor() != moveingFigure.getColor());
+    }
 
+    private void takeOffCoveredPawn(int col, int row) {
+        setFigure(col, row, new None());
     }
 
     public Move AIMove() {
