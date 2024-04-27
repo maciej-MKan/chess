@@ -22,11 +22,14 @@ import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
 public class GameService {
     public BoardDTO getMove(BoardDTO board) {
         Board engineBoard = BoardDTOMapper.map(board.pieces());
-        engineBoard.checkEnPassant(MoveDTOMapper.map(board.move()));
+        Move move = board.move() != null ?
+                MoveDTOMapper.map(board.move()) :
+                new Move(0, 0, 0, 0);
+        engineBoard.checkEnPassant(move);
         log.info("Board state before move:\n{}", engineBoard);
-        Move move = engineBoard.AIMove();
-        log.info("Board state after move:\n{}", engineBoard);
-        return new BoardDTO(BoardDTOMapper.map(engineBoard), MoveDTOMapper.map(move));
+        Move AImove = engineBoard.AIMove();
+        log.info("Board state after AI move:\n{}", engineBoard);
+        return new BoardDTO(BoardDTOMapper.map(engineBoard), MoveDTOMapper.map(AImove));
     }
 
     public BoardDTO makeNewBoard() {
