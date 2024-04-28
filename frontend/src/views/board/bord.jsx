@@ -75,6 +75,12 @@ const Chessboard = () => {
 
 
     const findPiece = (row, column) => boardState.pieces.find(piece => piece.position.row === row && piece.position.column === column);
+    const removePiece = (piece) => {
+        if (piece) {
+            console.log(piece);
+            boardState.pieces.remove(piece);
+        }
+    }
     const onSquareClick = (row, column) => {
         if (!isEmpty(selectedSquare) && row === selectedSquare.row && column === selectedSquare.column) {
             setSelectedSquare({})
@@ -104,6 +110,7 @@ const Chessboard = () => {
     const playerMove = () => {
         console.log("move " + selectedPiece.row + " " + selectedPiece.column + " to " + selectedSquare.row + " " + selectedSquare.column);
         const piece = findPiece(selectedPiece.row, selectedPiece.column);
+        removePiece(findPiece(selectedSquare.row, selectedSquare.column))
         piece.position.row = selectedSquare.row;
         piece.position.column = selectedSquare.column;
         piece.moved = true;
