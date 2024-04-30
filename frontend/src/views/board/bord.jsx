@@ -52,6 +52,7 @@ const Chessboard = () => {
     const fetchAvailableMoves = (board) => {
         console.log('try get available moves' + board)
         if (board && !isEmpty(board) && !gameOver) {
+            setWaitApi(true);
             getAvailableMoves(board)
                 .then((availableMovesData) =>
                     setAvailableMoves(!gameOver ? (availableMovesData.availableMoves) : {})
@@ -60,6 +61,7 @@ const Chessboard = () => {
                     console.log("error " + error);
                     setError(error.toString())
                 })
+                .finally(() => setWaitApi(false));
         }
     };
 
@@ -77,9 +79,10 @@ const Chessboard = () => {
     const findPiece = (row, column) => boardState.pieces.find(piece => piece.position.row === row && piece.position.column === column);
     const removePiece = (piece) => {
         if (piece) {
-            console.log(piece);
-            boardState.pieces.remove(piece);
+            const newPieces = boardState.pieces.filter(p => p !== piece);
+            return {...boardState, pieces: newPieces};
         }
+        return boardState;
     }
     const onSquareClick = (row, column) => {
         if (!isEmpty(selectedSquare) && row === selectedSquare.row && column === selectedSquare.column) {
@@ -110,28 +113,31 @@ const Chessboard = () => {
     const playerMove = () => {
         console.log("move " + selectedPiece.row + " " + selectedPiece.column + " to " + selectedSquare.row + " " + selectedSquare.column);
         const piece = findPiece(selectedPiece.row, selectedPiece.column);
-        removePiece(findPiece(selectedSquare.row, selectedSquare.column))
+        const updatedBoard = removePiece(findPiece(selectedSquare.row, selectedSquare.column));
+        setBoardState(updatedBoard);
         piece.position.row = selectedSquare.row;
         piece.position.column = selectedSquare.column;
         piece.moved = true;
-        console.log(piece.moved)
-        console.log(boardState);
+        console.log(updatedBoard);
         setSelectedPiece({});
         setSelectedSquare({});
-        computerMove();
+        computerMove(updatedBoard);
     }
-    const computerMove = () => {
-        setWaitApi(true);
-        getComputerMove(boardState)
-            .then(boardData => {
-                setBoardState(boardData);
-                fetchAvailableMoves(boardData);
-            })
-            .catch((error) => {
-                console.log("error " + error);
-                setError(error.toString())
-            })
-            .finally(() => setWaitApi(false));
+    const computerMove = (board) => {
+        if (waitApi) setTimeout(() => computerMove(board), 300);
+        if (!gameOver) {
+            setWaitApi(true);
+            getComputerMove(board)
+                .then(boardData => {
+                    setBoardState(boardData);
+                    fetchAvailableMoves(boardData);
+                })
+                .catch((error) => {
+                    console.log("error " + error);
+                    setError(error.toString())
+                })
+                .finally(() => setWaitApi(false));
+        }
     };
     const renderSquare = (row, column, piece) => {
         const isBlack = (row + column) % 2 === 1;
