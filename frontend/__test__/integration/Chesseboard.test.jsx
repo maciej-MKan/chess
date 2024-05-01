@@ -1,6 +1,6 @@
 import {describe, test, expect, vi, it} from "vitest";
 import {render, screen} from "@testing-library/react";
-import Chessboard from "../../src/views/board/bord";
+import Chessboard from "../../src/views/board/board";
 import {initGame} from "../../src/api/game";
 
 vi.stubGlobal('fetch', vi.fn());

@@ -19,11 +19,13 @@
 }
 
 .square {
+    position: relative;
     width: 100px;
     height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.5s ease-in-out;
 }
 
 .white {
@@ -59,6 +61,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.5s ease-in-out;
 }
 
 .piece_black_blink {
@@ -81,6 +84,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.5s ease-in-out;
 }
 
 .piece_white_blink {

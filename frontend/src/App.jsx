@@ -1,5 +1,5 @@
 import React from 'react';
-import Chessboard from "./views/board/bord";
+import Chessboard from "./views/board/board";
 
 
 const App = () => {

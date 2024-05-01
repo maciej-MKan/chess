@@ -84,6 +84,19 @@ const Chessboard = () => {
         }
         return boardState;
     }
+    const animatePieceMovement = (piece) => {
+        if (piece) {
+            const squareId = `square-${piece.row}-${piece.column}`;
+            const square = document.querySelector(`#${squareId}`);
+            console.log('selected square', square);
+            if (square) {
+                square.classList.add('animateMove');
+                setTimeout(() => {
+                    square.classList.remove('animateMove');
+                }, 500);
+            }
+        }
+    }
     const onSquareClick = (row, column) => {
         if (!isEmpty(selectedSquare) && row === selectedSquare.row && column === selectedSquare.column) {
             setSelectedSquare({})
@@ -91,7 +104,8 @@ const Chessboard = () => {
             setSelectedPiece({})
         } else {
             const piece = findPiece(row, column);
-            (piece && piece.color === playerColor) ? setSelectedPiece({row, column}) : setSelectedSquare({row, column});
+            const id = piece?.id;
+            (piece && piece.color === playerColor) ? setSelectedPiece({id, row, column}) : setSelectedSquare({row, column});
         }
     }
     const checkSquareSelected = (row, column) => {
@@ -114,13 +128,15 @@ const Chessboard = () => {
         console.log("move " + selectedPiece.row + " " + selectedPiece.column + " to " + selectedSquare.row + " " + selectedSquare.column);
         const piece = findPiece(selectedPiece.row, selectedPiece.column);
         const updatedBoard = removePiece(findPiece(selectedSquare.row, selectedSquare.column));
-        setBoardState(updatedBoard);
         piece.position.row = selectedSquare.row;
         piece.position.column = selectedSquare.column;
         piece.moved = true;
+        setBoardState(updatedBoard);
         console.log(updatedBoard);
         setSelectedPiece({});
         setSelectedSquare({});
+        console.log("Selected piece:", selectedPiece);
+        animatePieceMovement(selectedPiece);
         computerMove(updatedBoard);
     }
     const computerMove = (board) => {
@@ -145,7 +161,7 @@ const Chessboard = () => {
         const isSelectedPiece = checkPieceSelected(row, column);
         const isActive = checkSquareActive(row, column);
         return <Square
-            key={`${row}-${column}`}
+            id={`${row}-${column}`}
             color={isBlack ? 'black' : 'white'}
             piece={piece}
             onClick={() => {
