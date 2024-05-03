@@ -43,3 +43,5 @@ Chess is a web application that allows playing chess against an AI opponent. The
 ## License
 
 This project is licensed under the MIT License. For more information, see the [LICENSE](https://github.com/maciej-MKan/chess/blob/main/LICENSE) file.
+
+
