@@ -175,12 +175,28 @@ const Chessboard = () => {
 
     const renderBoard = () => {
         const board = [];
+
+        board.push(<div className="square empty" />);
+        for (let col = 0; col < 8; col++) {
+            board.push(
+                <div className="square column-header">
+                    {String.fromCharCode(65 + col)} {/* (A-H) */}
+                </div>
+            );
+        }
+
         for (let row = 0; row < 8; row++) {
+            board.push(
+                <div className="square row-header">
+                    {8 - row}
+                </div>
+            );
             for (let column = 0; column < 8; column++) {
                 const piece = findPiece(row, column);
                 board.push(renderSquare(row, column, piece ? piece : null));
             }
         }
+
         return board;
     };
 

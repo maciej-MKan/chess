@@ -1,7 +1,7 @@
 .chessboard {
     display: flex;
     flex-wrap: wrap;
-    width: 800px;
+    width: 720px;
 }
 
 .loadingLabel {
@@ -20,8 +20,8 @@
 
 .square {
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -34,6 +34,30 @@
 
 .black {
     background-color: #b58863;
+}
+
+.empty {
+    border-right: 3px ridge grey;
+    width: 77px;
+    border-bottom: 3px ridge grey;
+    height: 77px;
+
+}
+
+.row-header {
+    background-color: #b58863;
+    border-bottom: 3px ridge grey;
+    height: 77px;
+    border-right: 3px ridge rgba(0, 0, 0, 0.35);
+    width: 77px;
+}
+
+.column-header {
+    background-color: #b58863;
+    border-right: 3px ridge grey;
+    width: 77px;
+    border-bottom: 3px ridge rgba(0, 0, 0, 0.35);
+    height: 77px;
 }
 
 .white_blink {
@@ -85,8 +109,8 @@
 }
 
 .piece_image {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
     transition: all 0.5s ease-in-out;
 }
