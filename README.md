@@ -4,8 +4,11 @@
   <img src="https://github.com/maciej-MKan/chess/blob/main/assets/logo.jpg" alt="logo" width="500"/>
 </p>
 
-[![Java CI](https://github.com/maciej-MKan/chess/actions/workflows/build-gradle-project.yml/badge.svg)](https://github.com/maciej-MKan/chess/actions/workflows/build-gradle-project.yml)
-[![Java CI](https://github.com/maciej-MKan/chess/actions/workflows/build-docker-images.yml/badge.svg)](https://github.com/maciej-MKan/chess/actions/workflows/build-docker-images.yml)
+![Static Badge](https://img.shields.io/badge/java-v17.0.10-green)
+![NPM Version](https://img.shields.io/npm/v/vite)
+![Static Badge](https://img.shields.io/badge/docker-v26.1.0-purple)
+
+
 
 ## Project Description
 
@@ -32,9 +35,13 @@ Chess is a web application that allows playing chess against an AI opponent. The
 - REST - Architectural style for building distributed systems based on HTTP.
 
 ## Statistics
+[![Java CI](https://github.com/maciej-MKan/chess/actions/workflows/build-gradle-project.yml/badge.svg)](https://github.com/maciej-MKan/chess/actions/workflows/build-gradle-project.yml)
+[![Java CI](https://github.com/maciej-MKan/chess/actions/workflows/build-docker-images.yml/badge.svg)](https://github.com/maciej-MKan/chess/actions/workflows/build-docker-images.yml)
 [![Lines of code](https://img.shields.io/tokei/lines/github.com/maciej-MKan/chess)](https://github.com/maciej-MKan/chess)
 [![Commits](https://img.shields.io/github/commit-activity/t/maciej-MKan/chess)](https://github.com/maciej-MKan/chess)
 ![GitHub top language](https://img.shields.io/github/languages/top/maciej-MKan/chess)
+![GitHub Repo stars](https://img.shields.io/github/stars/maciej-MKan/chess?labelColor=%23454545&color=yellow)
+
 
 ## Authors
 
@@ -43,5 +50,4 @@ Chess is a web application that allows playing chess against an AI opponent. The
 ## License
 
 This project is licensed under the MIT License. For more information, see the [LICENSE](https://github.com/maciej-MKan/chess/blob/main/LICENSE) file.
-
 
