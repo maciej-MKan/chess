@@ -34,13 +34,15 @@ Chess is a web application that allows playing chess against an AI opponent. The
 - Docker - Platform for developing, shipping, and running applications in containers.
 - REST - Architectural style for building distributed systems based on HTTP.
 
-## Statistics
+## Project status
 [![Java CI](https://github.com/maciej-MKan/chess/actions/workflows/build-gradle-project.yml/badge.svg)](https://github.com/maciej-MKan/chess/actions/workflows/build-gradle-project.yml)
 [![Java CI](https://github.com/maciej-MKan/chess/actions/workflows/build-docker-images.yml/badge.svg)](https://github.com/maciej-MKan/chess/actions/workflows/build-docker-images.yml)
 [![Lines of code](https://img.shields.io/tokei/lines/github.com/maciej-MKan/chess)](https://github.com/maciej-MKan/chess)
 [![Commits](https://img.shields.io/github/commit-activity/t/maciej-MKan/chess)](https://github.com/maciej-MKan/chess)
 ![GitHub top language](https://img.shields.io/github/languages/top/maciej-MKan/chess)
 ![GitHub Repo stars](https://img.shields.io/github/stars/maciej-MKan/chess?labelColor=%23454545&color=yellow)
+
+${\color{red} \textnormal{If either CI shows an error, then the project is not currently working properly.}}$
 
 
 ## Authors
