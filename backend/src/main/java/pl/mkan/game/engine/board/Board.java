@@ -86,13 +86,23 @@ public class Board {
         whoseMove = oppositeColor(whoseMove);
     }
 
-    public void checkEnPassant(Move move) {
+    public boolean isEnPassant(Move move) {
         Figure moveingFigure = getFigure(move.destCol(), move.destRow());
         int deltaColumn = move.sourceCol() - move.destCol();
+        int deltaRow = move.sourceRow() - move.destRow();
         Figure adjacentFigure = getFigure(move.destCol(), move.sourceRow());
-        if ((moveingFigure instanceof Pawn) && (deltaColumn != 0) && isOpponentPawn(adjacentFigure, moveingFigure)) {
-            takeOffCoveredPawn(move.destCol(), move.sourceRow());
-        }
+        return (
+                (moveingFigure instanceof Pawn) &&
+                        (deltaColumn != 0) &&
+                        (deltaRow == 0)
+        );
+    }
+
+    private boolean isPawnTwoSquaresMove(Move prevMove) {
+        return (
+                (getFigure(prevMove.destCol(), prevMove.destRow()) instanceof Pawn) &&
+                        (Math.abs(prevMove.destRow() - prevMove.sourceRow()) == 2)
+        );
     }
 
     private boolean isOpponentPawn(Figure adjacentFigure, Figure moveingFigure) {
@@ -247,4 +257,12 @@ public class Board {
         }
     }
 
+    public void setEnPassantDestPosition(Move move) {
+        Figure movingFigure = getFigure(move.destCol(), move.destRow());
+        int newRow = checkMoveInColorDirection(
+                new Move(move.sourceCol(), move.sourceRow(), move.destCol(), move.destRow() + 1)
+        ) ? 1 : -1;
+        setFigure(move.destCol(), move.destRow(), new None());
+        setFigure(move.destCol(), newRow, movingFigure);
+    }
 }
