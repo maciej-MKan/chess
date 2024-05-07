@@ -161,16 +161,17 @@ public class Board {
     }
 
     private CoverOptions isMoveWithCapture(Move move, Move prevMove) {
-        if (!(getFigure(move.destCol(), move.destRow()) instanceof None)) {
+        boolean destSquareEmpty = getFigure(move.destCol(), move.destRow()) instanceof None;
+        if (!destSquareEmpty) {
             return CoverOptions.TRUE;
         }
-        int deltaRow = prevMove.destRow() - prevMove.sourceRow();
+        int deltaRowPrevMove = prevMove.destRow() - prevMove.sourceRow();
         if (
-                Math.abs(deltaRow) == 2 &&
+                Math.abs(deltaRowPrevMove) == 2 &&
                         getFigure(prevMove.destCol(), prevMove.destRow()) instanceof Pawn &&
                         Math.abs(prevMove.sourceCol() - move.sourceCol()) == 1 &&
                         move.destCol() == prevMove.destCol() &&
-                        move.destRow() == prevMove.destRow() - (deltaRow / 2)
+                        move.destRow() == prevMove.destRow()
         ) {
             return CoverOptions.ENPASSANT;
         }
