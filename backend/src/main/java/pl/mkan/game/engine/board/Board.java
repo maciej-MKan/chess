@@ -90,27 +90,11 @@ public class Board {
         Figure moveingFigure = getFigure(move.destCol(), move.destRow());
         int deltaColumn = move.sourceCol() - move.destCol();
         int deltaRow = move.sourceRow() - move.destRow();
-        Figure adjacentFigure = getFigure(move.destCol(), move.sourceRow());
         return (
                 (moveingFigure instanceof Pawn) &&
                         (deltaColumn != 0) &&
                         (deltaRow == 0)
         );
-    }
-
-    private boolean isPawnTwoSquaresMove(Move prevMove) {
-        return (
-                (getFigure(prevMove.destCol(), prevMove.destRow()) instanceof Pawn) &&
-                        (Math.abs(prevMove.destRow() - prevMove.sourceRow()) == 2)
-        );
-    }
-
-    private boolean isOpponentPawn(Figure adjacentFigure, Figure moveingFigure) {
-        return (adjacentFigure instanceof Pawn) && (adjacentFigure.getColor() != moveingFigure.getColor());
-    }
-
-    private void takeOffCoveredPawn(int col, int row) {
-        setFigure(col, row, new None());
     }
 
     public Move AIMove() {
@@ -132,7 +116,7 @@ public class Board {
         result = result && checkIfMovingFigure(move);
         result = result && checkFigureColor(move);
         result = result && targetFieldIsEmptyOrEnemy(move);
-        result = result && isValidMove(move, prevMov);
+        result = result && isValidMove(move);
         return result;
     }
 
@@ -145,7 +129,7 @@ public class Board {
         return (getFigure(move.destCol(), move.destRow()) instanceof None) || (getFigure(move.destCol(), move.destRow()).getColor() != whoseMove);
     }
 
-    private boolean isValidMove(Move move, Move prevMove) {
+    private boolean isValidMove(Move move) {
         boolean isFirstMove = getFigure(move.sourceCol(), move.sourceRow()).isFirstMove();
         int deltaCol = move.destCol() - move.sourceCol();
         int deltaRow = move.destRow() - move.sourceRow();
@@ -155,27 +139,14 @@ public class Board {
                 .filter(pm -> !pm.isHaveToBeFirstMove() || (pm.isHaveToBeFirstMove() == isFirstMove))
                 .filter(pm -> pm.getColumn() == deltaCol)
                 .filter(pm -> pm.getRow() == deltaRow)
-                .filter(pm -> pm.isHaveToCapture() == isMoveWithCapture(move, prevMove))
+                .filter(pm -> pm.isHaveToCapture() == isMoveWithCapture(move))
                 .filter(pm -> pm.isCanJump() || isPathClear(move))
                 .anyMatch(pm -> !pm.isOnlyInColorDirection() || isMoveInColorDirection);
     }
 
-    private CoverOptions isMoveWithCapture(Move move, Move prevMove) {
+    private CoverOptions isMoveWithCapture(Move move) {
         boolean destSquareEmpty = getFigure(move.destCol(), move.destRow()) instanceof None;
-        if (!destSquareEmpty) {
-            return CoverOptions.TRUE;
-        }
-        int deltaRowPrevMove = prevMove.destRow() - prevMove.sourceRow();
-        if (
-                Math.abs(deltaRowPrevMove) == 2 &&
-                        getFigure(prevMove.destCol(), prevMove.destRow()) instanceof Pawn &&
-                        Math.abs(prevMove.sourceCol() - move.sourceCol()) == 1 &&
-                        move.destCol() == prevMove.destCol() &&
-                        move.destRow() == prevMove.destRow()
-        ) {
-            return CoverOptions.ENPASSANT;
-        }
-        return CoverOptions.FALSE;
+        return destSquareEmpty ? CoverOptions.FALSE : CoverOptions.TRUE;
     }
 
     private boolean isPathClear(Move move) {
@@ -197,6 +168,7 @@ public class Board {
 
 
     private boolean checkMoveInColorDirection(Move move) {
+        if (move.sourceRow() == move.destRow()) return true;
         boolean isMoveInColorDirection;
         if (boardOrientation == BoardOrientation.WHITE_ON_TOP) {
             if (getFigure(move.sourceCol(), move.sourceRow()).getColor() == FigureColor.WHITE) {
@@ -264,6 +236,6 @@ public class Board {
                 new Move(move.sourceCol(), move.sourceRow(), move.destCol(), move.destRow() + 1)
         ) ? 1 : -1;
         setFigure(move.destCol(), move.destRow(), new None());
-        setFigure(move.destCol(), newRow, movingFigure);
+        setFigure(move.destCol(), move.destRow() + newRow, movingFigure);
     }
 }

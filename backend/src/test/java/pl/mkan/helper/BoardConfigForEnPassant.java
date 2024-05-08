@@ -13,16 +13,6 @@ public class BoardConfigForEnPassant {
                                                 "type": "PAWN",
                                                 "color": "BLACK",
                                                 "position": {
-                                                    "row": 4,
-                                                    "column": 3
-                                                },
-                                                "moved": true
-                                            },
-                                            {
-                                                "id": 22,
-                                                "type": "PAWN",
-                                                "color": "WHITE",
-                                                "position": {
                                                     "row": 3,
                                                     "column": 3
                                                 },
@@ -42,7 +32,7 @@ public class BoardConfigForEnPassant {
                                             "srcColumn": 4,
                                             "srcRow": 3,
                                             "destColumn": 3,
-                                            "destRow": 4
+                                            "destRow": 3
                                         }
                                 }""",
                         22)
