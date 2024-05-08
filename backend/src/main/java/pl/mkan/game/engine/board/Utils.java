@@ -15,28 +15,24 @@ public class Utils {
     }
 
     public static List<Move> generatePossibleMoves(Board board, FigureColor activeColor) {
-        return generatePossibleMoves(board, activeColor, new Move(0, 0, 0, 0));
-    }
-
-    public static List<Move> generatePossibleMoves(Board board, FigureColor activeColor, Move prevMove) {
         List<Move> allPossibleMoves = new ArrayList<>();
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 if (board.getFigure(col, row).getColor() == activeColor) {
-                    addPossibleMoves(col, row, allPossibleMoves, board, prevMove);
+                    addPossibleMoves(col, row, allPossibleMoves, board);
                 }
             }
         }
         return allPossibleMoves;
     }
 
-    private static void addPossibleMoves(int col, int row, List<Move> allPossibleMoves, Board board, Move prevMov) {
+    private static void addPossibleMoves(int col, int row, List<Move> allPossibleMoves, Board board) {
         List<FigureMove> possibleMoves = board.getFigure(col, row).getPossibleMoves();
         Set<Move> moves = new HashSet<>();
         for (FigureMove potentialMove : possibleMoves) {
             Board testBoard = board.deepCopy();
             Move moveToCheck = new Move(col, row, potentialMove.getColumn() + col, potentialMove.getRow() + row);
-            if (testBoard.checkMove(moveToCheck, prevMov)) {
+            if (testBoard.checkMove(moveToCheck)) {
                 moves.add(moveToCheck);
             }
         }

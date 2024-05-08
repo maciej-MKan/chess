@@ -49,7 +49,7 @@ public class GameService {
 
         engineBoard.switchWhoseMove();
 
-        List<Move> possibleMoves = generatePossibleMoves(engineBoard, engineBoard.getWhoseMove(), prevMove);
+        List<Move> possibleMoves = generatePossibleMoves(engineBoard, engineBoard.getWhoseMove());
 
         Map<Figure, List<Move>> figureMovesMap = possibleMoves.stream()
                 .collect(

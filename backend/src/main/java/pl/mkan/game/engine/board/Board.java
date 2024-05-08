@@ -110,7 +110,7 @@ public class Board {
         recoverBoard(prevBoard);
     }
 
-    public boolean checkMove(Move move, Move prevMov) {
+    public boolean checkMove(Move move) {
         boolean result;
         result = isTargetOnBoard(move);
         result = result && checkIfMovingFigure(move);
