@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.mkan.controller.dto.AvailableMovesDTO;
-import pl.mkan.controller.dto.AvailableMovesRequestDTO;
-import pl.mkan.controller.dto.BoardDTO;
-import pl.mkan.controller.dto.GameOverDTO;
+import pl.mkan.controller.dto.*;
 import pl.mkan.service.GameService;
 
 @Slf4j
@@ -42,5 +39,11 @@ public class GameController {
     public ResponseEntity<GameOverDTO> checkGameOver(@RequestBody @Valid BoardDTO board) {
         log.info("Handle game over request with state [{}]", board);
         return ResponseEntity.ok(gameService.checkGameOver(board));
+    }
+
+    @PostMapping(value = "/game/state")
+    public ResponseEntity<GameStateDTO> checkState(@RequestBody @Valid BoardDTO board) {
+        log.info("Handle game state request with state [{}]", board);
+        return ResponseEntity.ok(gameService.checkGameState(board));
     }
 }

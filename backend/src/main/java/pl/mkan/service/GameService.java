@@ -13,6 +13,7 @@ import pl.mkan.game.engine.figures.Figure;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
@@ -43,12 +44,7 @@ public class GameService {
 
     public AvailableMovesDTO calculateAvailableMoves(AvailableMovesRequestDTO gameState) {
         Board engineBoard = BoardDTOMapper.map(gameState.pieces());
-        Move prevMove = gameState.prevMove() != null ?
-                MoveDTOMapper.map(gameState.prevMove()) :
-                new Move(0, 0, 0, 0);
-
         engineBoard.switchWhoseMove();
-
         List<Move> possibleMoves = generatePossibleMoves(engineBoard, engineBoard.getWhoseMove());
 
         Map<Figure, List<Move>> figureMovesMap = possibleMoves.stream()
@@ -67,5 +63,13 @@ public class GameService {
             return new GameOverDTO(true, kingsOnBoard.get(0).color());
         }
         return new GameOverDTO(false, null);
+    }
+
+    public GameStateDTO checkGameState(BoardDTO board) {
+        GameOverDTO gameOver = checkGameOver(board);
+        Optional<PieceDTO> pawnToPromotion = board.pieces().stream().
+                filter(p -> p.type() == PieceType.PAWN).
+                filter(p -> p.position().row() == 0 || p.position().row() == 7).findAny();
+        return new GameStateDTO(gameOver, new PawnPromotionDTO(pawnToPromotion.orElse(null), List.of()));
     }
 }
