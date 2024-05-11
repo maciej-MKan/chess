@@ -30,6 +30,7 @@ public class PawnPromotionTest {
                 .then()
                 .statusCode(200)
                 .log().body()
-                .body("pieces.find { it.id ==11 }", Matchers.nullValue());
+                .body("pawnPromotion.pawn", isPromotion ? Matchers.notNullValue() : Matchers.nullValue())
+                .body("pawnPromotion.figuresToPromote.size()", isPromotion ? Matchers.equalTo(4) : Matchers.equalTo(0));
     }
 }

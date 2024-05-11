@@ -3,6 +3,7 @@ package pl.mkan.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.mkan.controller.dto.*;
+import pl.mkan.controller.dto.enums.PieceColor;
 import pl.mkan.controller.dto.enums.PieceType;
 import pl.mkan.controller.dto.mapper.BoardDTOMapper;
 import pl.mkan.controller.dto.mapper.MoveDTOMapper;
@@ -11,9 +12,10 @@ import pl.mkan.game.engine.Move;
 import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.figures.Figure;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
@@ -67,9 +69,34 @@ public class GameService {
 
     public GameStateDTO checkGameState(BoardDTO board) {
         GameOverDTO gameOver = checkGameOver(board);
-        Optional<PieceDTO> pawnToPromotion = board.pieces().stream().
+        PieceDTO pawnToPromotion = board.pieces().stream().
                 filter(p -> p.type() == PieceType.PAWN).
-                filter(p -> p.position().row() == 0 || p.position().row() == 7).findAny();
-        return new GameStateDTO(gameOver, new PawnPromotionDTO(pawnToPromotion.orElse(null), List.of()));
+                filter(
+                        p -> (p.position().row() == 0 &&
+                                p.position().column() == board.move().destColumn()) ||
+                                (p.position().row() == 7 &&
+                                        p.position().column() == board.move().destColumn())
+                )
+                .findAny()
+                .orElse(null);
+
+        List<PieceDTO> figuresToPromote = new ArrayList<>();
+        if (pawnToPromotion != null) figuresToPromote.addAll(generateFiguresToPromote(pawnToPromotion));
+        return new GameStateDTO(gameOver, new PawnPromotionDTO(pawnToPromotion, figuresToPromote));
+    }
+
+    private Collection<PieceDTO> generateFiguresToPromote(PieceDTO pawnToPromotion) {
+        int id = pawnToPromotion.id();
+        PieceColor color = pawnToPromotion.color();
+        PositionDTO position = pawnToPromotion.position();
+        Boolean moved = pawnToPromotion.moved();
+        List<String> figuresNames = List.of("QUEEN", "ROOK", "BISHOP", "KNIGHT");
+        List<PieceDTO> figuresToPromote = new ArrayList<>();
+
+        for (String figureName : figuresNames) {
+            figuresToPromote.add(new PieceDTO(id, PieceType.valueOf(figureName), color, position, moved));
+        }
+
+        return figuresToPromote;
     }
 }
