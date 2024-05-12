@@ -65,7 +65,7 @@ export const getAvailableMoves = async (bordState) => {
 };
 
 export const getGameState = async (boardState) => {
-    const url = `${backendUri}/api/game/game_over`;
+    const url = `${backendUri}/api/game/state`;
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -80,8 +80,16 @@ export const getGameState = async (boardState) => {
             return await response.json();
         } else {
             return {
-                isGameOver: false,
-                winner: null
+                gameOver: {
+                    isGameOver: false,
+                    winner: null
+                },
+                pawnPromotion: {
+                    pawn: null,
+                    figuresToPromote: [
+
+                    ]
+                }
             }
         }
     } catch (error) {

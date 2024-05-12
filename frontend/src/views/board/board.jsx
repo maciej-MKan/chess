@@ -34,12 +34,12 @@ const Chessboard = () => {
         if (boardState && !isEmpty(boardState)) {
             getGameState(boardState)
                 .then((gameStateData) => {
-                    if (gameStateData.isGameOver) {
+                    if (gameStateData.gameOver.isGameOver) {
                         setGameOver(true);
-                        setWinner(gameStateData.winner);
+                        setWinner(gameStateData.gameOver.winner);
                         setAvailableMoves({})
                     }
-                        console.log('game over: ' + gameStateData.isGameOver);
+                        console.log('game over: ' + gameStateData.gameOver.isGameOver);
                     }
                 )
                 .catch((error) => {
