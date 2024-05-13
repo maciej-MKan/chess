@@ -50,9 +50,7 @@ ${\color{red} \textnormal{If either CI shows an error, then the project is not c
 - [maciej-MKan](https://github.com/maciej-MKan)
 
 ## Demo
-<p align="center">
-  <img src="https://github.com/maciej-MKan/chess/blob/main/assets/chess_demo.gif" alt="logo" width="300"/>
-</p>
+![Demo](assets/chess_demo.gif)
 
 ## License
 
