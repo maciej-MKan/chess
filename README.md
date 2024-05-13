@@ -49,6 +49,11 @@ ${\color{red} \textnormal{If either CI shows an error, then the project is not c
 
 - [maciej-MKan](https://github.com/maciej-MKan)
 
+## Demo
+<p align="center">
+  <img src="https://github.com/maciej-MKan/chess/blob/main/assets/chess_demo.gif" alt="logo" width="300"/>
+</p>
+
 ## License
 
 This project is licensed under the MIT License. For more information, see the [LICENSE](https://github.com/maciej-MKan/chess/blob/main/LICENSE) file.
