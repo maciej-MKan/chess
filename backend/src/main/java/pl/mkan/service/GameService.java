@@ -47,6 +47,11 @@ public class GameService {
     public AvailableMovesDTO calculateAvailableMoves(AvailableMovesRequestDTO gameState) {
         Board engineBoard = BoardDTOMapper.map(gameState.pieces());
         engineBoard.switchWhoseMove();
+        try {
+            engineBoard.setPreMove(MoveDTOMapper.map(gameState.preMove()));
+        } catch (NullPointerException e) {
+            log.info("Game state has no pre move");
+        }
         List<Move> possibleMoves = generatePossibleMoves(engineBoard, engineBoard.getWhoseMove());
 
         Map<Figure, List<Move>> figureMovesMap = possibleMoves.stream()

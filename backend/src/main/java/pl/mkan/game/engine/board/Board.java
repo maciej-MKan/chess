@@ -1,6 +1,7 @@
 package pl.mkan.game.engine.board;
 
 import lombok.Getter;
+import lombok.Setter;
 import pl.mkan.game.engine.*;
 import pl.mkan.game.engine.figures.*;
 
@@ -18,6 +19,9 @@ public class Board {
     private FigureColor whoseMove = FigureColor.WHITE;
     @Getter
     private boolean gameWithComputer;
+    @Setter
+    private Move preMove;
+
     private Board prevBoard;
 
     public Board() {
@@ -146,7 +150,29 @@ public class Board {
 
     private CoverOptions isMoveWithCapture(Move move) {
         boolean destSquareEmpty = getFigure(move.destCol(), move.destRow()) instanceof None;
-        return destSquareEmpty ? CoverOptions.FALSE : CoverOptions.TRUE;
+        return destSquareEmpty ? CoverOptions.FALSE : preMove != null ? checkEnPassant(move, preMove) : CoverOptions.TRUE;
+    }
+
+    private CoverOptions checkEnPassant(Move move, Move preMove) {
+        Figure movingFigure = getFigure(move.sourceCol(), move.sourceRow());
+        FigureColor movingFigureColor = movingFigure.getColor();
+        Figure oponentFigure = prevBoard.getFigure(move.destCol(), move.destRow());
+        FigureColor oponentFigureColor = oponentFigure.getColor();
+        int deltaRowPreMove = preMove.destRow() - move.sourceRow();
+        int deltaRowMovingFigure = move.destRow() - move.sourceRow();
+        int deltaColMovingFigure = move.destCol() - move.sourceCol();
+
+        if (
+                movingFigure instanceof Pawn
+                        && oponentFigure instanceof Pawn
+                        && movingFigureColor != oponentFigureColor
+                        && Math.abs(deltaRowPreMove) == 2
+                        && Math.abs(deltaColMovingFigure) == 1
+                        && Math.abs(deltaRowMovingFigure) == 0
+        ) {
+            return CoverOptions.ENPASSANT;
+        }
+        return CoverOptions.TRUE;
     }
 
     private boolean isPathClear(Move move) {

@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
-public record AvailableMovesRequestDTO(@NotEmpty List<PieceDTO> pieces, @JsonProperty("move") MoveDTO prevMove) {
+public record AvailableMovesRequestDTO(@NotEmpty List<PieceDTO> pieces, @JsonProperty("move") MoveDTO preMove) {
 }
