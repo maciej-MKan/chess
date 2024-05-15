@@ -156,9 +156,9 @@ public class Board {
     private CoverOptions checkEnPassant(Move move, Move preMove) {
         Figure movingFigure = getFigure(move.sourceCol(), move.sourceRow());
         FigureColor movingFigureColor = movingFigure.getColor();
-        Figure oponentFigure = prevBoard.getFigure(move.destCol(), move.destRow());
+        Figure oponentFigure = getFigure(move.destCol(), move.destRow());
         FigureColor oponentFigureColor = oponentFigure.getColor();
-        int deltaRowPreMove = preMove.destRow() - move.sourceRow();
+        int deltaRowPreMove = preMove.destRow() - preMove.sourceRow();
         int deltaRowMovingFigure = move.destRow() - move.sourceRow();
         int deltaColMovingFigure = move.destCol() - move.sourceCol();
 
@@ -234,6 +234,7 @@ public class Board {
 
     public Board deepCopy() {
         Board newBoard = new Board(boardOrientation, gameWithComputer);
+        newBoard.setPreMove(preMove);
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 Figure figure = getFigure(col, row);
