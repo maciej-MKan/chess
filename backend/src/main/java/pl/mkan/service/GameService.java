@@ -24,6 +24,10 @@ import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
 @Service
 public class GameService {
     public BoardDTO getMove(BoardDTO board) {
+        GameOverDTO gameOver = checkGameOver(board);
+        if (gameOver.isGameOver()) {
+            return board;
+        }
         Board engineBoard = BoardDTOMapper.map(board.pieces());
         Move move = board.move() != null ?
                 MoveDTOMapper.map(board.move()) :
