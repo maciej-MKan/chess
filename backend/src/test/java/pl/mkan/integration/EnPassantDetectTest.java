@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import pl.mkan.controller.dto.PositionDTO;
 
 import static io.restassured.RestAssured.given;
 import static pl.mkan.controller.rest.GameController.API_PATH;
@@ -21,7 +22,7 @@ public class EnPassantDetectTest {
 
     @ParameterizedTest
     @MethodSource({"pl.mkan.helper.BoardConfigForEnPassant#enPassant"})
-    public void shouldDetectEnPassant(String requestBody, int coveredId) {
+    public void shouldDetectEnPassant(String requestBody, int coveringPawnId, PositionDTO expectedPosition) {
         given()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
@@ -29,6 +30,9 @@ public class EnPassantDetectTest {
                 .post("http://localhost:" + port + API_PATH + "/game")
                 .then()
                 .statusCode(200)
-                .body("pieces.find { it.id ==" + coveredId + " }", Matchers.nullValue());
+                .body("pieces.find { it.id ==" + coveringPawnId + " }.position.row",
+                        Matchers.equalTo(expectedPosition.row()))
+                .body("pieces.find { it.id ==" + coveringPawnId + " }.position.column",
+                        Matchers.equalTo(expectedPosition.column()));
     }
 }

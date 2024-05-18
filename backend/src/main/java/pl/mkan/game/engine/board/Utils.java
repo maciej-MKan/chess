@@ -3,6 +3,8 @@ package pl.mkan.game.engine.board;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
 import pl.mkan.game.engine.Move;
+import pl.mkan.game.engine.figures.Figure;
+import pl.mkan.game.engine.figures.King;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,14 +18,19 @@ public class Utils {
 
     public static List<Move> generatePossibleMoves(Board board, FigureColor activeColor) {
         List<Move> allPossibleMoves = new ArrayList<>();
+        int kingCounter = 0;
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                if (board.getFigure(col, row).getColor() == activeColor) {
+                Figure figure = board.getFigure(col, row);
+                if (figure instanceof King) {
+                    kingCounter++;
+                }
+                if (figure.getColor() == activeColor) {
                     addPossibleMoves(col, row, allPossibleMoves, board);
                 }
             }
         }
-        return allPossibleMoves;
+        return kingCounter == 2 ? allPossibleMoves : List.of();
     }
 
     private static void addPossibleMoves(int col, int row, List<Move> allPossibleMoves, Board board) {

@@ -1,6 +1,7 @@
 package pl.mkan.helper;
 
 import org.junit.jupiter.params.provider.Arguments;
+import pl.mkan.controller.dto.PositionDTO;
 
 import java.util.stream.Stream;
 
@@ -9,6 +10,26 @@ public class BoardConfigForEnPassant {
         return Stream.of(
                 Arguments.of("""
                                 {"pieces": [{
+                                                "id": 88,
+                                                "type": "KING",
+                                                "color": "WHITE",
+                                                "position": {
+                                                    "row": 7,
+                                                    "column": 5
+                                                },
+                                                "moved": false
+                                            },
+                                            {
+                                                "id": 99,
+                                                "type": "KING",
+                                                "color": "BLACK",
+                                                "position": {
+                                                    "row": 0,
+                                                    "column": 5
+                                                },
+                                                "moved": false
+                                            },
+                                            {
                                                 "id": 11,
                                                 "type": "PAWN",
                                                 "color": "BLACK",
@@ -35,7 +56,8 @@ public class BoardConfigForEnPassant {
                                             "destRow": 3
                                         }
                                 }""",
-                        22)
+                        11,
+                        new PositionDTO(2, 3))
         );
     }
 }
