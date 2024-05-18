@@ -17,7 +17,7 @@ const Chessboard = () => {
     const [selectedPiece, setSelectedPiece] = useState({});
 
     useEffect(() => {
-        setWaitApi(true)
+        setWaitApi(true);
         initGame()
             .then((boardData) => {
                 setBoardState(boardData);
@@ -30,9 +30,10 @@ const Chessboard = () => {
             .finally(() => setWaitApi(false));
     }, []);
 
-    useEffect(() => {
-        if (boardState && !isEmpty(boardState)) {
-            getGameState(boardState)
+    const fetchGameState = (board) => {
+        setWaitApi(true);
+        if (board && !isEmpty(board)) {
+            getGameState(board)
                 .then((gameStateData) => {
                     if (gameStateData.gameOver.isGameOver) {
                         setGameOver(true);
@@ -46,8 +47,9 @@ const Chessboard = () => {
                     console.log("error " + error);
                     setError(error.toString())
                 })
+                .finally(() => setWaitApi(false));
         }
-    }, [boardState]);
+    };
 
     const fetchAvailableMoves = (board) => {
         console.log('try get available moves' + board)
@@ -131,8 +133,15 @@ const Chessboard = () => {
         piece.position.row = selectedSquare.row;
         piece.position.column = selectedSquare.column;
         piece.moved = true;
+        updatedBoard.move = {
+            srcColumn: selectedPiece.column,
+            srcRow: selectedPiece.row,
+            destColumn: selectedSquare.column,
+            destRow: selectedSquare.row
+        };
+        fetchGameState(updatedBoard);
         setBoardState(updatedBoard);
-        console.log(updatedBoard);
+        console.log("updated board", updatedBoard);
         setSelectedPiece({});
         setSelectedSquare({});
         console.log("Selected piece:", selectedPiece);
@@ -146,6 +155,7 @@ const Chessboard = () => {
             getComputerMove(board)
                 .then(boardData => {
                     setBoardState(boardData);
+                    fetchGameState(boardData);
                     fetchAvailableMoves(boardData);
                 })
                 .catch((error) => {
