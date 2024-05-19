@@ -3,6 +3,7 @@ import {Square} from "./components/Square";
 import './Chessboard.css'
 import {getAvailableMoves, getComputerMove, getGameState, initGame} from "../../api/game";
 import {isEmpty} from "../utils";
+import PawnPromotionModal from "./components/PawnPromotion";
 
 const Chessboard = () => {
 
@@ -15,6 +16,8 @@ const Chessboard = () => {
     const [winner, setWinner] = useState(null)
     const [selectedSquare, setSelectedSquare] = useState({});
     const [selectedPiece, setSelectedPiece] = useState({});
+    const [pawnPromotionOpen, setPawnPromotionOpen] = useState(false);
+    const [piecesToPromote, setPiecesToPromote] = useState([]);
 
     useEffect(() => {
         setWaitApi(true);
@@ -40,7 +43,13 @@ const Chessboard = () => {
                         setWinner(gameStateData.gameOver.winner);
                         setAvailableMoves({})
                     }
+                    if (gameStateData.pawnPromotion.pawn) {
+                        console.log("pawn promotion");
+                        setPawnPromotionOpen(true);
+                        setPiecesToPromote(gameStateData.pawnPromotion.figuresToPromote);
+                    }
                         console.log('game over: ' + gameStateData.gameOver.isGameOver);
+                        console.log('pawn promotion: ' + (gameStateData.pawnPromotion.pawn === true));
                     }
                 )
                 .catch((error) => {
@@ -210,9 +219,20 @@ const Chessboard = () => {
         return board;
     };
 
+    const promotePawn = (piece) => {
+        const pawn = findPiece(piece.row, piece.column);
+        pawn.type = piece.type;
+    };
+
     return (
         <div>
             <div className="chessboard">{(error !== " ") ? error : boardState ? renderBoard() : error}</div>
+            <PawnPromotionModal
+                isOpen={pawnPromotionOpen}
+                onClose={() => setPawnPromotionOpen(false)}
+                piecesList={piecesToPromote}
+                onFigureSelect={(piece) => promotePawn(piece)}
+            />
             {waitApi && <div className='loadingLabel'>Wait for API response</div>}
             {gameOver && <div className='gameOver'>Game Over, the winner is {winner}</div>}
         </div>
