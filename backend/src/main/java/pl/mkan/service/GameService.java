@@ -48,6 +48,13 @@ public class GameService {
         return new BoardDTO(BoardDTOMapper.map(engineBoard), null);
     }
 
+    public BoardDTO makeTestBoard() {
+        Board engineBoard = new Board();
+        engineBoard.testInit();
+
+        return new BoardDTO(BoardDTOMapper.map(engineBoard), null);
+    }
+
     public AvailableMovesDTO calculateAvailableMoves(AvailableMovesRequestDTO gameState) {
         Board engineBoard = BoardDTOMapper.map(gameState.pieces());
         engineBoard.switchWhoseMove();

@@ -4,6 +4,7 @@ import './Chessboard.css'
 import {getAvailableMoves, getComputerMove, getGameState, initGame} from "../../api/game";
 import {isEmpty} from "../utils";
 import PawnPromotionModal from "./components/PawnPromotion";
+import {logDOM} from "@testing-library/react";
 
 const Chessboard = () => {
 
@@ -44,7 +45,8 @@ const Chessboard = () => {
                         setAvailableMoves({})
                     }
                     if (gameStateData.pawnPromotion.pawn) {
-                        console.log("pawn promotion");
+                        setWaitApi(true)
+                        console.log("pawn promotion: " + gameStateData.pawnPromotion.figuresToPromote);
                         setPawnPromotionOpen(true);
                         setPiecesToPromote(gameStateData.pawnPromotion.figuresToPromote);
                     }
@@ -158,7 +160,7 @@ const Chessboard = () => {
         computerMove(updatedBoard);
     }
     const computerMove = (board) => {
-        if (waitApi) setTimeout(() => computerMove(board), 300);
+        if (waitApi || pawnPromotionOpen) setTimeout(() => computerMove(board), 300);
         if (!gameOver) {
             setWaitApi(true);
             getComputerMove(board)
@@ -220,8 +222,14 @@ const Chessboard = () => {
     };
 
     const promotePawn = (piece) => {
-        const pawn = findPiece(piece.row, piece.column);
-        pawn.type = piece.type;
+        const pawn = findPiece(piece.position.row, piece.position.column);
+        if (pawn) {
+            pawn.type = piece.type;
+            setBoardState(boardState);
+        } else {
+            console.log("no pawn found for ");
+            console.log(piece)
+        }
     };
 
     return (
@@ -229,7 +237,7 @@ const Chessboard = () => {
             <div className="chessboard">{(error !== " ") ? error : boardState ? renderBoard() : error}</div>
             <PawnPromotionModal
                 isOpen={pawnPromotionOpen}
-                onClose={() => setPawnPromotionOpen(false)}
+                onClose={() => setWaitApi(false)}
                 piecesList={piecesToPromote}
                 onFigureSelect={(piece) => promotePawn(piece)}
             />

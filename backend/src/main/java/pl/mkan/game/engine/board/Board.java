@@ -47,6 +47,12 @@ public class Board {
 
     }
 
+    public void testInit() {
+        setFigure(0, 1, new Pawn(11, FigureColor.BLACK));
+        setFigure(4, 0, new King(88, FigureColor.WHITE));
+        setFigure(4, 7, new King(99, FigureColor.BLACK));
+    }
+
     private void setPawns(FigureColor color, int row) {
         for (int col = 0; col < 8; col++) {
             setFigure(col, row, new Pawn(((row + 1) * 10) + col + 1, color));

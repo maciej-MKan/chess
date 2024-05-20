@@ -28,6 +28,11 @@ public class GameController {
         return ResponseEntity.ok(gameService.makeNewBoard());
     }
 
+    @GetMapping(value = "/game/test")
+    public ResponseEntity<BoardDTO> testGame() {
+        return ResponseEntity.ok(gameService.makeTestBoard());
+    }
+
     @PostMapping(value = "/game/available_moves")
     public ResponseEntity<AvailableMovesDTO> getAvailableMoves(@RequestBody @Valid AvailableMovesRequestDTO request) {
         log.info("Handle POST request at '/game/available_moves' with object [{}]", request);

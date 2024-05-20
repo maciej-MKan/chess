@@ -9,16 +9,16 @@ const PawnPromotionModal = ({isOpen, onClose, piecesList, onFigureSelect}) => {
         onClose();
     };
 
-    if (!modalOpen) {
-        return null;
-    }
+    // if (!modalOpen) {
+    //     return null;
+    // }
 
     return (
         <>
             <h2>Promote Pawn</h2>
             <div className="promote-options">
                 {piecesList.map((figure) => (
-                    <div onClick={onFigureSelect(figure)}>
+                    <div onClick={() => onFigureSelect(figure)}>
                         <Piece
                             key={figure.id}
                             id={figure.id}
