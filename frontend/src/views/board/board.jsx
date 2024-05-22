@@ -18,6 +18,7 @@ const Chessboard = () => {
     const [selectedSquare, setSelectedSquare] = useState({});
     const [selectedPiece, setSelectedPiece] = useState({});
     const [pawnPromotionOpen, setPawnPromotionOpen] = useState(false);
+    const [pawnPromotionOnExit, setPawnPromotionOnExit] = useState(boardState => {})
     const [piecesToPromote, setPiecesToPromote] = useState([]);
 
     useEffect(() => {
@@ -34,7 +35,7 @@ const Chessboard = () => {
             .finally(() => setWaitApi(false));
     }, []);
 
-    const fetchGameState = (board) => {
+    const fetchGameState = (board, onExit) => {
         setWaitApi(true);
         if (board && !isEmpty(board)) {
             getGameState(board)
@@ -48,6 +49,7 @@ const Chessboard = () => {
                         setWaitApi(true)
                         console.log("pawn promotion: " + gameStateData.pawnPromotion.figuresToPromote);
                         setPawnPromotionOpen(true);
+                        // onExit(board);
                         setPiecesToPromote(gameStateData.pawnPromotion.figuresToPromote);
                     }
                         console.log('game over: ' + gameStateData.gameOver.isGameOver);
@@ -58,7 +60,12 @@ const Chessboard = () => {
                     console.log("error " + error);
                     setError(error.toString())
                 })
-                .finally(() => setWaitApi(false));
+                .finally(() => {
+                    setWaitApi(false);
+                    if (onExit) {
+                        console.log("exit command");
+                    }
+                });
         }
     };
 
@@ -150,17 +157,16 @@ const Chessboard = () => {
             destColumn: selectedSquare.column,
             destRow: selectedSquare.row
         };
-        fetchGameState(updatedBoard);
         setBoardState(updatedBoard);
         console.log("updated board", updatedBoard);
         setSelectedPiece({});
         setSelectedSquare({});
         console.log("Selected piece:", selectedPiece);
         animatePieceMovement(selectedPiece);
-        computerMove(updatedBoard);
+        fetchGameState(updatedBoard, computerMove);
     }
     const computerMove = (board) => {
-        if (waitApi || pawnPromotionOpen) setTimeout(() => computerMove(board), 300);
+        if (waitApi) setTimeout(() => computerMove(board), 300);
         if (!gameOver) {
             setWaitApi(true);
             getComputerMove(board)
@@ -237,7 +243,9 @@ const Chessboard = () => {
             <div className="chessboard">{(error !== " ") ? error : boardState ? renderBoard() : error}</div>
             <PawnPromotionModal
                 isOpen={pawnPromotionOpen}
-                onClose={() => setWaitApi(false)}
+                onClose={() => {
+                    setWaitApi(false);
+                }}
                 piecesList={piecesToPromote}
                 onFigureSelect={(piece) => promotePawn(piece)}
             />
