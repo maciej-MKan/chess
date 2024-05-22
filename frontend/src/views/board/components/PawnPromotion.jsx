@@ -1,36 +1,22 @@
-import React, {useState} from "react";
-import {Piece} from "./Piece";
+import React from 'react';
+import Modal from 'react-modal';
+import { Piece } from './Piece';
 
-const PawnPromotionModal = ({isOpen, onClose, piecesList, onFigureSelect}) => {
-    const [modalOpen, setModalOpen] = useState(isOpen);
+Modal.setAppElement('#root');
 
-    const closeModal = () => {
-        setModalOpen(false);
-        onClose();
-    };
-
-    // if (!modalOpen) {
-    //     return null;
-    // }
-
+const PawnPromotionModal = ({ isOpen, onClose, piecesList, onFigureSelect }) => {
     return (
-        <>
+        <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel="Pawn Promotion">
             <h2>Promote Pawn</h2>
             <div className="promote-options">
-                {piecesList.map((figure) => (
-                    <div onClick={() => onFigureSelect(figure)}>
-                        <Piece
-                            key={figure.id}
-                            id={figure.id}
-                            type={figure.type}
-                            color={figure.color}
-                            selected={false}
-                        />
+                {piecesList.map((piece, index) => (
+                    <div key={index} onClick={() => onFigureSelect(piece)}>
+                        <Piece id={piece.id} type={piece.type} color={piece.color} selected={false} />
                     </div>
                 ))}
             </div>
-            <button className="close-button" onClick={closeModal}>Close</button>
-        </>
+            <button onClick={onClose}>Cancel</button>
+        </Modal>
     );
 };
 
