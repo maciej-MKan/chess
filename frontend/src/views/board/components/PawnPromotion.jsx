@@ -1,12 +1,19 @@
 import React from 'react';
 import Modal from 'react-modal';
 import { Piece } from './Piece';
+import './PawnPromotion.css';
 
 Modal.setAppElement('#root');
 
 const PawnPromotionModal = ({ isOpen, onClose, piecesList, onFigureSelect }) => {
     return (
-        <Modal isOpen={isOpen} onRequestClose={onClose} contentLabel="Pawn Promotion">
+        <Modal
+            isOpen={isOpen}
+            onRequestClose={onClose}
+            contentLabel="Pawn Promotion"
+            className="react-modal-content"
+            overlayClassName="react-modal-overlay"
+        >
             <h2>Promote Pawn</h2>
             <div className="promote-options">
                 {piecesList.map((piece, index) => (
@@ -15,7 +22,6 @@ const PawnPromotionModal = ({ isOpen, onClose, piecesList, onFigureSelect }) => 
                     </div>
                 ))}
             </div>
-            <button onClick={onClose}>Cancel</button>
         </Modal>
     );
 };

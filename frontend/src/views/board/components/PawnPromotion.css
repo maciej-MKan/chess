@@ -1,0 +1,54 @@
+.promote-options {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.promote-options div {
+    cursor: pointer;
+    padding: 10px;
+    transition: transform 0.3s;
+}
+
+.promote-options div:hover {
+    transform: scale(1.1);
+}
+
+.react-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 32%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    outline: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.react-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 1000;
+}
+
+.react-modal-close-button {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.react-modal-close-button:hover {
+    background-color: #d32f2f;
+}

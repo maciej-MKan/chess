@@ -17,42 +17,46 @@ const Chessboard = () => {
     const [selectedPiece, setSelectedPiece] = useState({});
     const [pawnPromotionOpen, setPawnPromotionOpen] = useState(false);
     const [piecesToPromote, setPiecesToPromote] = useState([]);
-    const [waitingForPromotion, setWaitingForPromotion] = useState(false);
 
     useEffect(() => {
         setWaitApi(true);
         initGame()
-            .then((boardData) => {
+            .then(boardData => {
                 setBoardState(boardData);
                 fetchAvailableMoves(boardData);
             })
-            .catch((error) => {
+            .catch(error => {
                 console.log('error ' + error);
                 setError(error.toString());
             })
             .finally(() => setWaitApi(false));
     }, []);
 
-    const fetchGameState = useCallback((board) => {
+    const fetchGameState = useCallback((board, onExit) => {
         setWaitApi(true);
+        let needOnExit = true;
         if (board && !isEmpty(board)) {
             getGameState(board)
-                .then((gameStateData) => {
+                .then(gameStateData => {
                     if (gameStateData.gameOver.isGameOver) {
                         setGameOver(true);
                         setWinner(gameStateData.gameOver.winner);
                         setAvailableMoves({});
+                        needOnExit = false;
                     } else if (gameStateData.pawnPromotion.pawn) {
                         setPawnPromotionOpen(true);
                         setPiecesToPromote(gameStateData.pawnPromotion.figuresToPromote);
-                        setWaitingForPromotion(true);
+                        needOnExit = false;
                     }
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.log('error ' + error);
                     setError(error.toString());
                 })
-                .finally(() => setWaitApi(false));
+                .finally(() => {
+                    setWaitApi(false);
+                    if (onExit && needOnExit) onExit(board);
+                });
         }
     }, []);
 
@@ -60,8 +64,8 @@ const Chessboard = () => {
         if (board && !isEmpty(board) && !gameOver) {
             setWaitApi(true);
             getAvailableMoves(board)
-                .then((availableMovesData) => setAvailableMoves(!gameOver ? availableMovesData.availableMoves : {}))
-                .catch((error) => {
+                .then(availableMovesData => setAvailableMoves(!gameOver ? availableMovesData.availableMoves : {}))
+                .catch(error => {
                     console.log('error ' + error);
                     setError(error.toString());
                 })
@@ -79,17 +83,20 @@ const Chessboard = () => {
         } // eslint-disable-next-line
     }, [selectedSquare, selectedPiece]);
 
-    const findPiece = (row, column) => boardState?.pieces?.find((piece) => piece.position.row === row && piece.position.column === column);
+    const findPiece = useCallback((row, column) =>
+            boardState?.pieces?.find(piece => piece.position.row === row && piece.position.column === column),
+        [boardState]
+    );
 
-    const removePiece = (piece) => {
+    const removePiece = useCallback((piece) => {
         if (piece) {
-            const newPieces = boardState.pieces.filter((p) => p !== piece);
+            const newPieces = boardState.pieces.filter(p => p !== piece);
             return { ...boardState, pieces: newPieces };
         }
         return boardState;
-    };
+    }, [boardState]);
 
-    const animatePieceMovement = (piece) => {
+    const animatePieceMovement = useCallback((piece) => {
         if (piece) {
             const squareId = `square-${piece.row}-${piece.column}`;
             const square = document.querySelector(`#${squareId}`);
@@ -100,9 +107,9 @@ const Chessboard = () => {
                 }, 500);
             }
         }
-    };
+    }, []);
 
-    const onSquareClick = (row, column) => {
+    const onSquareClick = useCallback((row, column) => {
         if (!isEmpty(selectedSquare) && row === selectedSquare.row && column === selectedSquare.column) {
             setSelectedSquare({});
         } else if (!isEmpty(selectedPiece) && row === selectedPiece.row && column === selectedPiece.column) {
@@ -112,26 +119,24 @@ const Chessboard = () => {
             const id = piece?.id;
             piece && piece.color === playerColor ? setSelectedPiece({ id, row, column }) : setSelectedSquare({ row, column });
         }
-    };
+    }, [selectedSquare, selectedPiece, playerColor, findPiece]);
 
-    const checkSquareSelected = (row, column) => {
-        return selectedSquare.row === row && selectedSquare.column === column;
-    };
+    const checkSquareSelected = (row, column) =>
+        selectedSquare.row === row && selectedSquare.column === column;
 
-    const checkPieceSelected = (row, column) => {
-        return selectedPiece.row === row && selectedPiece.column === column;
-    };
+    const checkPieceSelected = (row, column) =>
+        selectedPiece.row === row && selectedPiece.column === column;
 
     const checkSquareActive = (row, column) => {
         if (findPiece(row, column)?.color === playerColor) return true;
         if (!isEmpty(selectedPiece)) {
             const id = findPiece(selectedPiece.row, selectedPiece.column)?.id;
-            return availableMoves[id]?.some((move) => move.row === row && move.column === column);
+            return availableMoves[id]?.some(move => move.row === row && move.column === column);
         }
         return false;
     };
 
-    const playerMove = () => {
+    const playerMove = useCallback(() => {
         const piece = findPiece(selectedPiece.row, selectedPiece.column);
         const updatedBoard = removePiece(findPiece(selectedSquare.row, selectedSquare.column));
         piece.position.row = selectedSquare.row;
@@ -147,30 +152,27 @@ const Chessboard = () => {
         setSelectedPiece({});
         setSelectedSquare({});
         animatePieceMovement(selectedPiece);
-        fetchGameState(updatedBoard);
-    };
+        fetchGameState(updatedBoard, computerMove);
+    }, [selectedPiece, selectedSquare, findPiece, removePiece, animatePieceMovement, fetchGameState]);
 
-    const computerMove = useCallback(
-        (board) => {
-            if (!gameOver && !waitingForPromotion && !waitApi) {
-                setWaitApi(true);
-                getComputerMove(board)
-                    .then((boardData) => {
-                        setBoardState(boardData);
-                        fetchGameState(boardData);
-                        fetchAvailableMoves(boardData);
-                    })
-                    .catch((error) => {
-                        console.log('error ' + error);
-                        setError(error.toString());
-                    })
-                    .finally(() => setWaitApi(false));
-            }
-        },
-        [fetchGameState, fetchAvailableMoves, gameOver, waitApi, waitingForPromotion]
-    );
+    const computerMove = useCallback((board) => {
+        if (!gameOver && !waitApi) {
+            setWaitApi(true);
+            getComputerMove(board)
+                .then(boardData => {
+                    setBoardState(boardData);
+                    fetchGameState(boardData, null);
+                    fetchAvailableMoves(boardData);
+                })
+                .catch(error => {
+                    console.log('error ' + error);
+                    setError(error.toString());
+                })
+                .finally(() => setWaitApi(false));
+        }
+    }, [gameOver, waitApi, fetchGameState, fetchAvailableMoves]);
 
-    const renderSquare = (row, column, piece) => {
+    const renderSquare = useCallback((row, column, piece) => {
         const isBlack = (row + column) % 2 === 1;
         const isSelected = checkSquareSelected(row, column);
         const isSelectedPiece = checkPieceSelected(row, column);
@@ -189,9 +191,9 @@ const Chessboard = () => {
                 active={isActive}
             />
         );
-    };
+    }, [waitApi, checkSquareSelected, checkPieceSelected, checkSquareActive, onSquareClick]);
 
-    const renderBoard = () => {
+    const renderBoard = useCallback(() => {
         const board = [];
 
         board.push(<div key="empty" className="square empty" />);
@@ -216,21 +218,19 @@ const Chessboard = () => {
         }
 
         return board;
-    };
+    }, [findPiece, renderSquare]);
 
-    const promotePawn = (piece) => {
+    const promotePawn = useCallback((piece) => {
         const pawn = findPiece(piece.position.row, piece.position.column);
         if (pawn) {
             pawn.type = piece.type;
-            setBoardState({ ...boardState });
             setPawnPromotionOpen(false);
-            setWaitingForPromotion(false);
-            fetchGameState(boardState);
+            computerMove(boardState);
         } else {
             console.log('no pawn found for ');
             console.log(piece);
         }
-    };
+    }, [findPiece, computerMove, boardState]);
 
     return (
         <div>
