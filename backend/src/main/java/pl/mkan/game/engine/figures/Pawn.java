@@ -1,6 +1,6 @@
 package pl.mkan.game.engine.figures;
 
-import pl.mkan.game.engine.CoverOptions;
+import pl.mkan.game.engine.CaptureOptions;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
 
@@ -25,16 +25,16 @@ public class Pawn extends Figure {
     @Override
     public List<FigureMove> getPossibleMoves() {
         List<FigureMove> moves = new ArrayList<>();
-        moves.add(new FigureMove(0, 1, true, CoverOptions.FALSE, false));
-        moves.add(new FigureMove(0, 2, true, CoverOptions.FALSE, true));
-        moves.add(new FigureMove(-1, 1, true, CoverOptions.TRUE, false));
-        moves.add(new FigureMove(1, 1, true, CoverOptions.TRUE, false));
-        moves.add(new FigureMove(0, -1, true, CoverOptions.FALSE, false));
-        moves.add(new FigureMove(0, -2, true, CoverOptions.FALSE, true));
-        moves.add(new FigureMove(-1, -1, true, CoverOptions.TRUE, false));
-        moves.add(new FigureMove(1, -1, true, CoverOptions.TRUE, false));
-        moves.add(new FigureMove(1, 0, false, CoverOptions.ENPASSANT, false));
-        moves.add(new FigureMove(-1, 0, false, CoverOptions.ENPASSANT, false));
+        moves.add(new FigureMove(0, 1, true, CaptureOptions.FALSE, false));
+        moves.add(new FigureMove(0, 2, true, CaptureOptions.FALSE, true));
+        moves.add(new FigureMove(-1, 1, true, CaptureOptions.TRUE, false));
+        moves.add(new FigureMove(1, 1, true, CaptureOptions.TRUE, false));
+        moves.add(new FigureMove(0, -1, true, CaptureOptions.FALSE, false));
+        moves.add(new FigureMove(0, -2, true, CaptureOptions.FALSE, true));
+        moves.add(new FigureMove(-1, -1, true, CaptureOptions.TRUE, false));
+        moves.add(new FigureMove(1, -1, true, CaptureOptions.TRUE, false));
+        moves.add(new FigureMove(1, 0, false, CaptureOptions.ENPASSANT, false));
+        moves.add(new FigureMove(-1, 0, false, CaptureOptions.ENPASSANT, false));
         return moves;
     }
 

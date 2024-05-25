@@ -1,6 +1,6 @@
 package pl.mkan.game.engine.figures;
 
-import pl.mkan.game.engine.CoverOptions;
+import pl.mkan.game.engine.CaptureOptions;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
 
@@ -23,12 +23,12 @@ public class King extends Figure {
     @Override
     public List<FigureMove> getPossibleMoves() {
         List<FigureMove> moves = new ArrayList<>();
-        addKingMoves(moves, CoverOptions.TRUE);
-        addKingMoves(moves, CoverOptions.FALSE);
+        addKingMoves(moves, CaptureOptions.TRUE);
+        addKingMoves(moves, CaptureOptions.FALSE);
         return moves;
     }
 
-    private void addKingMoves(List<FigureMove> moves, CoverOptions haveToCapture) {
+    private void addKingMoves(List<FigureMove> moves, CaptureOptions haveToCapture) {
         moves.add(new FigureMove(-1, -1, false, haveToCapture, false));
         moves.add(new FigureMove(-1, 1, false, haveToCapture, false));
         moves.add(new FigureMove(1, 1, false, haveToCapture, false));

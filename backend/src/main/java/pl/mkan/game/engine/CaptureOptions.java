@@ -1,5 +1,5 @@
 package pl.mkan.game.engine;
 
-public enum CoverOptions {
+public enum CaptureOptions {
     TRUE, ENPASSANT, FALSE
 }

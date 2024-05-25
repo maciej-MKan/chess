@@ -154,12 +154,12 @@ public class Board {
                 .anyMatch(pm -> !pm.isOnlyInColorDirection() || isMoveInColorDirection);
     }
 
-    private CoverOptions isMoveWithCapture(Move move) {
+    private CaptureOptions isMoveWithCapture(Move move) {
         boolean destSquareEmpty = getFigure(move.destCol(), move.destRow()) instanceof None;
-        return destSquareEmpty ? CoverOptions.FALSE : preMove != null ? checkEnPassant(move, preMove) : CoverOptions.TRUE;
+        return destSquareEmpty ? CaptureOptions.FALSE : preMove != null ? checkEnPassant(move, preMove) : CaptureOptions.TRUE;
     }
 
-    private CoverOptions checkEnPassant(Move move, Move preMove) {
+    private CaptureOptions checkEnPassant(Move move, Move preMove) {
         Figure movingFigure = getFigure(move.sourceCol(), move.sourceRow());
         FigureColor movingFigureColor = movingFigure.getColor();
         Figure oponentFigure = getFigure(move.destCol(), move.destRow());
@@ -176,9 +176,9 @@ public class Board {
                         && Math.abs(deltaColMovingFigure) == 1
                         && Math.abs(deltaRowMovingFigure) == 0
         ) {
-            return CoverOptions.ENPASSANT;
+            return CaptureOptions.ENPASSANT;
         }
-        return CoverOptions.TRUE;
+        return CaptureOptions.TRUE;
     }
 
     private boolean isPathClear(Move move) {

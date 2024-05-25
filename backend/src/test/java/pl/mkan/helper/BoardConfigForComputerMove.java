@@ -96,16 +96,6 @@ public class BoardConfigForComputerMove {
                                             "moved": false
                                         },
                                         {
-                                            "id": 21,
-                                            "type": "PAWN",
-                                            "color": "WHITE",
-                                            "position": {
-                                                "row": 1,
-                                                "column": 0
-                                            },
-                                            "moved": false
-                                        },
-                                        {
                                             "id": 22,
                                             "type": "PAWN",
                                             "color": "WHITE",
@@ -300,8 +290,8 @@ public class BoardConfigForComputerMove {
                                             "type": "QUEEN",
                                             "color": "BLACK",
                                             "position": {
-                                                "row": 7,
-                                                "column": 4
+                                                "row": 4,
+                                                "column": 0
                                             },
                                             "moved": false
                                         },
@@ -343,7 +333,7 @@ public class BoardConfigForComputerMove {
                                         "destRow": 5
                                     }
                                 }""",
-                        11, 6, 0)
+                        11, 4, 0)
         );
     }
 }
