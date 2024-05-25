@@ -36,9 +36,9 @@ public class GameService {
             engineBoard.setEnPassantDestPosition(move);
         }
         log.info("Board state before move:\n{}", engineBoard);
-        Move AImove = engineBoard.AIMove();
+        Move AIMove = engineBoard.AIMove();
         log.info("Board state after AI move:\n{}", engineBoard);
-        return new BoardDTO(BoardDTOMapper.map(engineBoard), MoveDTOMapper.map(AImove));
+        return new BoardDTO(BoardDTOMapper.map(engineBoard), MoveDTOMapper.map(AIMove));
     }
 
     public BoardDTO makeNewBoard() {

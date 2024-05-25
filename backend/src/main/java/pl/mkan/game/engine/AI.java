@@ -15,9 +15,9 @@ import static pl.mkan.game.engine.board.Utils.oppositeColor;
 @Slf4j
 public class AI {
 
-    private static final int MAX_DEPTH = 1;
-    private static final int alpha = Integer.MIN_VALUE;
-    private static final int beta = Integer.MAX_VALUE;
+    private static final int MAX_DEPTH = 3;
+    private static final int ALPHA_INITIAL = Integer.MIN_VALUE;
+    private static final int BETA_INITIAL = Integer.MAX_VALUE;
 
     private static int search(Board board, FigureColor movingColor, int depth, int alpha, int beta) {
         List<Move> possibleMoves = generatePossibleMoves(board, movingColor);
@@ -28,14 +28,16 @@ public class AI {
 
         for (Move move : possibleMoves) {
             board.move(move);
-            int move_score = -search(board, movingColor, depth - 1, -beta, -alpha);
+            log.debug("Move: " + move + " made. Depth: " + depth);
+            int moveScore = -search(board, oppositeColor(movingColor), depth - 1, -beta, -alpha);
             board.backMove();
+            log.debug("Move: " + move + " undone. Score: " + moveScore + ". Depth: " + depth);
 
-            if (move_score > alpha) {
-                alpha = move_score;
+            if (moveScore > alpha) {
+                alpha = moveScore;
             }
             if (alpha >= beta) {
-                return alpha;
+                break; // Beta cut-off
             }
         }
         return alpha;
@@ -48,22 +50,18 @@ public class AI {
         for (Move move : moves) {
             Board testBoard = board.deepCopy();
             testBoard.move(move);
-            int score = search(testBoard, oppositeColor(color), MAX_DEPTH, alpha, beta);
+            int score = search(testBoard, oppositeColor(color), MAX_DEPTH, ALPHA_INITIAL, BETA_INITIAL);
             moveScores.put(move, score);
+            log.info("Evaluated Move: {} with Score: {}", move, score);
         }
 
-        log.debug(
-                moveScores.entrySet().stream()
-                        .map(moveEntry -> "move " + moveEntry.getKey() + " has score " + moveEntry.getValue())
-                        .toString()
-        );
+        moveScores.forEach((move, score) -> log.info("Move: {} has score: {}", move, score));
 
         return moveScores.entrySet().stream()
                 .max(Comparator.comparingInt(Map.Entry::getValue))
                 .map(Map.Entry::getKey)
-                .orElseThrow(() -> new RuntimeException("sth wrong"));
+                .orElseThrow(() -> new RuntimeException("No valid moves"));
     }
-
 
     private static int evaluateBoard(Board board, FigureColor activeColor) {
         int playerScore = 0;
