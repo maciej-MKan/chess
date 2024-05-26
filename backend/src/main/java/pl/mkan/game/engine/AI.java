@@ -2,6 +2,7 @@ package pl.mkan.game.engine;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.mkan.game.engine.board.Board;
+import pl.mkan.game.engine.board.Position;
 import pl.mkan.game.engine.figures.*;
 
 import java.util.Comparator;
@@ -29,16 +30,14 @@ public class AI {
 
         for (Move move : possibleMoves) {
             board.move(move);
-//            log.debug("Move: " + move + " made. Depth: " + depth);
             int moveScore = -search(board, movingColor, depth - 1, -beta, -alpha);
             board.backMove();
-//            log.debug("Move: " + move + " undone. Score: " + moveScore + ". Depth: " + depth);
 
             if (moveScore > alpha) {
                 alpha = moveScore;
             }
             if (alpha >= beta) {
-                break; // Beta cut-off
+                break;
             }
         }
         return alpha;
@@ -53,7 +52,6 @@ public class AI {
             testBoard.move(move);
             int score = search(testBoard, oppositeColor(color), MAX_DEPTH, ALPHA_INITIAL, BETA_INITIAL);
             moveScores.put(move, score);
-//            log.info("Evaluated Move: {} with Score: {}", move, score);
         }
 
         moveScores.forEach((move, score) -> log.info("Move: {} has score: {}", move, score));
@@ -97,5 +95,12 @@ public class AI {
                 King.class, 1000
         );
         return figureScores.getOrDefault(figure.getClass(), 0);
+    }
+
+    public static void promotePawn(Board board, Pawn pawn) {
+        Position promotePosition = board.findFigurePositionById(pawn.getId())
+                .orElseThrow(() -> new RuntimeException("Pawn to promote doesn't exist"));
+
+        board.setFigure(promotePosition.col(), promotePosition.row(), new Queen(pawn.getId(), pawn.getColor()));
     }
 }

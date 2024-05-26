@@ -7,6 +7,8 @@ import pl.mkan.game.engine.figures.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 import static pl.mkan.game.engine.board.Utils.oppositeColor;
 
@@ -111,9 +113,22 @@ public class Board {
         FigureColor computerColor = boardOrientation == BoardOrientation.WHITE_ON_TOP ? FigureColor.WHITE : FigureColor.BLACK;
 
         if (whoseMove != computerColor) throw new RuntimeException("Is not computer turn");
+        Pawn pawn = searchPawnToPromotion();
+        if (pawn != null) {
+            AI.promotePawn(this, pawn);
+        }
         Move bestMove = AI.getBestMove(this, computerColor);
         move(bestMove);
         return bestMove;
+    }
+
+    private Pawn searchPawnToPromotion() {
+        return IntStream.range(0, 8)
+                .mapToObj(i -> getFigure(i, 7))
+                .filter(figure -> figure instanceof Pawn)
+                .map(figure -> (Pawn) figure)
+                .findFirst()
+                .orElse(null);
     }
 
     public void backMove() {
@@ -270,5 +285,23 @@ public class Board {
         ) ? 1 : -1;
         setFigure(move.destCol(), move.destRow(), new None());
         setFigure(move.destCol(), move.destRow() + newRow, movingFigure);
+    }
+
+    public Optional<Position> findFigurePositionById(int id) {
+        int col = -1;
+        int row = -1;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (getFigure(i, j).getId() == id) {
+                    col = i;
+                    row = j;
+                }
+            }
+        }
+        if (col >= 0) {
+            return Optional.of(new Position(col, row));
+        } else {
+            return Optional.empty();
+        }
     }
 }
