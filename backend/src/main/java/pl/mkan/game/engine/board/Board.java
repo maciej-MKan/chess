@@ -113,12 +113,12 @@ public class Board {
         FigureColor computerColor = boardOrientation == BoardOrientation.WHITE_ON_TOP ? FigureColor.WHITE : FigureColor.BLACK;
 
         if (whoseMove != computerColor) throw new RuntimeException("Is not computer turn");
+        Move bestMove = AI.getBestMove(this, computerColor);
+        move(bestMove);
         Pawn pawn = searchPawnToPromotion();
         if (pawn != null) {
             AI.promotePawn(this, pawn);
         }
-        Move bestMove = AI.getBestMove(this, computerColor);
-        move(bestMove);
         return bestMove;
     }
 
