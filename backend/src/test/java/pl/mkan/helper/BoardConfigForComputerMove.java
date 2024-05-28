@@ -336,4 +336,79 @@ public class BoardConfigForComputerMove {
                         11, 4, 0)
         );
     }
+
+    public static Stream<Arguments> pawnPromotion() {
+        return Stream.of(
+                Arguments.of("""
+                                {"pieces": [{
+                                            "id": 11,
+                                            "type": "PAWN",
+                                            "color": "WHITE",
+                                            "position": {
+                                                "row": 6,
+                                                "column": 0
+                                            },
+                                            "moved": true
+                                        },
+                                        {
+                                            "id": 12,
+                                            "type": "KING",
+                                            "color": "WHITE",
+                                            "position": {
+                                                "row": 7,
+                                                "column": 7
+                                            },
+                                            "moved": false
+                                        },
+                                        {
+                                            "id": 13,
+                                            "type": "PAWN",
+                                            "color": "WHITE",
+                                            "position": {
+                                                "row": 6,
+                                                "column": 7
+                                            },
+                                            "moved": false
+                                        },
+                                        {
+                                            "id": 14,
+                                            "type": "PAWN",
+                                            "color": "WHITE",
+                                            "position": {
+                                                "row": 6,
+                                                "column": 6
+                                            },
+                                            "moved": false
+                                        },
+                                        {
+                                            "id": 15,
+                                            "type": "PAWN",
+                                            "color": "WHITE",
+                                            "position": {
+                                                "row": 7,
+                                                "column": 6
+                                            },
+                                            "moved": false
+                                        },
+                                        {
+                                            "id": 21,
+                                            "type": "KING",
+                                            "color": "BLACK",
+                                            "position": {
+                                                "row": 0,
+                                                "column": 6
+                                            },
+                                            "moved": false
+                                        }
+                                    ],
+                                "move": {
+                                        "srcColumn": 6,
+                                        "srcRow": 6,
+                                        "destColumn": 6,
+                                        "destRow": 5
+                                    }
+                                }""",
+                        11)
+        );
+    }
 }

@@ -36,4 +36,18 @@ public class ComputerMoveTest {
                 .body("pieces.find { it.id ==" + movedId + " }.position.column", equalTo(expectedCol))
                 .body("move", notNullValue());
     }
+
+    @ParameterizedTest
+    @MethodSource("pl.mkan.helper.BoardConfigForComputerMove#pawnPromotion")
+    public void pawnPromotion(String requestBody, int promotePawnID) {
+        given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("http://localhost:" + port + API_PATH + "/game")
+                .then()
+                .statusCode(200)
+                .body("pieces.find { it.id ==" + promotePawnID + " }.type", equalTo("QUEEN"));
+
+    }
 }
