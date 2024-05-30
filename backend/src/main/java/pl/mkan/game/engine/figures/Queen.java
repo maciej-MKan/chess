@@ -1,8 +1,8 @@
 package pl.mkan.game.engine.figures;
 
-import pl.mkan.game.engine.CaptureOptions;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
+import pl.mkan.game.engine.MoveType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +24,12 @@ public class Queen extends Figure {
     @Override
     public List<FigureMove> getPossibleMoves() {
         List<FigureMove> moves = new ArrayList<>();
-        addQueenMoves(moves, CaptureOptions.TRUE);
-        addQueenMoves(moves, CaptureOptions.FALSE);
+        addQueenMoves(moves, MoveType.CAPTURE);
+        addQueenMoves(moves, MoveType.NONE);
         return moves;
     }
 
-    private void addQueenMoves(List<FigureMove> moves, CaptureOptions haveToCapture) {
+    private void addQueenMoves(List<FigureMove> moves, MoveType haveToCapture) {
 
         for (int delta = -7; delta < 8; delta++) {
             if (delta == 0) continue;

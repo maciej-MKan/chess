@@ -140,7 +140,7 @@ public class Board {
         result = isTargetOnBoard(move);
         result = result && checkIfMovingFigure(move);
         result = result && checkFigureColor(move);
-        result = result && targetFieldIsEmptyOrEnemy(move);
+        result = result && targetFieldIsEmptyOrEnemy(move, whoseMove);
         result = result && isValidMove(move);
         return result;
     }
@@ -150,7 +150,7 @@ public class Board {
         return move.destCol() >= 0 && move.destCol() < 8 && move.destRow() >= 0 && move.destRow() < 8;
     }
 
-    private boolean targetFieldIsEmptyOrEnemy(Move move) {
+    private boolean targetFieldIsEmptyOrEnemy(Move move, FigureColor whoseMove) {
         return (getFigure(move.destCol(), move.destRow()) instanceof None) || (getFigure(move.destCol(), move.destRow()).getColor() != whoseMove);
     }
 
@@ -164,17 +164,44 @@ public class Board {
                 .filter(pm -> !pm.isHaveToBeFirstMove() || (pm.isHaveToBeFirstMove() == isFirstMove))
                 .filter(pm -> pm.getColumn() == deltaCol)
                 .filter(pm -> pm.getRow() == deltaRow)
-                .filter(pm -> pm.isHaveToCapture() == isMoveWithCapture(move))
+                .filter(pm -> pm.getMoveType() == checkSpecialMove(move))
                 .filter(pm -> pm.isCanJump() || isPathClear(move))
                 .anyMatch(pm -> !pm.isOnlyInColorDirection() || isMoveInColorDirection);
     }
 
-    private CaptureOptions isMoveWithCapture(Move move) {
+    private MoveType checkSpecialMove(Move move) {
         boolean destSquareEmpty = getFigure(move.destCol(), move.destRow()) instanceof None;
-        return destSquareEmpty ? CaptureOptions.FALSE : preMove != null ? checkEnPassant(move, preMove) : CaptureOptions.TRUE;
+        MoveType moveType;
+
+        if (destSquareEmpty) {
+            moveType = MoveType.NONE;
+        } else if (preMove != null) {
+            if (isEnPassant(move, preMove)) {
+                moveType = MoveType.ENPASSANT;
+            } else if (isCastling(move)) {
+                moveType = MoveType.CASTLING;
+            } else {
+                moveType = MoveType.CAPTURE;
+            }
+        } else {
+            moveType = MoveType.CAPTURE;
+        }
+
+        return moveType;
     }
 
-    private CaptureOptions checkEnPassant(Move move, Move preMove) {
+    private boolean isCastling(Move move) {
+        Figure movingFigure = getFigure(move.sourceCol(), move.sourceRow());
+        Figure inDestFigure = getFigure(move.destCol(), move.destRow());
+
+        return movingFigure instanceof King &&
+                inDestFigure instanceof Rook &&
+                (movingFigure.isFirstMove() && inDestFigure.isFirstMove()) &&
+                isPathClear(move) &&
+                isTargetOnBoard(move);
+    }
+
+    private boolean isEnPassant(Move move, Move preMove) {
         Figure movingFigure = getFigure(move.sourceCol(), move.sourceRow());
         FigureColor movingFigureColor = movingFigure.getColor();
         Figure oponentFigure = getFigure(move.destCol(), move.destRow());
@@ -183,18 +210,16 @@ public class Board {
         int deltaRowMovingFigure = move.destRow() - move.sourceRow();
         int deltaColMovingFigure = move.destCol() - move.sourceCol();
 
-        if (
+        return (
                 movingFigure instanceof Pawn
                         && oponentFigure instanceof Pawn
                         && movingFigureColor != oponentFigureColor
                         && Math.abs(deltaRowPreMove) == 2
                         && Math.abs(deltaColMovingFigure) == 1
                         && Math.abs(deltaRowMovingFigure) == 0
-        ) {
-            return CaptureOptions.ENPASSANT;
-        }
-        return CaptureOptions.TRUE;
+        );
     }
+
 
     private boolean isPathClear(Move move) {
         boolean result = true;

@@ -7,7 +7,7 @@ public class FigureMove {
     private final int column;
     private final int row;
     private final boolean onlyInColorDirection;
-    private final CaptureOptions haveToCapture;
+    private final MoveType moveType;
     private final boolean haveToBeFirstMove;
     private final boolean canJump;
 
@@ -15,13 +15,13 @@ public class FigureMove {
             int column,
             int row,
             boolean onlyInColorDirection,
-            CaptureOptions haveToCapture,
+            MoveType moveType,
             boolean haveToBeFirstMove
     ) {
         this.column = column;
         this.row = row;
         this.onlyInColorDirection = onlyInColorDirection;
-        this.haveToCapture = haveToCapture;
+        this.moveType = moveType;
         this.haveToBeFirstMove = haveToBeFirstMove;
         canJump = false;
     }
@@ -30,20 +30,20 @@ public class FigureMove {
             int column,
             int row,
             boolean onlyInColorDirection,
-            CaptureOptions haveToCapture,
+            MoveType moveType,
             boolean haveToBeFirstMove,
             boolean canJump
     ) {
         this.column = column;
         this.row = row;
         this.onlyInColorDirection = onlyInColorDirection;
-        this.haveToCapture = haveToCapture;
+        this.moveType = moveType;
         this.haveToBeFirstMove = haveToBeFirstMove;
         this.canJump = canJump;
     }
 
-    public CaptureOptions isHaveToCapture() {
-        return this.haveToCapture;
+    public MoveType getMoveType() {
+        return this.moveType;
     }
 
     public boolean isHaveToBeFirstMove() {

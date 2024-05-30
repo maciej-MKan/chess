@@ -1,8 +1,8 @@
 package pl.mkan.game.engine.figures;
 
-import pl.mkan.game.engine.CaptureOptions;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
+import pl.mkan.game.engine.MoveType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +23,13 @@ public class King extends Figure {
     @Override
     public List<FigureMove> getPossibleMoves() {
         List<FigureMove> moves = new ArrayList<>();
-        addKingMoves(moves, CaptureOptions.TRUE);
-        addKingMoves(moves, CaptureOptions.FALSE);
+        addKingMoves(moves, MoveType.CAPTURE);
+        addKingMoves(moves, MoveType.NONE);
+        addCastling(moves);
         return moves;
     }
 
-    private void addKingMoves(List<FigureMove> moves, CaptureOptions haveToCapture) {
+    private void addKingMoves(List<FigureMove> moves, MoveType haveToCapture) {
         moves.add(new FigureMove(-1, -1, false, haveToCapture, false));
         moves.add(new FigureMove(-1, 1, false, haveToCapture, false));
         moves.add(new FigureMove(1, 1, false, haveToCapture, false));
@@ -37,6 +38,13 @@ public class King extends Figure {
         moves.add(new FigureMove(1, 0, false, haveToCapture, false));
         moves.add(new FigureMove(0, -1, false, haveToCapture, false));
         moves.add(new FigureMove(-1, 0, false, haveToCapture, false));
+    }
+
+    private void addCastling(List<FigureMove> moves) {
+        moves.add(new FigureMove(3, 0, false, MoveType.CASTLING, true));
+        moves.add(new FigureMove(4, 0, false, MoveType.CASTLING, true));
+        moves.add(new FigureMove(-3, 0, false, MoveType.CASTLING, true));
+        moves.add(new FigureMove(-4, 0, false, MoveType.CASTLING, true));
     }
 
     @Override

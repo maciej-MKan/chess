@@ -1,8 +1,8 @@
 package pl.mkan.game.engine.figures;
 
-import pl.mkan.game.engine.CaptureOptions;
 import pl.mkan.game.engine.FigureColor;
 import pl.mkan.game.engine.FigureMove;
+import pl.mkan.game.engine.MoveType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +23,12 @@ public class Knight extends Figure {
     @Override
     public List<FigureMove> getPossibleMoves() {
         List<FigureMove> moves = new ArrayList<>();
-        addKnightMoves(moves, CaptureOptions.TRUE);
-        addKnightMoves(moves, CaptureOptions.FALSE);
+        addKnightMoves(moves, MoveType.CAPTURE);
+        addKnightMoves(moves, MoveType.NONE);
         return moves;
     }
 
-    private static void addKnightMoves(List<FigureMove> moves, CaptureOptions haveToCapture) {
+    private static void addKnightMoves(List<FigureMove> moves, MoveType haveToCapture) {
         moves.add(new FigureMove(-1, -2, false, haveToCapture, false, true));
         moves.add(new FigureMove(1, -2, false, haveToCapture, false, true));
         moves.add(new FigureMove(2, -1, false, haveToCapture, false, true));
