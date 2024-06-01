@@ -110,14 +110,23 @@ const Chessboard = () => {
     }, []);
 
     const onSquareClick = useCallback((row, column) => {
+        const piece = findPiece(row, column);
         if (!isEmpty(selectedSquare) && row === selectedSquare.row && column === selectedSquare.column) {
             setSelectedSquare({});
         } else if (!isEmpty(selectedPiece) && row === selectedPiece.row && column === selectedPiece.column) {
             setSelectedPiece({});
+        } else if (
+            checkAvailableMove(selectedPiece.id, row, column) &&
+            piece?.type === "ROOK" &&
+            findPiece(selectedPiece.row , selectedPiece.column)?.type === "KING"
+        ){
+            console.log("castling");
+            setSelectedSquare({row, column});
         } else {
-            const piece = findPiece(row, column);
             const id = piece?.id;
-            piece && piece.color === playerColor ? setSelectedPiece({ id, row, column }) : setSelectedSquare({ row, column });
+            piece && (piece.color === playerColor) ?
+                setSelectedPiece({ id, row, column }) :
+                setSelectedSquare({ row, column });
         }
     }, [selectedSquare, selectedPiece, playerColor, findPiece]);
 
@@ -127,11 +136,13 @@ const Chessboard = () => {
     const checkPieceSelected = (row, column) =>
         selectedPiece.row === row && selectedPiece.column === column;
 
+    const checkAvailableMove = (id, row, column) => availableMoves[id]?.some(move => move.row === row && move.column === column);
+
     const checkSquareActive = (row, column) => {
         if (findPiece(row, column)?.color === playerColor) return true;
         if (!isEmpty(selectedPiece)) {
             const id = findPiece(selectedPiece.row, selectedPiece.column)?.id;
-            return availableMoves[id]?.some(move => move.row === row && move.column === column);
+            return checkAvailableMove(id, row, column);
         }
         return false;
     };

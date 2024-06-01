@@ -172,20 +172,10 @@ public class Board {
 
     private MoveType checkSpecialMove(Move move) {
         boolean destSquareEmpty = getFigure(move.destCol(), move.destRow()) instanceof None;
-        MoveType moveType;
-
-        if (destSquareEmpty) {
-            moveType = MoveType.NONE;
-        } else {
-            if (isEnPassant(move, preMove)) {
-                moveType = MoveType.ENPASSANT;
-            } else if (isCastling(move)) {
-                moveType = MoveType.CASTLING;
-            } else {
-                moveType = MoveType.CAPTURE;
-            }
-        }
-        return moveType;
+        return destSquareEmpty ? MoveType.NONE
+                : isEnPassant(move, preMove) ? MoveType.ENPASSANT
+                : isCastling(move) ? MoveType.CASTLING
+                : MoveType.CAPTURE;
     }
 
     private boolean isCastling(Move move) {
