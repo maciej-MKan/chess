@@ -365,7 +365,13 @@ public class BoardConfigForAvailableMoves {
                                 "{\"id\": 88, \"type\": \"KING\", \"color\": \"WHITE\", \"position\": {\"row\": 7, \"column\": 5}, \"moved\": false}," +
                                 "{\"id\": 11, \"type\": \"KING\", \"color\": \"BLACK\", \"position\": {\"row\": 4, \"column\": 4}, \"moved\": false}," +
                                 "{\"id\": 22, \"type\": \"PAWN\", \"color\": \"WHITE\", \"position\": {\"row\": 4, \"column\": 3}, \"moved\": false}]}",
-                        8)
+                        8),
+                Arguments.of(
+                        "{\"pieces\": [" +
+                                "{\"id\": 88, \"type\": \"KING\", \"color\": \"WHITE\", \"position\": {\"row\": 0, \"column\": 4}, \"moved\": false}," +
+                                "{\"id\": 11, \"type\": \"KING\", \"color\": \"BLACK\", \"position\": {\"row\": 7, \"column\": 3}, \"moved\": false}," +
+                                "{\"id\": 22, \"type\": \"ROOK\", \"color\": \"BLACK\", \"position\": {\"row\": 7, \"column\": 0}, \"moved\": false}]}",
+                        6)
         );
     }
 }

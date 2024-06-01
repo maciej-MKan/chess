@@ -57,6 +57,7 @@ public class GameService {
 
     public AvailableMovesDTO calculateAvailableMoves(AvailableMovesRequestDTO gameState) {
         Board engineBoard = BoardDTOMapper.map(gameState.pieces());
+        log.info("Board view: \n{}", engineBoard);
         engineBoard.switchWhoseMove();
         try {
             engineBoard.setPreMove(MoveDTOMapper.map(gameState.preMove()));

@@ -136,13 +136,11 @@ public class Board {
     }
 
     public boolean checkMove(Move move) {
-        boolean result;
-        result = isTargetOnBoard(move);
-        result = result && checkIfMovingFigure(move);
-        result = result && checkFigureColor(move);
-        result = result && targetFieldIsEmptyOrEnemy(move, whoseMove);
-        result = result && isValidMove(move);
-        return result;
+        return (isTargetOnBoard(move) &&
+                checkIfMovingFigure(move) &&
+                checkFigureColor(move) &&
+                targetFieldIsEmptyOrEnemy(move, whoseMove) &&
+                isValidMove(move));
     }
 
 
@@ -151,6 +149,9 @@ public class Board {
     }
 
     private boolean targetFieldIsEmptyOrEnemy(Move move, FigureColor whoseMove) {
+        if (getFigure(move.destCol(), move.destRow()).getColor() == whoseMove) {
+            return checkSpecialMove(move) == MoveType.CASTLING;
+        }
         return (getFigure(move.destCol(), move.destRow()) instanceof None) || (getFigure(move.destCol(), move.destRow()).getColor() != whoseMove);
     }
 
@@ -175,7 +176,7 @@ public class Board {
 
         if (destSquareEmpty) {
             moveType = MoveType.NONE;
-        } else if (preMove != null) {
+        } else {
             if (isEnPassant(move, preMove)) {
                 moveType = MoveType.ENPASSANT;
             } else if (isCastling(move)) {
@@ -183,10 +184,7 @@ public class Board {
             } else {
                 moveType = MoveType.CAPTURE;
             }
-        } else {
-            moveType = MoveType.CAPTURE;
         }
-
         return moveType;
     }
 
@@ -202,6 +200,7 @@ public class Board {
     }
 
     private boolean isEnPassant(Move move, Move preMove) {
+        if (preMove == null) return false;
         Figure movingFigure = getFigure(move.sourceCol(), move.sourceRow());
         FigureColor movingFigureColor = movingFigure.getColor();
         Figure oponentFigure = getFigure(move.destCol(), move.destRow());
