@@ -65,7 +65,7 @@ public class Board {
         setFigure(0, row, new Rook(((row + 1) * 10) + 1, color));
         setFigure(1, row, new Knight(((row + 1) * 10) + 2, color));
         setFigure(2, row, new Bishop(((row + 1) * 10) + 3, color));
-        if (boardOrientation == BoardOrientation.BLACK_ON_TOP) {
+        if (boardOrientation != BoardOrientation.BLACK_ON_TOP) {
             setFigure(3, row, new Queen(((row + 1) * 10) + 4, color));
             setFigure(4, row, new King(((row + 1) * 10) + 5, color));
         } else {
@@ -87,6 +87,12 @@ public class Board {
 
     public void move(Move move) {
         prevBoard = deepCopy();
+        if (isEnPassant(move)) {
+            setEnPassantDestPosition(move);
+        }
+        if (isCastling(move)) {
+            setCastlingDestPosition(move);
+        }
         Figure figure = getFigure(move.sourceCol(), move.sourceRow());
         figure.setMoved();
         setFigure(move.destCol(), move.destRow(), figure);
@@ -174,11 +180,11 @@ public class Board {
         boolean destSquareEmpty = getFigure(move.destCol(), move.destRow()) instanceof None;
         return destSquareEmpty ? MoveType.NONE
                 : isEnPassant(move, preMove) ? MoveType.ENPASSANT
-                : isCastling(move) ? MoveType.CASTLING
+                : willBeCastling(move) ? MoveType.CASTLING
                 : MoveType.CAPTURE;
     }
 
-    private boolean isCastling(Move move) {
+    public boolean willBeCastling(Move move) {
         Figure movingFigure = getFigure(move.sourceCol(), move.sourceRow());
         Figure inDestFigure = getFigure(move.destCol(), move.destRow());
 
@@ -317,5 +323,33 @@ public class Board {
         } else {
             return Optional.empty();
         }
+    }
+
+    public void setCastlingDestPosition(Move move) {
+        Figure king = getFigure(move.destCol(), move.destRow());
+        FigureColor castlingColor = king.getColor();
+        Figure rook = new Rook(((move.destRow() + 1) * 10) + (move.destCol() + 1), castlingColor);
+        int kingDestCol;
+        int rookDestCol;
+
+        int kingDeltaCol = move.destCol() - move.sourceCol();
+
+        if (kingDeltaCol < 0) {
+            kingDestCol = move.sourceCol() - 2;
+            rookDestCol = kingDestCol + 1;
+        } else {
+            kingDestCol = move.sourceCol() + 2;
+            rookDestCol = kingDestCol - 1;
+        }
+        setFigure(move.destCol(), move.destRow(), new None());
+        setFigure(kingDestCol, move.destRow(), king);
+        setFigure(rookDestCol, move.destRow(), rook);
+    }
+
+    public boolean isCastling(Move move) {
+        return (
+                (getFigure(move.destCol(), move.destRow()) instanceof King) &&
+                        (Math.abs(move.destCol() - move.sourceCol()) > 1)
+        );
     }
 }

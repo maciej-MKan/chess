@@ -32,8 +32,14 @@ public class GameService {
         Move move = board.move() != null ?
                 MoveDTOMapper.map(board.move()) :
                 new Move(0, 0, 0, 0);
+
         if (engineBoard.isEnPassant(move)) {
+            log.info("EnPassant move detected");
             engineBoard.setEnPassantDestPosition(move);
+        }
+        if (engineBoard.isCastling(move)) {
+            log.info("Castling move detected");
+            engineBoard.setCastlingDestPosition(move);
         }
         log.info("Board state before move:\n{}", engineBoard);
         Move AIMove = engineBoard.AIMove();
