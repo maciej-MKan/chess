@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Square } from './components/Square';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Square} from './components/Square';
 import './Chessboard.css';
-import { getAvailableMoves, getComputerMove, getGameState, initGame } from '../../api/game';
-import { isEmpty } from '../utils';
+import {getAvailableMoves, getComputerMove, getGameState, initGame} from '../../api/game';
+import {isEmpty} from '../utils';
 import PawnPromotionModal from './components/PawnPromotion';
 
 const Chessboard = () => {
@@ -17,6 +17,7 @@ const Chessboard = () => {
     const [selectedPiece, setSelectedPiece] = useState({});
     const [pawnPromotionOpen, setPawnPromotionOpen] = useState(false);
     const [piecesToPromote, setPiecesToPromote] = useState([]);
+    const [movesHistory, setMovesHistory] = useState([]);
 
     useEffect(() => {
         setWaitApi(true);
@@ -91,7 +92,7 @@ const Chessboard = () => {
     const removePiece = useCallback((piece) => {
         if (piece) {
             const newPieces = boardState.pieces.filter(p => p !== piece);
-            return { ...boardState, pieces: newPieces };
+            return {...boardState, pieces: newPieces};
         }
         return boardState;
     }, [boardState]);
@@ -118,15 +119,15 @@ const Chessboard = () => {
         } else if (
             checkAvailableMove(selectedPiece.id, row, column) &&
             piece?.type === "ROOK" &&
-            findPiece(selectedPiece.row , selectedPiece.column)?.type === "KING"
-        ){
+            findPiece(selectedPiece.row, selectedPiece.column)?.type === "KING"
+        ) {
             console.log("castling");
             setSelectedSquare({row, column});
         } else {
             const id = piece?.id;
             piece && (piece.color === playerColor) ?
-                setSelectedPiece({ id, row, column }) :
-                setSelectedSquare({ row, column });
+                setSelectedPiece({id, row, column}) :
+                setSelectedSquare({row, column});
         }
     }, [selectedSquare, selectedPiece, playerColor, findPiece]);
 
@@ -164,6 +165,8 @@ const Chessboard = () => {
         setSelectedSquare({});
         animatePieceMovement(selectedPiece);
         fetchGameState(updatedBoard, computerMove);
+        const moveDescription = `${piece.color} moved ${piece.type} from ${String.fromCharCode(65 + selectedPiece.column)}${8 - selectedPiece.row} to ${String.fromCharCode(65 + selectedSquare.column)}${8 - selectedSquare.row}`;
+        setMovesHistory(prevHistory => [...prevHistory, moveDescription]);
     }, [selectedPiece, selectedSquare, findPiece, removePiece, animatePieceMovement, fetchGameState]);
 
     const computerMove = useCallback((board) => {
@@ -207,7 +210,7 @@ const Chessboard = () => {
     const renderBoard = useCallback(() => {
         const board = [];
 
-        board.push(<div key="empty" className="square empty" />);
+        board.push(<div key="empty" className="square empty"/>);
         for (let col = 0; col < 8; col++) {
             board.push(
                 <div key={`column-header-${col}`} className="square column-header">
@@ -244,20 +247,30 @@ const Chessboard = () => {
     }, [findPiece, computerMove, boardState]);
 
     return (
-        <div>
-            <div className="chessboard">{error ? error : boardState ? renderBoard() : 'Loading...'}</div>
-            <PawnPromotionModal
-                isOpen={pawnPromotionOpen}
-                onClose={() => {
-                    setWaitApi(false);
-                    setPawnPromotionOpen(false);
-                }}
-                piecesList={piecesToPromote}
-                onFigureSelect={promotePawn}
-            />
+        <>
+            <div className="chessboard-container">
+                <div className="chessboard">{error ? error : boardState ? renderBoard() : 'Loading...'}</div>
+                <div className="moves-history">
+                    <h2>Moves History</h2>
+                    <ul>
+                        {movesHistory.map((move, index) => (
+                            <li key={index}>{move}</li>
+                        ))}
+                    </ul>
+                </div>
+                <PawnPromotionModal
+                    isOpen={pawnPromotionOpen}
+                    onClose={() => {
+                        setWaitApi(false);
+                        setPawnPromotionOpen(false);
+                    }}
+                    piecesList={piecesToPromote}
+                    onFigureSelect={promotePawn}
+                />
+            </div>
             {waitApi && <div className="loadingLabel">Wait for API response</div>}
             {gameOver && <div className="gameOver">Game Over, the winner is {winner}</div>}
-        </div>
+        </>
     );
 };
 
