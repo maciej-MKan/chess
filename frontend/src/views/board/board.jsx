@@ -175,6 +175,9 @@ const Chessboard = () => {
             getComputerMove(board)
                 .then(boardData => {
                     setBoardState(boardData);
+                    const piece = findPiece(boardData.move.srcRow, boardData.move.srcColumn);
+                    const moveDescription = `${piece.color} moved ${piece.type} from ${String.fromCharCode(65 + boardData.move.srcColumn)}${8 - boardData.move.srcRow} to ${String.fromCharCode(65 + boardData.move.destColumn)}${8 - boardData.move.destRow}`;
+                    setMovesHistory(prevHistory => [...prevHistory, moveDescription]);
                     fetchGameState(boardData, null);
                     fetchAvailableMoves(boardData);
                 })
