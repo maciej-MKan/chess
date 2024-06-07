@@ -56,5 +56,3 @@ ${\color{red} \textnormal{If either CI shows an error, then the project is not c
 
 This project is licensed under the MIT License. For more information, see the [LICENSE](https://github.com/maciej-MKan/chess/blob/main/LICENSE) file.
 
---- long weekend update ---
-
