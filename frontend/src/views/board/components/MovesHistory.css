@@ -1,0 +1,29 @@
+.react-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 32%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    outline: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.react-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 1000;
+}
+
+.moves-history-modal {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}

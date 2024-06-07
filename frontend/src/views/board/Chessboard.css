@@ -10,8 +10,8 @@
 }
 
 .moves-history {
-    margin-left: 20px; /* Dostosuj margines po lewej stronie */
-    /* Dodaj swoje istniejące style dla historii ruchów */
+    margin-left: 20px;
+    cursor: pointer;
 }
 
 .loadingLabel {
