@@ -292,6 +292,7 @@ const Chessboard = () => {
                 onClose={() => setMoveOptionsOpen(false)}
                 onViewState={handleViewState}
                 onRevertToMove={handleRevertToMove}
+                board={boardState}
             />
             {waitApi && <div className="loadingLabel">Wait for API response</div>}
             {gameOver && <div className="gameOver">Game Over, the winner is {winner}</div>}

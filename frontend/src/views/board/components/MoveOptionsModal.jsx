@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from 'react-modal';
 import './MovesHistory.css'
 
-const MoveOptionsModal = ({isOpen, onClose, onViewState, onRevertToMove}) => {
+const MoveOptionsModal = ({isOpen, onClose, onViewState, onRevertToMove, board}) => {
     return (
         <Modal
             isOpen={isOpen}
@@ -17,6 +17,7 @@ const MoveOptionsModal = ({isOpen, onClose, onViewState, onRevertToMove}) => {
                 <button onClick={onRevertToMove}>Revert to Move</button>
                 <button onClick={onClose}>Cancel</button>
             </div>
+            <div>hello</div>
         </Modal>
     );
 };
