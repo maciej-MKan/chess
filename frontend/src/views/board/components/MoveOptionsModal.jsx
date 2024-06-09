@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 import './MovesHistory.css'
+import '../Chessboard.css'
 
 const MoveOptionsModal = ({isOpen, onClose, onViewState, onRevertToMove, board}) => {
     return (
@@ -17,7 +18,7 @@ const MoveOptionsModal = ({isOpen, onClose, onViewState, onRevertToMove, board})
                 <button onClick={onRevertToMove}>Revert to Move</button>
                 <button onClick={onClose}>Cancel</button>
             </div>
-            <div>hello</div>
+            <div className="chessboard">{board}</div>
         </Modal>
     );
 };

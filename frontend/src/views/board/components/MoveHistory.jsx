@@ -7,7 +7,7 @@ const MoveHistory = ({ moves, onMoveClick }) => {
             <ul>
                 {moves.map((move, index) => (
                     <li key={index} onClick={() => onMoveClick(index)}>
-                        {move}
+                        {move.desc}
                     </li>
                 ))}
             </ul>
