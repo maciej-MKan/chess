@@ -268,8 +268,12 @@ const Chessboard = () => {
     const handleRevertToMove = useCallback(() => {
         setMoveOptionsOpen(false);
         const selectedMove = movesHistory[selectedMoveIndex];
-        // Revert the board to the selected move
-        // Implement the logic to revert to the selected move
+        setBoardState(selectedMove.state);
+        let length = movesHistory.length;
+        console.log(selectedMove.desc)
+        for (let i = selectedMoveIndex + 1; i < length; i++) {
+            movesHistory[i] = null;
+        }
     }, [selectedMoveIndex, movesHistory]);
 
     return (
