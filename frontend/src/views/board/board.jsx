@@ -21,7 +21,7 @@ const Chessboard = () => {
     const [piecesToPromote, setPiecesToPromote] = useState([]);
     const [movesHistory, setMovesHistory] = useState([]);
     const [moveOptionsOpen, setMoveOptionsOpen] = useState(false);
-    const [selectedMoveIndex, setSelectedMoveIndex] = useState(null);
+    const [selectedMoveIndex, setSelectedMoveIndex] = useState(0);
 
     useEffect(() => {
         setWaitApi(true);
@@ -167,7 +167,7 @@ const Chessboard = () => {
         setSelectedPiece({});
         setSelectedSquare({});
         const moveDescription = `${piece.color} moved ${piece.type} from ${String.fromCharCode(65 + selectedPiece.column)}${8 - selectedPiece.row} to ${String.fromCharCode(65 + selectedSquare.column)}${8 - selectedSquare.row}`;
-        setMovesHistory(prevHistory => [...prevHistory, {desc: moveDescription, state: updatedBoard}]);
+        setMovesHistory(prevHistory => [...prevHistory, {desc: moveDescription, state: updatedBoard, whoseMove: "player"}]);
         animatePieceMovement(selectedPiece);
         fetchGameState(updatedBoard, computerMove);
     }, [selectedPiece, selectedSquare, findPiece, removePiece, animatePieceMovement, fetchGameState]);
@@ -178,9 +178,9 @@ const Chessboard = () => {
             getComputerMove(board)
                 .then(boardData => {
                     setBoardState(boardData);
-                    const piece = findPiece(boardData.move.srcRow, boardData.move.srcColumn, boardState);
+                    const piece = findPiece(boardData.move.srcRow, boardData.move.srcColumn, board);
                     const moveDescription = `${piece.color} moved ${piece.type} from ${String.fromCharCode(65 + boardData.move.srcColumn)}${8 - boardData.move.srcRow} to ${String.fromCharCode(65 + boardData.move.destColumn)}${8 - boardData.move.destRow}`;
-                    setMovesHistory(prevHistory => [...prevHistory, {desc: moveDescription, state: boardData}]);
+                    setMovesHistory(prevHistory => [...prevHistory, {desc: moveDescription, state: boardData, whoseMove: "computer"}]);
                     fetchGameState(boardData, null);
                     fetchAvailableMoves(boardData);
                 })
@@ -192,11 +192,11 @@ const Chessboard = () => {
         }
     }, [gameOver, waitApi, fetchGameState, fetchAvailableMoves]);
 
-    const renderSquare = useCallback((row, column, piece) => {
+    const renderSquare = useCallback((row, column, piece, checkActive) => {
         const isBlack = (row + column) % 2 === 1;
         const isSelected = checkSquareSelected(row, column);
         const isSelectedPiece = checkPieceSelected(row, column);
-        const isActive = checkSquareActive(row, column);
+        const isActive = checkActive? checkSquareActive(row, column) : false;
         return (
             <Square
                 id={`${row}-${column}`}
@@ -213,7 +213,7 @@ const Chessboard = () => {
         );
     }, [waitApi, checkSquareSelected, checkPieceSelected, checkSquareActive, onSquareClick]);
 
-    const renderBoard = useCallback((boardData) => {
+    const renderBoard = useCallback((boardData, isActive) => {
         const board = [];
 
         board.push(<div key="empty" className="square empty" />);
@@ -233,7 +233,7 @@ const Chessboard = () => {
             );
             for (let column = 0; column < 8; column++) {
                 const piece = findPiece(row, column, boardData);
-                board.push(renderSquare(row, column, piece ? piece : null));
+                board.push(renderSquare(row, column, piece ? piece : null, isActive));
             }
         }
 
@@ -258,28 +258,23 @@ const Chessboard = () => {
         setMoveOptionsOpen(true);
     }, []);
 
-    const handleViewState = useCallback(() => {
-        setMoveOptionsOpen(false);
-        const selectedMove = movesHistory[selectedMoveIndex];
-        // Display the board state for the selected move
-        // Implement the logic to view the state for the selected move
-    }, [selectedMoveIndex, movesHistory]);
 
     const handleRevertToMove = useCallback(() => {
         setMoveOptionsOpen(false);
         const selectedMove = movesHistory[selectedMoveIndex];
-        setBoardState(selectedMove.state);
+        const boarsStateToRevert = selectedMove.state;
+        setBoardState(boarsStateToRevert);
         let length = movesHistory.length;
         console.log(selectedMove.desc)
-        for (let i = selectedMoveIndex + 1; i < length; i++) {
-            movesHistory[i] = null;
-        }
+        movesHistory.splice(selectedMoveIndex + 1,length - selectedMoveIndex);
+        if (selectedMove.whoseMove === "player") {computerMove(boarsStateToRevert)} else {playerMove()}
+
     }, [selectedMoveIndex, movesHistory]);
 
     return (
         <>
             <div className="chessboard-container">
-                <div className="chessboard">{error ? error : boardState ? renderBoard(boardState) : 'Loading...'}</div>
+                <div className="chessboard">{error ? error : boardState ? renderBoard(boardState, true) : 'Loading...'}</div>
                 <MoveHistory moves={movesHistory} onMoveClick={handleMoveClick} />
             </div>
             <PawnPromotionModal
@@ -294,9 +289,8 @@ const Chessboard = () => {
             <MoveOptionsModal
                 isOpen={moveOptionsOpen}
                 onClose={() => setMoveOptionsOpen(false)}
-                onViewState={handleViewState}
                 onRevertToMove={handleRevertToMove}
-                board={renderBoard(movesHistory[selectedMoveIndex]?.state)}
+                board={renderBoard(movesHistory[selectedMoveIndex]?.state, false)}
             />
             {waitApi && <div className="loadingLabel">Wait for API response</div>}
             {gameOver && <div className="gameOver">Game Over, the winner is {winner}</div>}
