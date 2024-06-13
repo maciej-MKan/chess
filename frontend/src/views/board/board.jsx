@@ -6,9 +6,10 @@ import {isEmpty} from '../utils';
 import PawnPromotionModal from './components/PawnPromotion';
 import MoveOptionsModal from "./components/MoveOptionsModal";
 import MoveHistory from "./components/MoveHistory";
+import PlayerColorSelector from "./components/PlayerColorSelector";
 
 const Chessboard = () => {
-    const playerColor = 'BLACK';
+    const [playerColor, setPlayerColor] = useState('');
     const [boardState, setBoardState] = useState();
     const [availableMoves, setAvailableMoves] = useState({});
     const [error, setError] = useState('');
@@ -270,6 +271,10 @@ const Chessboard = () => {
         if (selectedMove.whoseMove === "player") {computerMove(boarsStateToRevert)} else {playerMove()}
 
     }, [selectedMoveIndex, movesHistory]);
+
+    if (!playerColor) {
+        return <PlayerColorSelector onColorSelect={setPlayerColor} />;
+    }
 
     return (
         <>
