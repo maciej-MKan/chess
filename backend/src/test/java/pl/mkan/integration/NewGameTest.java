@@ -19,16 +19,31 @@ public class NewGameTest {
     private int port;
 
     @Test
-    public void getNewGame() {
+    public void thisGeneratePlayerBlackBoard() {
         given()
                 .when()
-                .get("http://localhost:" + port + API_PATH + "/game")
+                .get("http://localhost:" + port + API_PATH + "/game?playerColor=BLACK")
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
                 .body("pieces.size()", equalTo(32))
                 .body("pieces.find { it.id == 11 }.type", equalTo("ROOK"))
                 .body("pieces.find { it.id == 12 }.color", equalTo("WHITE"))
+                .body("pieces.find { it.id == 13 }.position.row", equalTo(0))
+                .body("pieces.find { it.id == 13 }.position.column", equalTo(2));
+    }
+
+    @Test
+    public void thisGeneratePlayerBlackWhite() {
+        given()
+                .when()
+                .get("http://localhost:" + port + API_PATH + "/game?playerColor=WHITE")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("pieces.size()", equalTo(32))
+                .body("pieces.find { it.id == 11 }.type", equalTo("ROOK"))
+                .body("pieces.find { it.id == 12 }.color", equalTo("BLACK"))
                 .body("pieces.find { it.id == 13 }.position.row", equalTo(0))
                 .body("pieces.find { it.id == 13 }.position.column", equalTo(2));
     }

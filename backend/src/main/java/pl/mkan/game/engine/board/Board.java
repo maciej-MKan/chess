@@ -18,11 +18,13 @@ public class Board {
     @Getter
     private BoardOrientation boardOrientation = BoardOrientation.WHITE_ON_TOP;
     @Getter
-    private FigureColor whoseMove = FigureColor.WHITE;
+    private FigureColor whoseMove;
     @Getter
-    private boolean gameWithComputer;
+    private final boolean gameWithComputer = true;
     @Setter
     private Move preMove;
+    @Setter
+    private FigureColor playerColor;
 
     private Board prevBoard;
 
@@ -32,22 +34,16 @@ public class Board {
         }
     }
 
-    public Board(BoardOrientation boardOrientation, boolean gameWithComputer) {
+    public Board(FigureColor playerColor) {
         this();
-        this.boardOrientation = boardOrientation;
+        this.playerColor = playerColor;
+        boardOrientation = (playerColor == FigureColor.BLACK) ? BoardOrientation.WHITE_ON_TOP : BoardOrientation.BLACK_ON_TOP;
         this.whoseMove = boardOrientation == BoardOrientation.WHITE_ON_TOP ? FigureColor.WHITE : FigureColor.BLACK;
-        this.gameWithComputer = gameWithComputer;
     }
 
     public void init() {
-        FigureColor playerColor = (boardOrientation == BoardOrientation.WHITE_ON_TOP) ? FigureColor.WHITE : FigureColor.BLACK;
-        init(playerColor);
-    }
-
-    public void init(FigureColor playerColor) {
-        setBeginningRoofFigures(0, playerColor);
-        setPawns(playerColor, 1);
-        playerColor = oppositeColor(playerColor);
+        setBeginningRoofFigures(0, oppositeColor(playerColor));
+        setPawns(oppositeColor(playerColor), 1);
         setBeginningRoofFigures(7, playerColor);
         setPawns(playerColor, 6);
     }
@@ -277,7 +273,7 @@ public class Board {
     }
 
     public Board deepCopy() {
-        Board newBoard = new Board(boardOrientation, gameWithComputer);
+        Board newBoard = new Board(playerColor);
         newBoard.setPreMove(preMove);
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {

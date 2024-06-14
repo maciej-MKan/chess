@@ -29,7 +29,7 @@ public class GameService {
         if (gameOver.isGameOver()) {
             return board;
         }
-        Board engineBoard = BoardDTOMapper.map(board.pieces());
+        Board engineBoard = BoardDTOMapper.map(board.pieces(), PieceColor.BLACK); //ToDo player color
         Move move = board.move() != null ?
                 MoveDTOMapper.map(board.move()) :
                 new Move(0, 0, 0, 0);
@@ -49,8 +49,8 @@ public class GameService {
     }
 
     public BoardDTO makeNewBoard(PieceColor playerColor) {
-        Board engineBoard = new Board();
-        engineBoard.init(PieceColorMapper.mapColor(playerColor));
+        Board engineBoard = new Board(PieceColorMapper.mapColor(playerColor));
+        engineBoard.init();
 
         return new BoardDTO(BoardDTOMapper.map(engineBoard), null);
     }
@@ -63,7 +63,7 @@ public class GameService {
     }
 
     public AvailableMovesDTO calculateAvailableMoves(AvailableMovesRequestDTO gameState) {
-        Board engineBoard = BoardDTOMapper.map(gameState.pieces());
+        Board engineBoard = BoardDTOMapper.map(gameState.pieces(), gameState.playerColor());
         log.info("Board view: \n{}", engineBoard);
         engineBoard.switchWhoseMove();
         try {
