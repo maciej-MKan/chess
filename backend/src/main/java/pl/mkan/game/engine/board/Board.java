@@ -40,13 +40,16 @@ public class Board {
     }
 
     public void init() {
-        FigureColor color = (boardOrientation == BoardOrientation.WHITE_ON_TOP) ? FigureColor.WHITE : FigureColor.BLACK;
-        setBeginningRoofFigures(0, color);
-        setPawns(color, 1);
-        color = oppositeColor(color);
-        setBeginningRoofFigures(7, color);
-        setPawns(color, 6);
+        FigureColor playerColor = (boardOrientation == BoardOrientation.WHITE_ON_TOP) ? FigureColor.WHITE : FigureColor.BLACK;
+        init(playerColor);
+    }
 
+    public void init(FigureColor playerColor) {
+        setBeginningRoofFigures(0, playerColor);
+        setPawns(playerColor, 1);
+        playerColor = oppositeColor(playerColor);
+        setBeginningRoofFigures(7, playerColor);
+        setPawns(playerColor, 6);
     }
 
     public void testInit() {

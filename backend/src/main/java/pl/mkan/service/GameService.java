@@ -8,6 +8,7 @@ import pl.mkan.controller.dto.enums.PieceType;
 import pl.mkan.controller.dto.mapper.BoardDTOMapper;
 import pl.mkan.controller.dto.mapper.MoveDTOMapper;
 import pl.mkan.controller.dto.mapper.MovesDTOMapper;
+import pl.mkan.controller.dto.mapper.PieceColorMapper;
 import pl.mkan.game.engine.Move;
 import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.figures.Figure;
@@ -47,9 +48,9 @@ public class GameService {
         return new BoardDTO(BoardDTOMapper.map(engineBoard), MoveDTOMapper.map(AIMove));
     }
 
-    public BoardDTO makeNewBoard() {
+    public BoardDTO makeNewBoard(PieceColor playerColor) {
         Board engineBoard = new Board();
-        engineBoard.init();
+        engineBoard.init(PieceColorMapper.mapColor(playerColor));
 
         return new BoardDTO(BoardDTOMapper.map(engineBoard), null);
     }

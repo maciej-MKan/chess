@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.mkan.controller.dto.*;
+import pl.mkan.controller.dto.enums.PieceColor;
 import pl.mkan.service.GameService;
 
 @Slf4j
@@ -23,9 +24,12 @@ public class GameController {
     }
 
     @GetMapping(value = "/game")
-    public ResponseEntity<BoardDTO> newGame() {
+    public ResponseEntity<BoardDTO> newGame(
+            @RequestParam(value = "playerColor") final PieceColor playerColor
+    ) {
         log.info("Handle GET request at '/game'");
-        return ResponseEntity.ok(gameService.makeNewBoard());
+        log.info("Player color: '{}'", playerColor);
+        return ResponseEntity.ok(gameService.makeNewBoard(playerColor));
     }
 
     @GetMapping(value = "/game/test")
