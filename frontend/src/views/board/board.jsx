@@ -31,7 +31,7 @@ const Chessboard = () => {
             initGame(playerColor)
                 .then(boardData => {
                     setBoardState(boardData);
-                    fetchAvailableMoves(boardData);
+                    fetchAvailableMoves(boardData, playerColor);
                 })
                 .catch(error => {
                     console.log('error ' + error);
@@ -69,10 +69,10 @@ const Chessboard = () => {
         }
     }, []);
 
-    const fetchAvailableMoves = useCallback((board) => {
+    const fetchAvailableMoves = useCallback((board, color) => {
         if (board && !isEmpty(board) && !gameOver) {
             setWaitApi(true);
-            getAvailableMoves(board)
+            getAvailableMoves(board, color)
                 .then(availableMovesData => setAvailableMoves(!gameOver ? availableMovesData.availableMoves : {}))
                 .catch(error => {
                     console.log('error ' + error);
@@ -186,7 +186,7 @@ const Chessboard = () => {
                     const moveDescription = `${piece.color} moved ${piece.type} from ${String.fromCharCode(65 + boardData.move.srcColumn)}${8 - boardData.move.srcRow} to ${String.fromCharCode(65 + boardData.move.destColumn)}${8 - boardData.move.destRow}`;
                     setMovesHistory(prevHistory => [...prevHistory, {desc: moveDescription, state: boardData, whoseMove: "computer"}]);
                     fetchGameState(boardData, null);
-                    fetchAvailableMoves(boardData);
+                    fetchAvailableMoves(boardData, playerColor);
                 })
                 .catch(error => {
                     console.log('error ' + error);
