@@ -25,18 +25,21 @@ const Chessboard = () => {
     const [selectedMoveIndex, setSelectedMoveIndex] = useState(0);
 
     useEffect(() => {
-        setWaitApi(true);
-        initGame()
-            .then(boardData => {
-                setBoardState(boardData);
-                fetchAvailableMoves(boardData);
-            })
-            .catch(error => {
-                console.log('error ' + error);
-                setError(error.toString());
-            })
-            .finally(() => setWaitApi(false));
-    }, []);
+        if ((playerColor !== '') && (playerColor !== undefined)) {
+            setWaitApi(true);
+            console.log(playerColor);
+            initGame(playerColor)
+                .then(boardData => {
+                    setBoardState(boardData);
+                    fetchAvailableMoves(boardData);
+                })
+                .catch(error => {
+                    console.log('error ' + error);
+                    setError(error.toString());
+                })
+                .finally(() => setWaitApi(false));
+        }
+    }, [playerColor]);
 
     const fetchGameState = useCallback((board, onExit) => {
         setWaitApi(true);
