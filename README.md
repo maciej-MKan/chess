@@ -26,6 +26,7 @@ Chess is a web application that allows playing chess against an AI opponent. The
    ```cd chess```
 3. Run Docker Compose to start the application (docker compose is required):
    ```docker compose up```
+4. Open your browser and navigate to ```localhost:3000```
 
 ## Technologies
 
