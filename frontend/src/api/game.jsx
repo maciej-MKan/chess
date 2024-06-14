@@ -2,7 +2,7 @@ const backendUri = import.meta.env.VITE_BACKEND_URI
 const frontUri = import.meta.env.VITE_FRONTEND_URI
 
 export const initGame = async () => {
-    const url = `${backendUri}/api/game`;
+    const url = `${backendUri}/api/game?playerColor=WHITE`;
     try {
         const response = await fetch(url,{
             headers: {
