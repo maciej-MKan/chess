@@ -2,6 +2,7 @@ package pl.mkan.controller.dto.mapper;
 
 import pl.mkan.controller.dto.PieceDTO;
 import pl.mkan.controller.dto.PositionDTO;
+import pl.mkan.controller.dto.enums.PieceColor;
 import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.figures.Figure;
 import pl.mkan.game.engine.figures.None;
@@ -33,8 +34,8 @@ public class BoardDTOMapper {
     }
 
 
-    public static Board map(List<PieceDTO> pieces) {
-        Board board = new Board();
+    public static Board map(List<PieceDTO> pieces, PieceColor playerColor) {
+        Board board = new Board(PieceColorMapper.mapColor(playerColor));
         for (PieceDTO piece : pieces) {
             board.setFigure(piece.position().column(), piece.position().row(), PieceDTOMapper.mapPiece(piece));
         }

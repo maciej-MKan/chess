@@ -331,7 +331,8 @@ public class BoardConfigForComputerMove {
                                         "srcRow": 6,
                                         "destColumn": 6,
                                         "destRow": 5
-                                    }
+                                    },
+                                "playerColor": "BLACK"
                                 }""",
                         11, 4, 0)
         );
@@ -406,7 +407,8 @@ public class BoardConfigForComputerMove {
                                         "srcRow": 6,
                                         "destColumn": 6,
                                         "destRow": 5
-                                    }
+                                    },
+                                "playerColor": "BLACK"
                                 }""",
                         11)
         );

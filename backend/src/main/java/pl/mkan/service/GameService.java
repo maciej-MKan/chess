@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.mkan.controller.dto.*;
 import pl.mkan.controller.dto.enums.PieceColor;
 import pl.mkan.controller.dto.enums.PieceType;
-import pl.mkan.controller.dto.mapper.BoardDTOMapper;
-import pl.mkan.controller.dto.mapper.MoveDTOMapper;
-import pl.mkan.controller.dto.mapper.MovesDTOMapper;
-import pl.mkan.controller.dto.mapper.PieceColorMapper;
+import pl.mkan.controller.dto.mapper.*;
 import pl.mkan.game.engine.Move;
 import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.figures.Figure;
@@ -24,14 +21,15 @@ import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
 @Slf4j
 @Service
 public class GameService {
-    public BoardDTO getMove(BoardDTO board) {
-        GameOverDTO gameOver = checkGameOver(board);
+    public BoardDTO getMove(MoveRequestDTO request) {
+        GameOverDTO gameOver = checkGameOver(MoveRequestDTOMapper.map(request));
+        PieceColor playerColor = request.playerColor();
         if (gameOver.isGameOver()) {
-            return board;
+            return MoveRequestDTOMapper.map(request);
         }
-        Board engineBoard = BoardDTOMapper.map(board.pieces());
-        Move move = board.move() != null ?
-                MoveDTOMapper.map(board.move()) :
+        Board engineBoard = BoardDTOMapper.map(request.pieces(), playerColor);
+        Move move = request.move() != null ?
+                MoveDTOMapper.map(request.move()) :
                 new Move(0, 0, 0, 0);
 
         if (engineBoard.isEnPassant(move)) {
@@ -49,8 +47,8 @@ public class GameService {
     }
 
     public BoardDTO makeNewBoard(PieceColor playerColor) {
-        Board engineBoard = new Board();
-        engineBoard.init(PieceColorMapper.mapColor(playerColor));
+        Board engineBoard = new Board(PieceColorMapper.mapColor(playerColor));
+        engineBoard.init();
 
         return new BoardDTO(BoardDTOMapper.map(engineBoard), null);
     }
@@ -63,7 +61,7 @@ public class GameService {
     }
 
     public AvailableMovesDTO calculateAvailableMoves(AvailableMovesRequestDTO gameState) {
-        Board engineBoard = BoardDTOMapper.map(gameState.pieces());
+        Board engineBoard = BoardDTOMapper.map(gameState.pieces(), gameState.playerColor());
         log.info("Board view: \n{}", engineBoard);
         engineBoard.switchWhoseMove();
         try {

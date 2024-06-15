@@ -5,7 +5,7 @@ import Chessboard from "./views/board/board";
 const App = () => {
   return (
       <div>
-        <h1>Chessboard</h1>
+        <h1>Chess on Java</h1>
         <Chessboard/>
       </div>
   );

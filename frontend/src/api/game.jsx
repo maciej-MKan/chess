@@ -1,8 +1,8 @@
 const backendUri = import.meta.env.VITE_BACKEND_URI
 const frontUri = import.meta.env.VITE_FRONTEND_URI
 
-export const initGame = async () => {
-    const url = `${backendUri}/api/game?playerColor=WHITE`;
+export const initGame = async (playerColor) => {
+    const url = `${backendUri}/api/game?playerColor=${playerColor}`;
     try {
         const response = await fetch(url,{
             headers: {
@@ -11,14 +11,18 @@ export const initGame = async () => {
                 'Origin' : `${frontUri}`
             }
         });
-        return await response.json();
+        if (response.ok) {
+            return await response.json();
+        } else {
+            throw new Error('bad response');
+        }
     } catch (error) {
         console.error('Error fetching init game: ', error);
         throw error;
     }
 };
 
-export const getComputerMove = async (bordState) => {
+export const getComputerMove = async (bordState, color) => {
     const url = `${backendUri}/api/game`;
     try {
         const response = await fetch(url, {
@@ -28,7 +32,7 @@ export const getComputerMove = async (bordState) => {
                 'Accept': 'application/json',
                 'Origin' : `${frontUri}`
             },
-            body: JSON.stringify(bordState),
+            body: JSON.stringify({...bordState, playerColor: color}),
         });
         if (response.ok) {
             return await response.json();
@@ -41,7 +45,7 @@ export const getComputerMove = async (bordState) => {
     }
 };
 
-export const getAvailableMoves = async (bordState) => {
+export const getAvailableMoves = async (bordState, color) => {
     const url = `${backendUri}/api/game/available_moves`;
     try {
         const response = await fetch(url, {
@@ -51,7 +55,7 @@ export const getAvailableMoves = async (bordState) => {
                 'Accept': 'application/json',
                 'Origin' : `${frontUri}`
             },
-            body: JSON.stringify(bordState),
+            body: JSON.stringify({...bordState, playerColor: color}),
         });
         if (response.ok) {
             return await response.json();

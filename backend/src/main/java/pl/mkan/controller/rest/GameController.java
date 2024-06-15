@@ -18,9 +18,9 @@ public class GameController {
     private final GameService gameService;
 
     @PostMapping(value = "/game")
-    public ResponseEntity<BoardDTO> getMove(@RequestBody @Valid BoardDTO board) {
-        log.info("Handle POST request at '/game' with object [{}]", board);
-        return ResponseEntity.ok(gameService.getMove(board));
+    public ResponseEntity<BoardDTO> getMove(@RequestBody @Valid MoveRequestDTO request) {
+        log.info("Handle POST request at '/game' with object [{}]", request);
+        return ResponseEntity.ok(gameService.getMove(request));
     }
 
     @GetMapping(value = "/game")
