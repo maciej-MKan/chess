@@ -11,7 +11,8 @@ public class BoardConfigForNonUniquePiecesPosition {
                 Arguments.of(
                         "{\"pieces\": [{\"id\": 11, \"type\": \"KING\", \"color\": \"BLACK\", \"position\": {\"row\": 6, \"column\": 0}, \"moved\": true}," +
                                 "{\"id\": 12, \"type\": \"PAWN\", \"color\": \"BLACK\", \"position\": {\"row\": 3, \"column\": 1}, \"moved\": true}," +
-                                "{\"id\": 22, \"type\": \"KING\", \"color\": \"WHITE\", \"position\": {\"row\": 3, \"column\": 1}, \"moved\": true}]}",
+                                "{\"id\": 22, \"type\": \"KING\", \"color\": \"WHITE\", \"position\": {\"row\": 3, \"column\": 1}, \"moved\": true}]," +
+                                "\"playerColor\": \"BLACK\"}",
                         "Bad Request")
         );
     }
