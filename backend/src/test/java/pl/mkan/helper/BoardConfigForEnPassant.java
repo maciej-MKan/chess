@@ -54,7 +54,8 @@ public class BoardConfigForEnPassant {
                                             "srcRow": 3,
                                             "destColumn": 3,
                                             "destRow": 3
-                                        }
+                                        },
+                                "playerColor": "BLACK"
                                 }""",
                         11,
                         new PositionDTO(2, 3))

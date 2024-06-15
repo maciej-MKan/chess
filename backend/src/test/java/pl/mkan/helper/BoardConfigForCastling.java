@@ -54,7 +54,8 @@ public class BoardConfigForCastling {
                                             "srcRow": 7,
                                             "destColumn": 0,
                                             "destRow": 7
-                                        }
+                                        },
+                                "playerColor": "BLACK"
                                 }""",
                         88,
                         new PositionDTO(7, 2))

@@ -9,7 +9,8 @@ import pl.mkan.controller.dto.PositionDTO;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UniquePiecesPositionValidator implements ConstraintValidator<UniquePiecesPosition, BoardDTO> {
+public class UniquePiecesPositionValidator implements
+        ConstraintValidator<UniquePiecesPosition, BoardDTO> {
 
     @Override
     public boolean isValid(BoardDTO boardDTO, ConstraintValidatorContext constraintValidatorContext) {
@@ -25,4 +26,5 @@ public class UniquePiecesPositionValidator implements ConstraintValidator<Unique
         }
         return true;
     }
+
 }
