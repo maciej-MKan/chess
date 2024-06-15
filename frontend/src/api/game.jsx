@@ -22,7 +22,7 @@ export const initGame = async (playerColor) => {
     }
 };
 
-export const getComputerMove = async (bordState) => {
+export const getComputerMove = async (bordState, color) => {
     const url = `${backendUri}/api/game`;
     try {
         const response = await fetch(url, {
@@ -32,7 +32,7 @@ export const getComputerMove = async (bordState) => {
                 'Accept': 'application/json',
                 'Origin' : `${frontUri}`
             },
-            body: JSON.stringify(bordState),
+            body: JSON.stringify({...bordState, playerColor: color}),
         });
         if (response.ok) {
             return await response.json();

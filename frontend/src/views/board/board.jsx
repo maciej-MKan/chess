@@ -179,9 +179,9 @@ const Chessboard = () => {
     const computerMove = useCallback((board) => {
         if (!gameOver && !waitApi) {
             setWaitApi(true);
-            getComputerMove(board)
+            getComputerMove(board, playerColor)
                 .then(boardData => {
-                    setBoardState(boardData);
+                    setBoardState({pieces: boardData.pieces, move: boardData.move});
                     const piece = findPiece(boardData.move.srcRow, boardData.move.srcColumn, board);
                     const moveDescription = `${piece.color} moved ${piece.type} from ${String.fromCharCode(65 + boardData.move.srcColumn)}${8 - boardData.move.srcRow} to ${String.fromCharCode(65 + boardData.move.destColumn)}${8 - boardData.move.destRow}`;
                     setMovesHistory(prevHistory => [...prevHistory, {desc: moveDescription, state: boardData, whoseMove: "computer"}]);
