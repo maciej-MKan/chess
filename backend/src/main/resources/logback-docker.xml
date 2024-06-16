@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="true">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <property name="HOME_LOG" value="/log/app.log"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%t] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="DOCKER_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36}:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="DOCKER_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${HOME_LOG}</file>
+        <append>true</append>
+        <immediateFlush>true</immediateFlush>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36}:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="docker">
+        <logger name="com.mkan" level="ERROR">
+            <appender-ref ref="DOCKER_FILE"/>
+        </logger>
+        >
+        <root level="INFO">
+            <appender-ref ref="DOCKER_CONSOLE"/>
+        </root>
+        >
+    </springProfile>
+
+    <springProfile name="local">
+        <root level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+</configuration>
