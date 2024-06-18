@@ -1,10 +1,6 @@
-FROM node:18-alpine
+FROM node:18
 
 WORKDIR /app
-
-ARG VITE_BACKEND_URI
-
-ENV VITE_BACKEND_URI=$VITE_BACKEND_URI
 
 COPY package.json .
 
@@ -18,4 +14,6 @@ RUN npm run build
 
 EXPOSE 5173
 
-CMD [ "npm", "run", "serve" ]
+RUN ["chmod", "+x", "./env.sh"]
+
+ENTRYPOINT ["/bin/sh",  "-c", "./env.sh"]
