@@ -1,20 +1,18 @@
 #!/bin/bash
 
 echo "setup environment"
-node env.js
 
-if [ $? -eq 0 ]; then
-  echo "Success executing env.js"
+TARGET_PATH="./.env"
+ENV_CONFIG_FILE="VITE_BACKEND_URI=${API_URL}"
 
-  set -o allexport
-  source ./.env
-  set +o allexport
+echo "$ENV_CONFIG_FILE" > "$TARGET_PATH"
 
-  echo "$(<./.env )"
+echo "$(<"$TARGET_PATH")"
 
-  echo "run app"
-  npm run start
-else
-  echo "env.js field"
-  exit 1
-fi
+set -o allexport
+source "$./.env"
+set +o allexport
+
+echo "run app"
+npm run build
+npm run serve
