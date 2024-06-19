@@ -10,7 +10,7 @@ echo "$ENV_CONFIG_FILE" > "$TARGET_PATH"
 echo "$(<"$TARGET_PATH")"
 
 set -o allexport
-source "$TARGET_PATH"
+source "$./.env"
 set +o allexport
 
 echo "run app"
