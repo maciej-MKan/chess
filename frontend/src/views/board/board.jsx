@@ -7,6 +7,7 @@ import PawnPromotionModal from './components/PawnPromotion';
 import MoveOptionsModal from "./components/MoveOptionsModal";
 import MoveHistory from "./components/MoveHistory";
 import PlayerColorSelector from "./components/PlayerColorSelector";
+import PlayerNameInput from "./components/PlayerNameInput";
 
 const Chessboard = () => {
     const [playerColor, setPlayerColor] = useState('');
@@ -25,27 +26,51 @@ const Chessboard = () => {
     const [selectedMoveIndex, setSelectedMoveIndex] = useState(0);
 
     useEffect(() => {
-        if ((playerColor !== '') && (playerColor !== undefined)) {
-            setWaitApi(true);
-            console.log(playerColor);
-            initGame(playerColor)
-                .then(boardData => {
-                    setBoardState(boardData);
-                    if (playerColor === "BLACK") {
-                        computerMove({
-                            pieces: boardData.pieces
-                        });
-                    } else {
-                        fetchAvailableMoves(boardData, playerColor);
-                    }
-                })
-                .catch(error => {
-                    console.log('error ' + error);
-                    setError(error.toString());
-                })
-                .finally(() => setWaitApi(false));
+        const savedGameState = sessionStorage.getItem('chessGameState');
+        let currentState;
+        if (savedGameState) {
+            const {boardState, movesHistory, playerColor} = JSON.parse(savedGameState);
+            setBoardState(boardState);
+            currentState = boardState;
+            setMovesHistory(movesHistory);
+            setPlayerColor(playerColor);
+        } else {
+            if ((playerColor !== '') && (playerColor !== undefined)) {
+                setWaitApi(true);
+                console.log(playerColor);
+                initGame(playerColor)
+                    .then(boardData => {
+                        setBoardState(boardData);
+                        currentState = boardData;
+                    })
+                    .catch(error => {
+                        console.log('error ' + error);
+                        setError(error.toString());
+                    })
+                    .finally(() => setWaitApi(false));
+            }
         }
+
     }, [playerColor]);
+
+    useEffect( () =>{
+        console.log("player color effect")
+        if (playerColor === "BLACK") {
+            computerMove({
+                pieces: boardState.pieces
+            });
+        } else {
+            console.log(boardState);
+            fetchAvailableMoves(boardState, playerColor);
+        }
+    },[playerColor]);
+
+    useEffect(() => {
+        if (boardState && movesHistory.length) {
+            const gameState = {boardState, movesHistory, playerColor};
+            sessionStorage.setItem('chessGameState', JSON.stringify(gameState));
+        }
+    }, [boardState, movesHistory, playerColor]);
 
     const fetchGameState = useCallback((board, onExit) => {
         setWaitApi(true);
@@ -293,8 +318,17 @@ const Chessboard = () => {
 
     }, [selectedMoveIndex, movesHistory]);
 
+    const setPlayerName = (name) => {
+        sessionStorage.setItem('chessPlayerName', name);
+    }
+
     if (!playerColor) {
-        return <PlayerColorSelector onColorSelect={setPlayerColor}/>;
+        return (
+            <>
+                {/*<PlayerNameInput onNameSubmit={setPlayerName}/>*/}
+                <PlayerColorSelector onColorSelect={setPlayerColor}/>
+            </>
+        );
     }
 
     return (
