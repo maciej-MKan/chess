@@ -27,13 +27,13 @@ const Chessboard = () => {
 
     useEffect(() => {
         const savedGameState = sessionStorage.getItem('chessGameState');
-        let currentState;
         if (savedGameState) {
             const {boardState, movesHistory, playerColor} = JSON.parse(savedGameState);
             setBoardState(boardState);
-            currentState = boardState;
             setMovesHistory(movesHistory);
             setPlayerColor(playerColor);
+            move(boardState);
+
         } else {
             if ((playerColor !== '') && (playerColor !== undefined)) {
                 setWaitApi(true);
@@ -41,7 +41,7 @@ const Chessboard = () => {
                 initGame(playerColor)
                     .then(boardData => {
                         setBoardState(boardData);
-                        currentState = boardData;
+                        move(boardData);
                     })
                     .catch(error => {
                         console.log('error ' + error);
@@ -53,17 +53,17 @@ const Chessboard = () => {
 
     }, [playerColor]);
 
-    useEffect( () =>{
+    const move = (board) => {
         console.log("player color effect")
         if (playerColor === "BLACK") {
             computerMove({
-                pieces: boardState.pieces
+                pieces: board.pieces
             });
         } else {
-            console.log(boardState);
-            fetchAvailableMoves(boardState, playerColor);
+            console.log(board);
+            fetchAvailableMoves(board, playerColor);
         }
-    },[playerColor]);
+    };
 
     useEffect(() => {
         if (boardState && movesHistory.length) {
@@ -322,10 +322,10 @@ const Chessboard = () => {
         sessionStorage.setItem('chessPlayerName', name);
     }
 
-    if (!playerColor) {
+    if (!sessionStorage.getItem('chessPlayerName')) {
         return (
             <>
-                {/*<PlayerNameInput onNameSubmit={setPlayerName}/>*/}
+                <PlayerNameInput onNameSubmit={setPlayerName}/>
                 <PlayerColorSelector onColorSelect={setPlayerColor}/>
             </>
         );
