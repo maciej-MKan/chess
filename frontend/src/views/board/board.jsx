@@ -33,7 +33,6 @@ const Chessboard = () => {
             setMovesHistory(movesHistory);
             setPlayerColor(playerColor);
             move(boardState);
-
         } else {
             if ((playerColor !== '') && (playerColor !== undefined)) {
                 setWaitApi(true);
