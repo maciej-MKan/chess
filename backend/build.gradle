@@ -41,4 +41,9 @@ compileJava.options.encoding = 'UTF-8'
 
 jar {
 	enabled = false
+	manifest {
+		attributes(
+				'Main-Class': 'pl.mkan.ChessApplication'
+		)
+	}
 }
