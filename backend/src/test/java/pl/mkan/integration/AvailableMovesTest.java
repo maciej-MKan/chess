@@ -15,7 +15,9 @@ import static org.hamcrest.Matchers.nullValue;
 import static pl.mkan.controller.rest.GameController.API_PATH;
 
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @AutoConfigureWebTestClient
 public class AvailableMovesTest {
     @LocalServerPort

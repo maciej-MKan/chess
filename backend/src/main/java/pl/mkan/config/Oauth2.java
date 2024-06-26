@@ -1,6 +1,5 @@
 package pl.mkan.config;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -13,7 +12,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class Oauth2 {
 
     @Bean
-    @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "true")
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> {
@@ -26,18 +24,6 @@ public class Oauth2 {
                     auth.anyRequest().authenticated();
                 })
                 .oauth2Login(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
-                .build();
-    }
-
-    @Bean
-    @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "false", matchIfMissing = false)
-    SecurityFilterChain securityDisabled(HttpSecurity http) throws Exception {
-        return http
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api**").permitAll();
-                    auth.anyRequest().permitAll();
-                })
                 .formLogin(Customizer.withDefaults())
                 .build();
     }
