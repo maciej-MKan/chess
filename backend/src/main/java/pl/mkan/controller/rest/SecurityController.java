@@ -22,7 +22,7 @@ public class SecurityController {
     public ResponseEntity<String> login() {
         return ResponseEntity.ok("Welcome");
     }
-
+  
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
