@@ -1,5 +1,3 @@
-version: '3'
-
 networks:
   inter-network:
     driver: bridge
@@ -13,9 +11,15 @@ services:
       - "8089:8080"
     networks:
       - inter-network
+    env_file:
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: "docker"
-      server.front: "http://localhost:3000"
+      server.front: ${FRONTEND_URL}
+      oauth2.gh-id: ${GH_CLIENT_ID}
+      oauth2.gh-secret: ${GH_CLIENT_SECRET}
+      oauth2.google-id: ${GOOGLE_CLIENT_ID}
+      oauth2.google-secret: ${GOOGLE_CLIENT_SECRET}
 
   frontend-vite:
     build:
