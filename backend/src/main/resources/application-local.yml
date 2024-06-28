@@ -1,0 +1,17 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  front: http://localhost:5173
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${GH_CLIENT_ID}
+            client-secret: ${GH_CLIENT_SECRET}
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}

@@ -2,4 +2,22 @@ server:
   port: 8080
   servlet:
     context-path: /
-  front: http://localhost:3000/
+  front: ""
+
+oauth2:
+  gh-id:
+  gh-secret:
+  google-id:
+  google-secret:
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${oauth2.gh-id}
+            client-secret: ${oauth2.gh-secret}
+          google:
+            client-id: ${oauth2.google-id}
+            client-secret: ${oauth2.google-secret}
