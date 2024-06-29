@@ -12,6 +12,8 @@ spring:
           github:
             client-id: ${GH_CLIENT_ID}
             client-secret: ${GH_CLIENT_SECRET}
+            scope: profile, email
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: profile, email
