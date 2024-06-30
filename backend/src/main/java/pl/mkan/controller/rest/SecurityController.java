@@ -8,12 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.mkan.controller.dto.UserDTO;
+import pl.mkan.service.UserService;
 
 @Slf4j
 @RestController
@@ -21,15 +22,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/security")
 public class SecurityController {
 
+    private final UserService userService;
+
     @GetMapping(path = "/login")
     public ResponseEntity<String> login(@AuthenticationPrincipal OAuth2User principal) {
-        log.info("User [{}] login", principal.getName());
-        OAuth2AuthenticationToken authentication =
-                (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            log.info(authentication.getAuthorizedClientRegistrationId());
-        }
-        return ResponseEntity.ok("Welcome " + principal.getAttribute("name"));
+//        log.info("User [{}] login", principal.getName());
+//        OAuth2AuthenticationToken authentication =
+//                (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null) {
+//            log.info(authentication.getAuthorizedClientRegistrationId());
+//        }
+        String name = principal.getAttribute("name");
+        userService.saveIfNewUser(new UserDTO(name));
+        return ResponseEntity.ok("Welcome " + name);
     }
   
     @GetMapping("/logout")

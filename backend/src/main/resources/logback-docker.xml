@@ -38,10 +38,4 @@
         >
     </springProfile>
 
-    <springProfile name="local">
-        <root level="INFO" additivity="false">
-            <appender-ref ref="CONSOLE"/>
-        </root>
-    </springProfile>
-
 </configuration>
