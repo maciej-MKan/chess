@@ -1,9 +1,6 @@
-package pl.mkan.persistance.model;
+package pl.mkan.persistence.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,15 +12,20 @@ import pl.mkan.service.tools.UserIdFactory;
 @EqualsAndHashCode(of = "userId")
 @NoArgsConstructor
 @Entity
-public class UserEntity {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true)
     private int userId;
+
+    @Column(nullable = false)
     private String username;
 
-    public UserEntity(String username) {
+    public User(String username) {
         this.username = username;
         this.userId = UserIdFactory.generateId().getUserId();
         log.info("Created user with id {}", userId);
