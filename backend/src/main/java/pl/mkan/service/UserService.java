@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.mkan.controller.dto.UserDTO;
-import pl.mkan.persistance.model.UserEntity;
-import pl.mkan.persistance.repository.UserRepository;
+import pl.mkan.persistence.model.User;
+import pl.mkan.persistence.repository.UserRepository;
 
 @Slf4j
 @AllArgsConstructor
@@ -15,7 +15,11 @@ public class UserService {
     private final UserRepository userRepository;
 
     public boolean saveIfNewUser(UserDTO user) {
-        userRepository.save(new UserEntity(user.name()));
-        return true;
+        User newUser = new User(user.name());
+        if (userRepository.findByUserId(newUser.getUserId()) == null) {
+            userRepository.save(newUser);
+            return true;
+        }
+        return false;
     }
 }
