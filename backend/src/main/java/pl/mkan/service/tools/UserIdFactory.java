@@ -9,8 +9,8 @@ public class UserIdFactory {
         OAuth2AuthenticationToken authentication =
                 (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         return switch (authentication.getAuthorizedClientRegistrationId()) {
-            case "github" -> new GHUserId();
-            case "google" -> new GoogleUserId();
+            case "github" -> new GHUserId(authentication);
+            case "google" -> new GoogleUserId(authentication);
             default -> throw new RuntimeException("Unsupported oauth2 authentication token");
         };
     }
