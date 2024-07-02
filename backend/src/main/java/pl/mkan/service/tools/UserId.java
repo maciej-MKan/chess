@@ -1,6 +1,8 @@
 package pl.mkan.service.tools;
 
+import java.util.UUID;
+
 public interface UserId {
 
-    int getUserId();
+    UUID getUserId();
 }

@@ -26,17 +26,12 @@ public class SecurityController {
 
     @GetMapping(path = "/login")
     public ResponseEntity<String> login(@AuthenticationPrincipal OAuth2User principal) {
-//        log.info("User [{}] login", principal.getName());
-//        OAuth2AuthenticationToken authentication =
-//                (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null) {
-//            log.info(authentication.getAuthorizedClientRegistrationId());
-//        }
         String name = principal.getAttribute("name");
+        log.info("User [{}] logged in", name);
         userService.saveIfNewUser(new UserDTO(name));
         return ResponseEntity.ok("Welcome " + name);
     }
-  
+
     @GetMapping("/logout")
     public String logout(
             @AuthenticationPrincipal OAuth2User user,

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pl.mkan.service.tools.UserIdFactory;
 
+import java.util.UUID;
+
 @Slf4j
 @Getter
 @EqualsAndHashCode(of = "userId")
@@ -20,7 +22,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private int userId;
+    private UUID userId;
 
     @Column(nullable = false)
     private String username;
