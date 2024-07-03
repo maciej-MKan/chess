@@ -52,7 +52,7 @@ export const getAvailableMoves = async (bordState, color) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
+                // 'Accept': 'application/json',
                 'Origin' : `${frontUri}`
             },
             body: JSON.stringify({...bordState, playerColor: color}),
