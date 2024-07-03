@@ -321,10 +321,10 @@ const Chessboard = () => {
         sessionStorage.setItem('chessPlayerName', name);
     }
 
-    if (!sessionStorage.getItem('chessPlayerName')) {
+    if (!playerColor) {
         return (
             <>
-                <PlayerNameInput onNameSubmit={setPlayerName}/>
+                {/*<PlayerNameInput onNameSubmit={setPlayerName}/>*/}
                 <PlayerColorSelector onColorSelect={setPlayerColor}/>
             </>
         );

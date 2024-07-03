@@ -1,13 +1,17 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Chessboard from "./views/board/board";
+import Login from "./views/dashboard/components/Login";
 
 
 const App = () => {
   return (
-      <div>
-        <h1>Chess on Java</h1>
-        <Chessboard/>
-      </div>
+      <Router>
+          <Routes>
+              <Route path="/" element={<Chessboard/>}></Route>
+              <Route path="/login" element={<Login/>}></Route>
+          </Routes>
+      </Router>
   );
 }
 

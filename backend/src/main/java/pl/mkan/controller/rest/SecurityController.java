@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.mkan.controller.dto.UserDTO;
 import pl.mkan.service.UserService;
 
+import java.io.IOException;
+
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -25,11 +26,11 @@ public class SecurityController {
     private final UserService userService;
 
     @GetMapping(path = "/login")
-    public ResponseEntity<String> login(@AuthenticationPrincipal OAuth2User principal) {
+    public void login(@AuthenticationPrincipal OAuth2User principal, HttpServletResponse response) throws IOException {
         String name = principal.getAttribute("name");
         log.info("User [{}] logged in", name);
         userService.saveIfNewUser(new UserDTO(name));
-        return ResponseEntity.ok("Welcome " + name);
+        response.sendRedirect("http://localhost:5173/");
     }
 
     @GetMapping("/logout")

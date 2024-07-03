@@ -20,8 +20,10 @@ public class Security_local {
         return http
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
-                            "/api**",
-                            "/login**",
+                            "/api/**",
+                            "/api/game/**",
+                            "/login/**",
+                            "/oauth2/**",
                             "/error/**",
                             "/error**",
                             "/security/logout",
@@ -31,12 +33,16 @@ public class Security_local {
                     auth.anyRequest().authenticated();
                 })
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"))
+                        .ignoringRequestMatchers(new AntPathRequestMatcher("/**"))
                 )
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/security/login")
+                        .defaultSuccessUrl("/security/login", true)
+                        .failureUrl("/login?error=true")
+                )
                 .formLogin(Customizer.withDefaults())
                 .build();
     }
