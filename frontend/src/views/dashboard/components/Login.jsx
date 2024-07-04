@@ -1,4 +1,6 @@
 import React from "react";
+import "./Login.css"
+
 const backendUri = import.meta.env.VITE_BACKEND_URI
 const frontUri = import.meta.env.VITE_FRONTEND_URI
 
@@ -8,10 +10,12 @@ const Login = () => {
     };
 
     return (
-        <div>
-            <h1>Login</h1>
-            <button onClick={() => handleLogin('google')}>Login with Google</button>
-            <button onClick={() => handleLogin('github')}>Login with GitHub</button>
+        <div className="login-container">
+            <h2>Login</h2>
+            <div className="provider-box">
+                <button className="button-google" onClick={() => handleLogin('google')}>Login with Google</button>
+                <button className="button-gh" onClick={() => handleLogin('github')}>Login with GitHub</button>
+            </div>
         </div>
     );
 }
