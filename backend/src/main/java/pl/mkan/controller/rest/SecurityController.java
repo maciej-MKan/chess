@@ -2,8 +2,9 @@ package pl.mkan.controller.rest;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,18 +20,26 @@ import java.io.IOException;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(path = "/security")
 public class SecurityController {
 
     private final UserService userService;
 
+    @Value("${server.front}")
+    private String frontUrl;
+
     @GetMapping(path = "/login")
+    public void loginPage(HttpServletResponse response) throws IOException {
+        response.sendRedirect(frontUrl + "/login");
+    }
+
+    @GetMapping(path = "/login-success")
     public void login(@AuthenticationPrincipal OAuth2User principal, HttpServletResponse response) throws IOException {
         String name = principal.getAttribute("name");
         log.info("User [{}] logged in", name);
         userService.saveIfNewUser(new UserDTO(name));
-        response.sendRedirect("http://localhost:5173/");
+        response.sendRedirect(frontUrl + "/");
     }
 
     @GetMapping("/logout")
