@@ -1,23 +1,41 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {useNavigate} from 'react-router-dom'
 import "./Login.css"
-
-const backendUri = import.meta.env.VITE_BACKEND_URI
-const frontUri = import.meta.env.VITE_FRONTEND_URI
+import Oauth2Component from "./Oauth2Component";
+import GuestComponent from "./GuestComponent";
 
 const Login = () => {
-    const handleLogin = (provider) => {
-        window.location.href = `${backendUri}/oauth2/authorization/${provider}`;
-    };
+    const navigate = useNavigate();
+    const [hasToken, setHasToken] = useState(null);
+
+    useEffect(() => {
+        const token = document.cookie.split('; ').find(row => row.startsWith('token='));
+        sessionStorage.clear();
+
+        if (token) {
+            setHasToken(true);
+            navigate("/");
+            console.log("found token")
+        } else {
+            setHasToken(false);
+            console.log("token not found render login page")
+        }
+    }, [navigate]);
+
+    if (hasToken === null) {
+        return <div>checking token...</div>;
+    }
+
+    if (hasToken) {
+        return null; // or a loading indicator
+    }
 
     return (
         <div className="login-container">
-            <h2>Login</h2>
-            <div className="provider-box">
-                <button className="button-google" onClick={() => handleLogin('google')}>Login with Google</button>
-                <button className="button-gh" onClick={() => handleLogin('github')}>Login with GitHub</button>
-            </div>
+            <Oauth2Component/>
+            <GuestComponent/>
         </div>
-    );
+    )
 }
 
 export default Login;

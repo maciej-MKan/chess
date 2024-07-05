@@ -1,13 +1,30 @@
 /* Login.css */
 .login-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    background: linear-gradient(135deg, rgba(213, 169, 133, 0.8), #a7a1a8);
+    align-items: flex-start;
     justify-content: center;
     height: 100vh;
-    background: linear-gradient(135deg, rgba(213, 169, 133, 0.8), #a7a1a8);
     color: #fff;
     font-family: 'Arial', sans-serif;
+    padding-top: 15%;
+}
+
+.guest-container {
+    margin: 15px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.oauth2-container {
+    margin: 15px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
 }
 
 h2 {
@@ -17,6 +34,12 @@ h2 {
 }
 
 .provider-box {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.guest-box {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -50,5 +73,15 @@ button {
 
 .button-gh:hover {
     background-color: #24292e;
+    transform: scale(1.05);
+}
+
+.button-guest {
+    background-color: #ffffff;
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.button-guest:hover {
+    background-color: #d0d0d0;
     transform: scale(1.05);
 }

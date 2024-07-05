@@ -1,7 +1,17 @@
 .color-selector {
     display: flex;
+    background: linear-gradient(135deg, rgba(213, 169, 133, 0.8), #a7a1a8);
+    height: 100vh;
     flex-direction: column;
     align-items: center;
+}
+
+.select-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 15%;
 }
 
 .color-options {
