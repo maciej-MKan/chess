@@ -1,12 +1,17 @@
 .chessboard {
+    margin-top: 80px;
+    margin-left: 5px;
     display: flex;
     flex-wrap: wrap;
     width: 720px;
+    height: 720px;
 }
 
 .chessboard-container {
     display: flex;
     flex-direction: row;
+    background: linear-gradient(135deg, rgba(243, 243, 243, 0.8), #a7a1a8);
+    height: 100vh;
 }
 
 .moves-history {

@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Square} from './components/Square';
 import './Chessboard.css';
 import {getAvailableMoves, getComputerMove, getGameState, initGame} from '../../api/game';
-import {isEmpty} from '../utils';
+import {isEmpty} from '../utils/utils';
 import PawnPromotionModal from './components/PawnPromotion';
 import MoveOptionsModal from "./components/MoveOptionsModal";
 import MoveHistory from "./components/MoveHistory";
