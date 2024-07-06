@@ -34,12 +34,50 @@
     cursor: default;
 }
 
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 .moves-history-modal {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    padding: 10px;
+    margin-top: -30px;
+}
+
+.scroll-box{
+    margin-bottom: -80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
     padding: 10px;
 }
 
-.button {
-    padding: 10px;
+.button-revert, .button-cancel, .button-prev, .button-next {
+    background-color: #b2afaf;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 2px 10px;
+    color: rgba(0, 0, 0, 0.9);
+    width: auto;
+    height: 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-revert:hover, .button-cancel:hover, .button-prev:hover, .button-next:hover {
+    background-color: rgba(133, 133, 133, 0.85);
+    transform: scale(1.05);
+}
+
+h3 {
+    margin-right: 20px;
 }

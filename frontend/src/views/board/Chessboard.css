@@ -20,15 +20,28 @@
 }
 
 .loadingLabel {
-    color: #bb0101;
-    margin: 10px;
+    position: absolute;
+    z-index: 1000;
+    display: flex;
+    padding: 10px;
+    margin-left: 158px;
+    border-radius: 5px;
+    background-color: rgba(51, 51, 51, 0.84);
+    color: #e50101;
     align-self: center;
+    justify-self: center;
     font-size: 40px;
 }
 
 .gameOver {
+    position: absolute;
+    z-index: 1000;
+    display: flex;
+    padding: 10px;
+    margin-left: 60px;
+    border-radius: 5px;
+    background-color: rgba(51, 51, 51, 0.84);
     color: #53b618;
-    margin: 10px;
     align-self: center;
     font-size: 40px;
 }
@@ -132,4 +145,8 @@
 
 .animateMove {
     transition: all 0.5s ease-in-out;
+}
+
+.marked {
+    border-color: #bb0101;
 }
