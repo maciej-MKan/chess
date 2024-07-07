@@ -31,7 +31,9 @@ public class SecurityController {
 
     @GetMapping(path = "/login")
     public void loginPage(HttpServletResponse response) throws IOException {
-        response.sendRedirect(frontUrl + "/login");
+        String redirectUrl = frontUrl + "/login";
+        log.info("redirecting to {}", redirectUrl);
+        response.sendRedirect(redirectUrl);
     }
 
     @GetMapping(path = "/login-success")
