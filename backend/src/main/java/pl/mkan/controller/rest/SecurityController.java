@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,10 +38,12 @@ public class SecurityController {
     }
 
     @GetMapping(path = "/login-success")
-    public void login(@AuthenticationPrincipal OAuth2User principal, HttpServletResponse response) throws IOException {
+    public void login(@AuthenticationPrincipal OAuth2User principal, @AuthenticationPrincipal OAuth2AuthenticationToken idToken, HttpServletResponse response) throws IOException {
         String name = principal.getAttribute("name");
         log.info("User [{}] logged in", name);
+        log.info("IdToken [{}]", idToken);
         userService.saveIfNewUser(new UserDTO(name));
+//        response.addCookie(new Cookie("Authorization", "Bearer " + "token"));
         response.sendRedirect(frontUrl + "/");
     }
 
