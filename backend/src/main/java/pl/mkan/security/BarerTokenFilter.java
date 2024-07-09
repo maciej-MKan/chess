@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -30,14 +31,18 @@ public class BarerTokenFilter extends OncePerRequestFilter {
 
         if (tokenCookie.isPresent()) {
             // Token is present in cookies, print it to console
-            log.info("Token found: [{}]", tokenCookie.get().getValue());
-            SecurityContextHolder.getContext().setAuthentication(new UserIdAuthenticationToken("id", null));
+//            log.info("Token found: [{}]", tokenCookie.get().getValue());
+            Authentication oauth2auth = SecurityContextHolder.getContext().getAuthentication();
+            log.info("oauth2 authentication: {}", oauth2auth);
+//            Authentication authentication = Optional.ofNullable(oauth2auth)
+//                    .orElse(new OAuth2AuthenticationToken(new DefaultOAuth2User(null, Map.of("name", "user name", "userId", "user id"), "name"), null, null));
+//            log.info("authentication {}", authentication);
+            oauth2auth.setAuthenticated(true);
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
             // Token is not present
             log.info("Token not found in cookies");
         }
-
-
         filterChain.doFilter(request, response);
     }
 }
