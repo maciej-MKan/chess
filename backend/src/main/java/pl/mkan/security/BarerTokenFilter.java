@@ -38,7 +38,7 @@ public class BarerTokenFilter extends OncePerRequestFilter {
 //                    .orElse(new OAuth2AuthenticationToken(new DefaultOAuth2User(null, Map.of("name", "user name", "userId", "user id"), "name"), null, null));
 //            log.info("authentication {}", authentication);
             oauth2auth.setAuthenticated(true);
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            SecurityContextHolder.getContext().setAuthentication();
         } else {
             // Token is not present
             log.info("Token not found in cookies");
