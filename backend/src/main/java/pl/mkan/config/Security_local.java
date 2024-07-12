@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import pl.mkan.security.BarerTokenFilter;
 
@@ -45,16 +46,17 @@ public class Security_local {
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
-//                .sessionManagement(sessionManagement -> sessionManagement
-//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                )
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/security/login")
-                        .defaultSuccessUrl("/security/login-success", true)
-                        .failureUrl("/login?error=true")
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .oauth2Login(Customizer.withDefaults()
+//                        oauth2 -> oauth2
+//                        .loginPage("/security/login")
+//                        .defaultSuccessUrl("/security/login-success", true)
+//                        .failureUrl("/login?error=true")
                 );
 
-        http.addFilterBefore(barerTokenFilter, BasicAuthenticationFilter.class);
+//        http.addFilterBefore(barerTokenFilter, BasicAuthenticationFilter.class);
 
         return http.build();
     }
