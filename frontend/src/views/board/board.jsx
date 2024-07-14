@@ -7,7 +7,7 @@ import PawnPromotionModal from './components/PawnPromotion';
 import MoveOptionsModal from "./components/MoveOptionsModal";
 import MoveHistory from "./components/MoveHistory";
 import PlayerColorSelector from "./components/PlayerColorSelector";
-import PlayerNameInput from "./components/PlayerNameInput";
+import UserStatus from "./components/UserStatus";
 
 const Chessboard = () => {
     const [playerColor, setPlayerColor] = useState('');
@@ -363,6 +363,7 @@ const Chessboard = () => {
                 <div
                     className="chessboard">{error ? error : boardState ? renderBoard(boardState, true) : 'Loading...'}</div>
                 <MoveHistory moves={movesHistory} onMoveClick={handleMoveClick}/>
+                <UserStatus/>
 
                 {waitApi && <div className="loadingLabel">Wait for API response</div>}
                 {gameOver && <div className="gameOver">Game Over, the winner is {winner}</div>}
