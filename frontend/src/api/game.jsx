@@ -5,6 +5,7 @@ export const initGame = async (playerColor) => {
     const url = `${backendUri}/api/game?playerColor=${playerColor}`;
     try {
         const response = await fetch(url,{
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -14,7 +15,7 @@ export const initGame = async (playerColor) => {
         if (response.ok) {
             return await response.json();
         } else {
-            throw new Error('bad response');
+            return Promise.reject('bad response');
         }
     } catch (error) {
         console.error('Error fetching init game: ', error);
@@ -27,6 +28,7 @@ export const getComputerMove = async (bordState, color) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -50,9 +52,10 @@ export const getAvailableMoves = async (bordState, color) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                // 'Accept': 'application/json',
+                'Accept': 'application/json',
                 'Origin' : `${frontUri}`
             },
             body: JSON.stringify({...bordState, playerColor: color}),
@@ -73,6 +76,7 @@ export const getGameState = async (boardState) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
