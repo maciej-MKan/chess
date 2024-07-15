@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Chessboard from "./views/board/board";
-import Login from "./views/dashboard/components/Login";
+import Login from "./views/login/components/Login";
 import Title from "./views/utils/components/Title";
 import "./App.css"
 
