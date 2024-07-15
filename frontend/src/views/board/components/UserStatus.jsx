@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import './UserStatus.css';
-import {fetchUserDetails} from "../../../api/user";
+import {fetchUserDetails, sendLogout} from "../../../api/user";
 import DropDownMenu from "../../userMenu/DropDownMenu";
 
 const UserStatus = () => {
     const [username, setUsername] = useState(null);
     const navigate = useNavigate();
+    const backendUri = import.meta.env.VITE_BACKEND_URI
 
     useEffect(() => {
         fetchUserDetails().then(user => setUsername(user.name))
@@ -17,6 +18,10 @@ const UserStatus = () => {
     };
 
     const handleLogout = () => {
+        setUsername("");
+        document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+        sendLogout().then(r => {
+        });
     }
     const handleGamesHistory = () => {
     }

@@ -2,7 +2,6 @@ import React from "react";
 import "./Login.css"
 
 const backendUri = import.meta.env.VITE_BACKEND_URI
-const frontUri = import.meta.env.VITE_FRONTEND_URI
 
 const Oauth2Component = () => {
     const handleLogin = (provider) => {

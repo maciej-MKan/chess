@@ -1,22 +1,29 @@
 /* DropdownMenu.css */
 .dropdown {
     position: relative;
-    display: inline-block;
+    display: inline-flex;
+    align-items: self-start;
+    justify-content: center;
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    margin-top: 54px;
+    padding-top: 5px;
+    padding-right: 24px;
+    padding-left: 24px;
     min-width: 160px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
     transition: background-color 0.3s ease, transform 0.3s ease;
     z-index: 1;
 }
 
 .dropdown-content a {
+    align-self: center;
+    border-radius: 15px;
     color: black;
+    background-color: rgba(181, 136, 99, 0.5);
+    margin: 2px;
     padding: 12px 16px;
     font-size: 1.2rem;
     text-decoration: none;
@@ -24,13 +31,14 @@
 }
 
 .dropdown-content a:hover {
-    background-color: #f1f1f1;
+    background-color: rgba(255, 213, 133, 0.5);
 }
 
 .dropdown:hover .dropdown-content {
+    flex-direction: column;
     display: block;
 }
 
 .dropdown:hover .dropbtn {
-    background-color: rgba(189, 190, 190, 0.14);
+    background-color: rgba(240, 217, 181, 0.5);
 }
