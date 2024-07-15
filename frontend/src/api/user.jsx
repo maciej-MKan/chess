@@ -21,3 +21,20 @@ export const fetchUserDetails = async () => {
         return null;
     }
 };
+
+export const sendLogout = async () => {
+    try {
+        await fetch(`${backendUri}/security/logout`, {
+            credentials: "include",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Origin': `${frontUri}`
+            }
+        });
+        return null;
+    } catch (error) {
+        console.error('Logout fail: ', error);
+        return null;
+    }
+}

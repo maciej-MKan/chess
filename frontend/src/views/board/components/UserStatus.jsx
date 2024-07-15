@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import './UserStatus.css';
-import {fetchUserDetails} from "../../../api/user";
+import {fetchUserDetails, sendLogout} from "../../../api/user";
 import DropDownMenu from "../../userMenu/DropDownMenu";
 
 const UserStatus = () => {
@@ -17,6 +17,11 @@ const UserStatus = () => {
     };
 
     const handleLogout = () => {
+        setUsername("");
+        document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+        sendLogout().then(() => {
+        });
+        navigate("/login");
     }
     const handleGamesHistory = () => {
     }
