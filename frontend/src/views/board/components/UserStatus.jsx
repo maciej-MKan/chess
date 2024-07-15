@@ -7,7 +7,6 @@ import DropDownMenu from "../../userMenu/DropDownMenu";
 const UserStatus = () => {
     const [username, setUsername] = useState(null);
     const navigate = useNavigate();
-    const backendUri = import.meta.env.VITE_BACKEND_URI
 
     useEffect(() => {
         fetchUserDetails().then(user => setUsername(user.name))
@@ -20,8 +19,9 @@ const UserStatus = () => {
     const handleLogout = () => {
         setUsername("");
         document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
-        sendLogout().then(r => {
+        sendLogout().then(() => {
         });
+        navigate("/login");
     }
     const handleGamesHistory = () => {
     }
