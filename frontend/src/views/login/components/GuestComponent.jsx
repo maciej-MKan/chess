@@ -7,7 +7,7 @@ const GuestComponent = () => {
     const navigate = useNavigate();
 
     const handleGuestPlay = () => {
-        navigate("/");
+        navigate("/game");
     }
 
     return (
