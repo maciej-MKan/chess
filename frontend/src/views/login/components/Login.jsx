@@ -14,7 +14,7 @@ const Login = () => {
 
         if (token) {
             setHasToken(true);
-            navigate("/");
+            navigate("/game");
             console.log("found token")
         } else {
             setHasToken(false);

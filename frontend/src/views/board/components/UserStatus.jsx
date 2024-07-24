@@ -13,7 +13,7 @@ const UserStatus = () => {
     }, []);
 
     const handleLogin = () => {
-        navigate('/login');
+        navigate('/');
     };
 
     const handleLogout = () => {
@@ -21,7 +21,7 @@ const UserStatus = () => {
         document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
         sendLogout().then(() => {
         });
-        navigate("/login");
+        navigate("/");
     }
     const handleGamesHistory = () => {
     }

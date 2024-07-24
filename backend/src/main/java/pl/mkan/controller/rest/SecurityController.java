@@ -42,7 +42,7 @@ public class SecurityController {
         String name = principal.getAttribute("name");
         log.info("User [{}] logged in", name);
         userService.saveIfNewUser(new UserDTO(name));
-        response.sendRedirect(frontUrl + "/");
+        response.sendRedirect(frontUrl + "/game");
     }
 
     @GetMapping("/logout")
