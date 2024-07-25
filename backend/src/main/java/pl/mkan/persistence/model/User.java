@@ -27,6 +27,9 @@ public class User {
     @Column(nullable = false)
     private String username;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserPreferences preferences;
+
     public User(String username) {
         this.username = username;
         this.userId = UserIdFactory.generateId().getUserId();
