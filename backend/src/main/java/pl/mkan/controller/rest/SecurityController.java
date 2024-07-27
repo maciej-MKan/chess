@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.mkan.controller.dto.UserDTO;
+import pl.mkan.controller.dto.enums.PieceColor;
 import pl.mkan.service.UserService;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -40,8 +42,13 @@ public class SecurityController {
     @GetMapping(path = "/login-success")
     public void login(@AuthenticationPrincipal OAuth2User principal, HttpServletResponse response) throws IOException {
         String name = principal.getAttribute("name");
+        Optional<PieceColor> userColor = Optional.empty();
         log.info("User [{}] logged in", name);
-        userService.saveIfNewUser(new UserDTO(name));
+        boolean newUser = userService.saveIfNewUser(new UserDTO(name));
+        if (!newUser) {
+            userColor = Optional.of(userService.getUserColor(userService.getUserByName(name).getUserId()));
+        }
+        log.info("User default color [{}]", userColor.orElseThrow().name());
         response.sendRedirect(frontUrl + "/game");
     }
 
