@@ -1,4 +1,6 @@
 HELP.md
+.env
+backend/.env
 .gradle
 .attach_pid190086
 build/
@@ -36,3 +38,4 @@ out/
 
 ### VS Code ###
 .vscode/
+/.env
