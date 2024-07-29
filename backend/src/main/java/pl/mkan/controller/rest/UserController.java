@@ -9,10 +9,11 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.mkan.controller.dto.UserColorDTO;
 import pl.mkan.controller.dto.UserDTO;
+import pl.mkan.controller.dto.enums.PieceColor;
+import pl.mkan.service.UserService;
 
 import java.security.Principal;
 
@@ -23,6 +24,7 @@ import java.security.Principal;
 public class UserController {
 
     private final OAuth2AuthorizedClientService authorizedClientService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<UserDTO> GetUserInfo(Principal principal, @AuthenticationPrincipal OAuth2User user) {
@@ -38,5 +40,16 @@ public class UserController {
         log.info("client token : [{}]", client.getAccessToken().getTokenValue());
 
         return ResponseEntity.ok(new UserDTO(user.getAttribute("name")));
+    }
+
+    @PostMapping("/color")
+    public void SetUserColor(@RequestBody UserColorDTO request) {
+        userService.setDefaultColor(request.color());
+    }
+
+    @GetMapping("/color")
+    public ResponseEntity<PieceColor> GetUserColor() {
+        PieceColor userColor = userService.getUserColor().isPresent() ? userService.getUserColor().get() : null;
+        return ResponseEntity.ok(userColor);
     }
 }

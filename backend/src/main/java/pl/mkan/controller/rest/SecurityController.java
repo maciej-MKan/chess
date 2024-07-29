@@ -46,9 +46,9 @@ public class SecurityController {
         log.info("User [{}] logged in", name);
         boolean newUser = userService.saveIfNewUser(new UserDTO(name));
         if (!newUser) {
-            userColor = Optional.of(userService.getUserColor(userService.getUserByName(name).getUserId()));
+            userColor = userService.getUserColor();
         }
-        log.info("User default color [{}]", userColor.orElseThrow().name());
+        log.info("User default color [{}]", userColor.map(Enum::name).orElse("null"));
         response.sendRedirect(frontUrl + "/game");
     }
 
