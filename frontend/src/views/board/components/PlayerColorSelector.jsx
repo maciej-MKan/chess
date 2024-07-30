@@ -4,7 +4,9 @@ import {fetchUserColor} from "../../../api/user";
 
 const PlayerColorSelector = ({onColorSelect}) => {
     useEffect(() => {
-        fetchUserColor().then(color => onColorSelect(color))
+        fetchUserColor().then(color => {
+            if (color != null) onColorSelect(color)
+        })
     }, []);
 
     return (
