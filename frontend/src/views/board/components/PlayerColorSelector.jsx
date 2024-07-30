@@ -1,7 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './PlayerColorSelector.css';
+import {fetchUserColor} from "../../../api/user";
 
 const PlayerColorSelector = ({onColorSelect}) => {
+    useEffect(() => {
+        fetchUserColor().then(color => onColorSelect(color))
+    }, []);
+
     return (
         <div className="color-selector">
             <div className="select-box">

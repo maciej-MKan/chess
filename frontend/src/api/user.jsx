@@ -22,6 +22,27 @@ export const fetchUserDetails = async () => {
     }
 };
 
+export const fetchUserColor = async () => {
+    try {
+        const response = await fetch(`${backendUri}/user/color`, {
+            credentials: "include",
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Origin': `${frontUri}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Unauthorized');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+        return null;
+    }
+};
+
 export const sendLogout = async () => {
     try {
         await fetch(`${backendUri}/security/logout`, {

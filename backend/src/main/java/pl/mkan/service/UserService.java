@@ -33,6 +33,7 @@ public class UserService {
 
     public Optional<PieceColor> getUserColor() {
         String defaultUserColor = userPreferences.findDefaultColorByUserId(UserIdFactory.generateId().getUserId());
+        log.info("Found user color: {}", defaultUserColor);
         return defaultUserColor == null ? Optional.empty() : Optional.of(PieceColor.valueOf(defaultUserColor));
     }
 
