@@ -8,6 +8,7 @@ import MoveOptionsModal from "./components/MoveOptionsModal";
 import MoveHistory from "./components/MoveHistory";
 import PlayerColorSelector from "./components/PlayerColorSelector";
 import UserStatus from "./components/UserStatus";
+import {sendUserColor} from "../../api/user";
 
 const Chessboard = () => {
     const [playerColor, setPlayerColor] = useState('');
@@ -125,6 +126,15 @@ const Chessboard = () => {
     const findPiece = ((row, column, boardData) =>
             boardData?.pieces?.find(piece => piece.position.row === row && piece.position.column === column)
     );
+
+    const storePlayerColor = (color) => {
+        sendUserColor(color)
+            .catch(error => {
+                console.log('error ' + error);
+                setError(error.toString()
+                )}
+            );
+    };
 
     const removePiece = useCallback((piece) => {
         if (piece) {
@@ -348,11 +358,16 @@ const Chessboard = () => {
         }
     }
 
+    const handlePlayerColorSelect = (color) => {
+        setPlayerColor(color);
+        storePlayerColor(color);
+    }
+
     if (!playerColor) {
         return (
             <>
                 {/*<PlayerNameInput onNameSubmit={setPlayerName}/>*/}
-                <PlayerColorSelector onColorSelect={setPlayerColor}/>
+                <PlayerColorSelector onColorSelect={handlePlayerColorSelect}/>
             </>
         );
     }
