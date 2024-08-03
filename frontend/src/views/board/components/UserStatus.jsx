@@ -4,12 +4,16 @@ import './UserStatus.css';
 import {fetchUserDetails, sendLogout} from "../../../api/user";
 import DropDownMenu from "../../userMenu/DropDownMenu";
 
-const UserStatus = () => {
+const UserStatus = ({isLoginIn}) => {
     const [username, setUsername] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchUserDetails().then(user => setUsername(user.name))
+        isLoginIn = false;
+        fetchUserDetails().then(user => {
+            setUsername(user.name);
+            isLoginIn = true;
+        })
     }, []);
 
     const handleLogin = () => {
@@ -18,6 +22,7 @@ const UserStatus = () => {
 
     const handleLogout = () => {
         setUsername("");
+        isLoginIn = false;
         document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
         sendLogout().then(() => {
         });

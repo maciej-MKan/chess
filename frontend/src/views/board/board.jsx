@@ -13,6 +13,7 @@ import {sendUserColor} from "../../api/user";
 const Chessboard = () => {
     const [playerColor, setPlayerColor] = useState('');
     const [boardState, setBoardState] = useState();
+    const [loginIn, setLoginIn] = useState(false);
     const [availableMoves, setAvailableMoves] = useState({});
     const [error, setError] = useState('');
     const [waitApi, setWaitApi] = useState(false);
@@ -360,7 +361,9 @@ const Chessboard = () => {
 
     const handlePlayerColorSelect = (color) => {
         setPlayerColor(color);
-        storePlayerColor(color);
+        if(loginIn) {
+            storePlayerColor(color);
+        }
     }
 
     if (!playerColor) {
@@ -378,7 +381,7 @@ const Chessboard = () => {
                 <div
                     className="chessboard">{error ? error : boardState ? renderBoard(boardState, true) : 'Loading...'}</div>
                 <MoveHistory moves={movesHistory} onMoveClick={handleMoveClick}/>
-                <UserStatus/>
+                <UserStatus isLoginIn={setLoginIn}/>
 
                 {waitApi && <div className="loadingLabel">Wait for API response</div>}
                 {gameOver && <div className="gameOver">Game Over, the winner is {winner}</div>}
