@@ -54,7 +54,7 @@ const UserStatus = ({isLoginIn}) => {
             </div>
             <PreferencesModal
                 isOpen={preferencesVisible}
-                onClose={setPreferencesVisible(false)}
+                onClose={() => setPreferencesVisible(false)}
                 userName={username}
             />
         </>
