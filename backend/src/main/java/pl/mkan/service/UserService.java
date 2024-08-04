@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import pl.mkan.controller.dto.UserDTO;
 import pl.mkan.controller.dto.enums.PieceColor;
 import pl.mkan.persistence.model.User;
+import pl.mkan.persistence.model.UserPreferences;
 import pl.mkan.persistence.repository.UserPreferencesRepository;
 import pl.mkan.persistence.repository.UserRepository;
+import pl.mkan.service.tools.UserIdFactory;
 
-import java.util.UUID;
+import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
@@ -26,15 +28,23 @@ public class UserService {
             userRepository.save(newUser);
             return true;
         }
-//        log.info((userPreferences.findByUser(storedUser).orElse(new UserPreferences(0L, newUser, "Not specified"))).getDefaultColor());
         return false;
     }
 
-    public PieceColor getUserColor(UUID userId) {
-        return PieceColor.valueOf(userPreferences.findDefaultColorByUserId(userId));
+    public Optional<PieceColor> getUserColor() {
+        String defaultUserColor = userPreferences.findDefaultColorByUserId(UserIdFactory.generateId().getUserId());
+        log.info("Found user color: {}", defaultUserColor);
+        return defaultUserColor == null ? Optional.empty() : Optional.of(PieceColor.valueOf(defaultUserColor));
     }
 
-    public User getUserByName(String userName) {
-        return userRepository.findByUsername(userName);
+
+    public void setDefaultColor(PieceColor color) {
+        User user = userRepository.findByUserId(UserIdFactory.generateId().getUserId());
+        log.info("Setting default color {} for user {}",
+                color,
+                user.getUsername()
+        );
+        UserPreferences preferences = new UserPreferences(user, color.name());
+        userPreferences.save(preferences);
     }
 }

@@ -1,12 +1,11 @@
 package pl.mkan.persistence.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.mkan.controller.dto.enums.PieceColor;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -22,4 +21,14 @@ public class UserPreferences {
     private User user;
 
     private String defaultColor;
+
+    public UserPreferences(User user, String defaultColor) {
+        this.user = user;
+        this.defaultColor = defaultColor;
+    }
+
+    public UserPreferences(User user, PieceColor defaultColor) {
+        this.user = user;
+        this.defaultColor = defaultColor.name();
+    }
 }

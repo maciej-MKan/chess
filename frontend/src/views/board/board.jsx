@@ -131,9 +131,10 @@ const Chessboard = () => {
     const storePlayerColor = (color) => {
         sendUserColor(color)
             .catch(error => {
-                console.log('error ' + error);
-                setError(error.toString()
-                )}
+                    console.log('error ' + error);
+                    setError(error.toString()
+                    )
+                }
             );
     };
 
@@ -343,9 +344,6 @@ const Chessboard = () => {
 
     }, [selectedMoveIndex, movesHistory]);
 
-    const setPlayerName = (name) => {
-        sessionStorage.setItem('chessPlayerName', name);
-    }
 
     const handleSwitchToNextMove = () => {
         if (selectedMoveIndex < movesHistory.length -1) {
@@ -361,7 +359,7 @@ const Chessboard = () => {
 
     const handlePlayerColorSelect = (color) => {
         setPlayerColor(color);
-        if(loginIn) {
+        if (loginIn) {
             storePlayerColor(color);
         }
     }
