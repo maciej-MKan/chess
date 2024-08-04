@@ -344,9 +344,6 @@ const Chessboard = () => {
 
     }, [selectedMoveIndex, movesHistory]);
 
-    const setPlayerName = (name) => {
-        sessionStorage.setItem('chessPlayerName', name);
-    }
 
     const handleSwitchToNextMove = () => {
         if (selectedMoveIndex < movesHistory.length -1) {
