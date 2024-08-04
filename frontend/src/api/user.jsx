@@ -43,6 +43,23 @@ export const fetchUserColor = async () => {
     }
 };
 
+export const sendUserColor = async (color) => {
+    try {
+        await fetch(`${backendUri}/user/color`, {
+            credentials: "include",
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Origin': `${frontUri}`
+            },
+            body: JSON.stringify({color: color})
+        });
+    } catch (error) {
+        console.error('Store user color fail: ', error);
+    }
+};
+
 export const sendLogout = async () => {
     try {
         await fetch(`${backendUri}/security/logout`, {

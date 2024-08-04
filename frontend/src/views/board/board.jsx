@@ -8,10 +8,12 @@ import MoveOptionsModal from "./components/MoveOptionsModal";
 import MoveHistory from "./components/MoveHistory";
 import PlayerColorSelector from "./components/PlayerColorSelector";
 import UserStatus from "./components/UserStatus";
+import {sendUserColor} from "../../api/user";
 
 const Chessboard = () => {
     const [playerColor, setPlayerColor] = useState('');
     const [boardState, setBoardState] = useState();
+    const [loginIn, setLoginIn] = useState(false);
     const [availableMoves, setAvailableMoves] = useState({});
     const [error, setError] = useState('');
     const [waitApi, setWaitApi] = useState(false);
@@ -125,6 +127,16 @@ const Chessboard = () => {
     const findPiece = ((row, column, boardData) =>
             boardData?.pieces?.find(piece => piece.position.row === row && piece.position.column === column)
     );
+
+    const storePlayerColor = (color) => {
+        sendUserColor(color)
+            .catch(error => {
+                    console.log('error ' + error);
+                    setError(error.toString()
+                    )
+                }
+            );
+    };
 
     const removePiece = useCallback((piece) => {
         if (piece) {
@@ -348,11 +360,18 @@ const Chessboard = () => {
         }
     }
 
+    const handlePlayerColorSelect = (color) => {
+        setPlayerColor(color);
+        if (loginIn) {
+            storePlayerColor(color);
+        }
+    }
+
     if (!playerColor) {
         return (
             <>
                 {/*<PlayerNameInput onNameSubmit={setPlayerName}/>*/}
-                <PlayerColorSelector onColorSelect={setPlayerColor}/>
+                <PlayerColorSelector onColorSelect={handlePlayerColorSelect}/>
             </>
         );
     }
@@ -363,7 +382,7 @@ const Chessboard = () => {
                 <div
                     className="chessboard">{error ? error : boardState ? renderBoard(boardState, true) : 'Loading...'}</div>
                 <MoveHistory moves={movesHistory} onMoveClick={handleMoveClick}/>
-                <UserStatus/>
+                <UserStatus isLoginIn={setLoginIn}/>
 
                 {waitApi && <div className="loadingLabel">Wait for API response</div>}
                 {gameOver && <div className="gameOver">Game Over, the winner is {winner}</div>}
