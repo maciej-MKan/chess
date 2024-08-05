@@ -4,19 +4,27 @@ import './UserStatus.css';
 import {fetchUserDetails, sendLogout} from "../../../api/user";
 import DropDownMenu from "../../userMenu/DropDownMenu";
 import PreferencesModal from "../../userMenu/PreferencesModal";
+import {useDispatch, useSelector} from "react-redux";
+import {logIn, logOut} from "../../../redux/authSlice";
+import {setUsername} from "../../../redux/userSlice";
 
-const UserStatus = ({isLoginIn}) => {
-    const [username, setUsername] = useState(null);
+const UserStatus = () => {
     const navigate = useNavigate();
     const [preferencesVisible, setPreferencesVisible] = useState(false);
+    const dispatch = useDispatch();
+    const isLoginIn = useSelector((state) => state.auth.isLoginIn);
+    const username = useSelector((state) => state.user.username);
 
     useEffect(() => {
-        isLoginIn = false;
         fetchUserDetails().then(user => {
-            setUsername(user.name);
-            isLoginIn = true;
+            dispatch(setUsername(user.name));
+            dispatch(logIn());
         })
     }, []);
+
+    useEffect(() => {
+        console.log("isLoginIn : ", isLoginIn);
+    }, [isLoginIn]);
 
     const handleLogin = () => {
         navigate('/');
@@ -24,7 +32,7 @@ const UserStatus = ({isLoginIn}) => {
 
     const handleLogout = () => {
         setUsername("");
-        isLoginIn = false;
+        dispatch(logOut());
         document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
         sendLogout().then(() => {
         });
@@ -55,7 +63,6 @@ const UserStatus = ({isLoginIn}) => {
             <PreferencesModal
                 isOpen={preferencesVisible}
                 onClose={() => setPreferencesVisible(false)}
-                userName={username}
             />
         </>
     );

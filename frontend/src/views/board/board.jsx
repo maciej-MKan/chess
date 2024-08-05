@@ -9,11 +9,11 @@ import MoveHistory from "./components/MoveHistory";
 import PlayerColorSelector from "./components/PlayerColorSelector";
 import UserStatus from "./components/UserStatus";
 import {sendUserColor} from "../../api/user";
+import {useSelector} from "react-redux";
 
 const Chessboard = () => {
     const [playerColor, setPlayerColor] = useState('');
     const [boardState, setBoardState] = useState();
-    const [loginIn, setLoginIn] = useState(false);
     const [availableMoves, setAvailableMoves] = useState({});
     const [error, setError] = useState('');
     const [waitApi, setWaitApi] = useState(false);
@@ -26,6 +26,7 @@ const Chessboard = () => {
     const [movesHistory, setMovesHistory] = useState([]);
     const [moveOptionsOpen, setMoveOptionsOpen] = useState(false);
     const [selectedMoveIndex, setSelectedMoveIndex] = useState(0);
+    const loginIn = useSelector((state) => state.auth.isLoginIn);
 
     useEffect(() => {
         const savedGameState = sessionStorage.getItem('chessGameState');
@@ -128,15 +129,18 @@ const Chessboard = () => {
             boardData?.pieces?.find(piece => piece.position.row === row && piece.position.column === column)
     );
 
-    const storePlayerColor = (color) => {
-        sendUserColor(color)
-            .catch(error => {
-                    console.log('error ' + error);
-                    setError(error.toString()
-                    )
-                }
-            );
-    };
+    useEffect(() => {
+        if (loginIn && playerColor) {
+            console.log("storePlayerColor : ", playerColor);
+            sendUserColor(playerColor)
+                .catch(error => {
+                        console.log('error ' + error);
+                        setError(error.toString()
+                        )
+                    }
+                );
+        }
+    }, [loginIn, playerColor]);
 
     const removePiece = useCallback((piece) => {
         if (piece) {
@@ -346,22 +350,21 @@ const Chessboard = () => {
 
 
     const handleSwitchToNextMove = () => {
-        if (selectedMoveIndex < movesHistory.length -1) {
-            setSelectedMoveIndex(selectedMoveIndex +1);
+        if (selectedMoveIndex < movesHistory.length - 1) {
+            setSelectedMoveIndex(selectedMoveIndex + 1);
         }
     }
 
     const handleSwitchToPrevMove = () => {
         if (selectedMoveIndex > 0) {
-            setSelectedMoveIndex(selectedMoveIndex -1);
+            setSelectedMoveIndex(selectedMoveIndex - 1);
         }
     }
 
     const handlePlayerColorSelect = (color) => {
+        console.log("setPlayerColor : ", color);
+        console.log("loginIn : ", loginIn);
         setPlayerColor(color);
-        if (loginIn) {
-            storePlayerColor(color);
-        }
     }
 
     if (!playerColor) {
@@ -371,43 +374,43 @@ const Chessboard = () => {
                 <PlayerColorSelector onColorSelect={handlePlayerColorSelect}/>
             </>
         );
+    } else {
+        return (
+            <>
+                <div className="chessboard-container">
+                    <div
+                        className="chessboard">{error ? error : boardState ? renderBoard(boardState, true) : 'Loading...'}</div>
+                    <MoveHistory moves={movesHistory} onMoveClick={handleMoveClick}/>
+                    <UserStatus/>
+
+                    {waitApi && <div className="loadingLabel">Wait for API response</div>}
+                    {gameOver && <div className="gameOver">Game Over, the winner is {winner}</div>}
+                </div>
+                <PawnPromotionModal
+                    isOpen={pawnPromotionOpen}
+                    onClose={() => {
+                        setWaitApi(false);
+                        setPawnPromotionOpen(false);
+                    }}
+                    piecesList={piecesToPromote}
+                    onFigureSelect={promotePawn}
+                />
+                <MoveOptionsModal
+                    isOpen={moveOptionsOpen}
+                    labelContent={movesHistory[selectedMoveIndex]?.desc}
+                    onClose={() => setMoveOptionsOpen(false)}
+                    onRevertToMove={handleRevertToMove}
+                    onNext={handleSwitchToNextMove}
+                    onPreview={handleSwitchToPrevMove}
+                    board={renderBoard(
+                        movesHistory[selectedMoveIndex]?.state,
+                        false,
+                        movesHistory[selectedMoveIndex]?.move
+                    )}
+                />
+            </>
+        );
     }
-
-    return (
-        <>
-            <div className="chessboard-container">
-                <div
-                    className="chessboard">{error ? error : boardState ? renderBoard(boardState, true) : 'Loading...'}</div>
-                <MoveHistory moves={movesHistory} onMoveClick={handleMoveClick}/>
-                <UserStatus isLoginIn={setLoginIn}/>
-
-                {waitApi && <div className="loadingLabel">Wait for API response</div>}
-                {gameOver && <div className="gameOver">Game Over, the winner is {winner}</div>}
-            </div>
-            <PawnPromotionModal
-                isOpen={pawnPromotionOpen}
-                onClose={() => {
-                    setWaitApi(false);
-                    setPawnPromotionOpen(false);
-                }}
-                piecesList={piecesToPromote}
-                onFigureSelect={promotePawn}
-            />
-            <MoveOptionsModal
-                isOpen={moveOptionsOpen}
-                labelContent={movesHistory[selectedMoveIndex]?.desc}
-                onClose={() => setMoveOptionsOpen(false)}
-                onRevertToMove={handleRevertToMove}
-                onNext={handleSwitchToNextMove}
-                onPreview={handleSwitchToPrevMove}
-                board={renderBoard(
-                    movesHistory[selectedMoveIndex]?.state,
-                    false,
-                    movesHistory[selectedMoveIndex]?.move
-                )}
-            />
-        </>
-    );
 };
 
 export default Chessboard;
