@@ -35,6 +35,7 @@ Chess is a web application that allows playing chess against an AI opponent. The
 - Docker - Platform for developing, shipping, and running applications in containers.
 - REST - Architectural style for building distributed systems based on HTTP.
 - OAuth2 - Access authorization protocol.
+- Redux - A library for managing and centralizing application state.
 
 ## Project status
 [![Java CI](https://github.com/maciej-MKan/chess/actions/workflows/build-gradle-project.yml/badge.svg)](https://github.com/maciej-MKan/chess/actions/workflows/build-gradle-project.yml)
