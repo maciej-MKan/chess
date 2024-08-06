@@ -9,10 +9,11 @@ import MoveHistory from "./components/MoveHistory";
 import PlayerColorSelector from "./components/PlayerColorSelector";
 import UserStatus from "./components/UserStatus";
 import {sendUserColor} from "../../api/user";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {setUserColor} from "../../redux/userSlice";
 
 const Chessboard = () => {
-    const [playerColor, setPlayerColor] = useState('');
+    const dispatch = useDispatch();
     const [boardState, setBoardState] = useState();
     const [availableMoves, setAvailableMoves] = useState({});
     const [error, setError] = useState('');
@@ -27,6 +28,7 @@ const Chessboard = () => {
     const [moveOptionsOpen, setMoveOptionsOpen] = useState(false);
     const [selectedMoveIndex, setSelectedMoveIndex] = useState(0);
     const loginIn = useSelector((state) => state.auth.isLoginIn);
+    const playerColor = useSelector((state) => state.user.userColor);
 
     useEffect(() => {
         const savedGameState = sessionStorage.getItem('chessGameState');
@@ -34,7 +36,7 @@ const Chessboard = () => {
             const {boardState, movesHistory, playerColor} = JSON.parse(savedGameState);
             setBoardState(boardState);
             setMovesHistory(movesHistory);
-            setPlayerColor(playerColor);
+            dispatch(setUserColor(playerColor));
             move(boardState);
         } else {
             if ((playerColor !== '') && (playerColor !== undefined)) {
@@ -361,17 +363,11 @@ const Chessboard = () => {
         }
     }
 
-    const handlePlayerColorSelect = (color) => {
-        console.log("setPlayerColor : ", color);
-        console.log("loginIn : ", loginIn);
-        setPlayerColor(color);
-    }
-
     if (!playerColor) {
         return (
             <>
                 {/*<PlayerNameInput onNameSubmit={setPlayerName}/>*/}
-                <PlayerColorSelector onColorSelect={handlePlayerColorSelect}/>
+                <PlayerColorSelector/>
             </>
         );
     } else {
