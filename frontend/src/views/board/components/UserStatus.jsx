@@ -31,7 +31,7 @@ const UserStatus = () => {
     };
 
     const handleLogout = () => {
-        setUsername("");
+        dispatch(setUsername(""));
         dispatch(logOut());
         document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
         sendLogout().then(() => {

@@ -1,19 +1,40 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Modal from "react-modal";
 import './PreferencesModal.css'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {setUserColor, setUsername} from "../../redux/userSlice";
 
 const PreferencesModal = ({isOpen, onClose}) => {
+    const dispatch = useDispatch();
     const username = useSelector((state) => state.user.username);
-    const [newUsername, setNewUsername] = useState(username);
-    const [color, setColor] = useState(null);
+    const color = useSelector((state) => state.user.userColor);
+    const [newUsername, setNewUsername] = useState('');
+    const [newColor, setNewColor] = useState('');
     const labelContent = username + "'s preferences";
 
     const handleSave = () => {
         if (username !== newUsername) {
             console.log("username changed : ", newUsername);
+            dispatch(setUsername(username));
         }
+        if (color !== newColor) {
+            console.log("color changed : ", color);
+            dispatch(setUserColor(newColor));
+        }
+        onClose();
     }
+    const handleClose = () => {
+        setNewUsername(username);
+        setNewColor(color);
+        onClose();
+    }
+    useEffect(() => {
+        setNewUsername(username);
+    }, [username]);
+    useEffect(() => {
+        setNewColor(color);
+    }, [color]);
+
     return (
         <Modal
             isOpen={isOpen}
@@ -38,25 +59,25 @@ const PreferencesModal = ({isOpen, onClose}) => {
                     <label>
                         <input
                             type="radio"
-                            value="white"
-                            checked={color === 'white'}
-                            onChange={(e) => setColor(e.target.value)}
+                            value="WHITE"
+                            checked={newColor === 'WHITE'}
+                            onChange={(e) => setNewColor(e.target.value)}
                         />
                         White
                     </label>
                     <label>
                         <input
                             type="radio"
-                            value="black"
-                            checked={color === 'black'}
-                            onChange={(e) => setColor(e.target.value)}
+                            value="BLACK"
+                            checked={newColor === 'BLACK'}
+                            onChange={(e) => setNewColor(e.target.value)}
                         />
                         Black
                     </label>
                 </div>
             </div>
             <button className="button-save" onClick={handleSave}>save</button>
-            <button className="button-cancel" onClick={onClose}>close</button>
+            <button className="button-cancel" onClick={handleClose}>close</button>
         </Modal>
     )
 }
