@@ -2,15 +2,20 @@ import React, {useEffect, useState} from 'react';
 import Modal from "react-modal";
 import './PreferencesModal.css'
 import {useDispatch, useSelector} from "react-redux";
-import {setUserColor, setUsername} from "../../redux/userSlice";
+import {setUserDefaultColor, setUserGameColor, setUsername} from "../../redux/userSlice";
+import {sendUserColor} from "../../api/user";
+import GameDialog from "../utils/components/GameDialog";
+import {useNavigate} from "react-router-dom";
 
 const PreferencesModal = ({isOpen, onClose}) => {
     const dispatch = useDispatch();
     const username = useSelector((state) => state.user.username);
-    const color = useSelector((state) => state.user.userColor);
+    const color = useSelector((state) => state.user.userDefaultColor);
     const [newUsername, setNewUsername] = useState('');
     const [newColor, setNewColor] = useState('');
+    const [dialogOpen, setDialogOpen] = useState(false);
     const labelContent = username + "'s preferences";
+    const navigate = useNavigate();
 
     const handleSave = () => {
         if (username !== newUsername) {
@@ -19,7 +24,13 @@ const PreferencesModal = ({isOpen, onClose}) => {
         }
         if (color !== newColor) {
             console.log("color changed : ", color);
-            dispatch(setUserColor(newColor));
+            setDialogOpen(true);
+            dispatch(setUserDefaultColor(newColor));
+            sendUserColor(color)
+                .catch(error => {
+                        console.log('error ' + error);
+                    }
+                );
         }
         onClose();
     }
@@ -36,49 +47,66 @@ const PreferencesModal = ({isOpen, onClose}) => {
     }, [color]);
 
     return (
-        <Modal
-            isOpen={isOpen}
-            onRequestClose={onClose}
-            contentLabel={labelContent}
-            className="react-modal-content"
-            overlayClassName="react-modal-overlay"
-        >
-            <h3>{labelContent}</h3>
-            <div className="input-group">
-                <label htmlFor="username">Username:</label>
-                <input
-                    type="text"
-                    id="username"
-                    value={newUsername}
-                    onChange={(e) => setNewUsername(e.target.value)}
-                />
-            </div>
-            <div className="input-group">
-                <label htmlFor="color">Default Color:</label>
-                <div className="color-options">
-                    <label>
-                        <input
-                            type="radio"
-                            value="WHITE"
-                            checked={newColor === 'WHITE'}
-                            onChange={(e) => setNewColor(e.target.value)}
-                        />
-                        White
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            value="BLACK"
-                            checked={newColor === 'BLACK'}
-                            onChange={(e) => setNewColor(e.target.value)}
-                        />
-                        Black
-                    </label>
+        <>
+            <Modal
+                isOpen={isOpen}
+                onRequestClose={onClose}
+                contentLabel={labelContent}
+                className="react-modal-content"
+                overlayClassName="react-modal-overlay"
+            >
+                <h3>{labelContent}</h3>
+                <div className="input-group">
+                    <label className="label" htmlFor="username">Username: </label>
+                    <input
+                        className="name-input"
+                        type="text"
+                        id="username"
+                        value={newUsername}
+                        onChange={(e) => setNewUsername(e.target.value)}
+                    />
                 </div>
-            </div>
-            <button className="button-save" onClick={handleSave}>save</button>
-            <button className="button-cancel" onClick={handleClose}>close</button>
-        </Modal>
+                <div className="input-group">
+                    <label className="label" htmlFor="color">Default Color:</label>
+                    <div className="color-options">
+                        <label style={{cursor: "pointer"}}>
+                            <input
+                                className="color-option"
+                                type="radio"
+                                value="WHITE"
+                                checked={newColor === 'WHITE'}
+                                onChange={(e) => setNewColor(e.target.value)}
+                            />
+                            White
+                        </label>
+                        <label style={{cursor: "pointer"}}>
+                            <input
+                                className="color-option"
+                                type="radio"
+                                value="BLACK"
+                                checked={newColor === 'BLACK'}
+                                onChange={(e) => setNewColor(e.target.value)}
+                            />
+                            Black
+                        </label>
+                    </div>
+                </div>
+                <div className="button-group">
+                    <button className="button-save" onClick={handleSave}>save</button>
+                    <button className="button-close" onClick={handleClose}>close</button>
+                </div>
+            </Modal>
+            <GameDialog
+                isOpen={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                onContinue={() => setDialogOpen(false)}
+                onNewGame={() => {
+                    navigate("/game");
+                    setDialogOpen(false);
+                    dispatch(setUserGameColor(color));
+                }}
+            />
+        </>
     )
 }
 

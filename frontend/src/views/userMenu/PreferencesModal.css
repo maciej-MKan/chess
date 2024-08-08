@@ -1,0 +1,50 @@
+h3 {
+    margin-right: 20px;
+}
+
+.input-group {
+    display: flex;
+    justify-content: flex-start;
+    align-items: self-start;
+    flex-direction: row;
+    padding: 10px;
+}
+
+.label {
+    font-size: 1.2rem;
+    padding-right: 10px;
+}
+
+.name-input {
+    font-size: 1.2rem;
+}
+
+.color-options {
+    font-size: 1.2rem;
+}
+
+.color-option {
+    cursor: pointer;
+}
+
+.button-group {
+    padding-top: 20px;
+}
+
+.button-close, .button-save {
+    background-color: #b2afaf;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 2px 10px;
+    color: rgba(0, 0, 0, 0.9);
+    width: auto;
+    height: 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-close:hover, .button-save:hover {
+    background-color: rgba(133, 133, 133, 0.85);
+}

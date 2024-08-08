@@ -10,7 +10,7 @@ import PlayerColorSelector from "./components/PlayerColorSelector";
 import UserStatus from "./components/UserStatus";
 import {sendUserColor} from "../../api/user";
 import {useDispatch, useSelector} from "react-redux";
-import {setUserColor} from "../../redux/userSlice";
+import {setUserGameColor} from "../../redux/userSlice";
 
 const Chessboard = () => {
     const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const Chessboard = () => {
     const [moveOptionsOpen, setMoveOptionsOpen] = useState(false);
     const [selectedMoveIndex, setSelectedMoveIndex] = useState(0);
     const loginIn = useSelector((state) => state.auth.isLoginIn);
-    const playerColor = useSelector((state) => state.user.userColor);
+    const playerColor = useSelector((state) => state.user.userGameColor);
 
     useEffect(() => {
         const savedGameState = sessionStorage.getItem('chessGameState');
@@ -36,7 +36,7 @@ const Chessboard = () => {
             const {boardState, movesHistory, playerColor} = JSON.parse(savedGameState);
             setBoardState(boardState);
             setMovesHistory(movesHistory);
-            dispatch(setUserColor(playerColor));
+            dispatch(setUserGameColor(playerColor));
             move(boardState);
         } else {
             if ((playerColor !== '') && (playerColor !== undefined)) {
