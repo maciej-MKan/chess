@@ -101,6 +101,7 @@ const PreferencesModal = ({isOpen, onClose}) => {
                 onClose={() => setDialogOpen(false)}
                 onContinue={() => setDialogOpen(false)}
                 onNewGame={() => {
+                    sessionStorage.clear();
                     navigate("/game");
                     setDialogOpen(false);
                     dispatch(setUserGameColor(color));

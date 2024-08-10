@@ -31,6 +31,7 @@ const Chessboard = () => {
     const playerColor = useSelector((state) => state.user.userGameColor);
 
     useEffect(() => {
+        setWaitApi(true);
         const savedGameState = sessionStorage.getItem('chessGameState');
         if (savedGameState) {
             const {boardState, movesHistory, playerColor} = JSON.parse(savedGameState);
@@ -41,7 +42,12 @@ const Chessboard = () => {
         } else {
             if ((playerColor !== '') && (playerColor !== undefined)) {
                 setWaitApi(true);
-                console.log(playerColor);
+                console.log("init new game with player color : " + playerColor);
+                setAvailableMoves({});
+                setSelectedSquare({});
+                setSelectedPiece({});
+                setMovesHistory([]);
+                setSelectedMoveIndex(0);
                 initGame(playerColor)
                     .then(boardData => {
                         setBoardState(boardData);
