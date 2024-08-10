@@ -40,11 +40,17 @@ public class UserService {
 
     public void setDefaultColor(PieceColor color) {
         User user = userRepository.findByUserId(UserIdFactory.generateId().getUserId());
+        UserPreferences preferences = user.getPreferences();
+
+        if (preferences != null) {
+            preferences.setDefaultColor(color.name());
+        } else {
+            preferences = new UserPreferences(user, color.name());
+        }
         log.info("Setting default color {} for user {}",
                 color,
                 user.getUsername()
         );
-        UserPreferences preferences = new UserPreferences(user, color.name());
         userPreferences.save(preferences);
     }
 }
