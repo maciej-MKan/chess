@@ -52,4 +52,9 @@ public class UserController {
         PieceColor userColor = userService.getUserColor().isPresent() ? userService.getUserColor().get() : null;
         return ResponseEntity.ok(userColor);
     }
+
+    @PostMapping("/name")
+    public void SetUserName(@RequestBody String name) {
+        log.info("New user name [{}]", name);
+    }
 }
