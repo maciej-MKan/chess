@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import pl.mkan.service.tools.UserIdFactory;
 
@@ -24,6 +25,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private UUID userId;
 
+    @Setter
     @Column(nullable = false)
     private String username;
 
