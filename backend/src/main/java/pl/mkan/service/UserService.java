@@ -39,7 +39,7 @@ public class UserService {
 
 
     public void setDefaultColor(PieceColor color) {
-        User user = userRepository.findByUserId(UserIdFactory.generateId().getUserId());
+        User user = getUser();
         UserPreferences preferences = user.getPreferences();
 
         if (preferences != null) {
@@ -52,5 +52,20 @@ public class UserService {
                 user.getUsername()
         );
         userPreferences.save(preferences);
+    }
+
+    public void setUserName(String name) {
+        User user = getUser();
+        user.setUsername(name);
+        userRepository.save(user);
+    }
+
+    public String getUserName() {
+        User user = getUser();
+        return user.getUsername();
+    }
+
+    private User getUser() {
+        return userRepository.findByUserId(UserIdFactory.generateId().getUserId());
     }
 }
