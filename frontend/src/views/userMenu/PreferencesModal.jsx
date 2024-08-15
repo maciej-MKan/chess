@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import './PreferencesModal.css'
 import {useDispatch, useSelector} from "react-redux";
 import {setUserDefaultColor, setUserGameColor, setUsername} from "../../redux/userSlice";
-import {sendUserColor} from "../../api/user";
+import {sendUserColor, sendUserName} from "../../api/user";
 import GameDialog from "../utils/components/GameDialog";
 import {useNavigate} from "react-router-dom";
 
@@ -20,7 +20,13 @@ const PreferencesModal = ({isOpen, onClose}) => {
     const handleSave = () => {
         if (username !== newUsername) {
             console.log("username changed : ", newUsername);
-            dispatch(setUsername(username));
+            dispatch(setUsername(newUsername));
+            sendUserName(newUsername)
+                .catch(
+                    error => {
+                        console.log('error : ' + error)
+                    }
+                )
         }
         if (color !== newColor) {
             console.log("color changed : ", color);
