@@ -1,5 +1,6 @@
 package pl.mkan.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.mkan.controller.dto.*;
@@ -9,18 +10,21 @@ import pl.mkan.controller.dto.mapper.*;
 import pl.mkan.game.engine.Move;
 import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.figures.Figure;
+import pl.mkan.persistence.model.BoardState;
+import pl.mkan.persistence.repository.GameRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class GameService {
+
+    private final GameRepository gameRepository;
+
     public BoardDTO getMove(MoveRequestDTO request) {
         GameOverDTO gameOver = checkGameOver(MoveRequestDTOMapper.map(request));
         PieceColor playerColor = request.playerColor();
@@ -43,21 +47,23 @@ public class GameService {
         log.info("Board state before move:\n{}", engineBoard);
         Move AIMove = engineBoard.AIMove();
         log.info("Board state after AI move:\n{}", engineBoard);
-        return new BoardDTO(BoardDTOMapper.map(engineBoard), MoveDTOMapper.map(AIMove));
+        String gameId = request.gameId() != null ? request.gameId() : "empty";
+        return new BoardDTO(BoardDTOMapper.map(engineBoard), MoveDTOMapper.map(AIMove), gameId);
     }
 
     public BoardDTO makeNewBoard(PieceColor playerColor) {
         Board engineBoard = new Board(PieceColorMapper.mapColor(playerColor));
         engineBoard.init();
+        String gameId = UUID.randomUUID().toString();
 
-        return new BoardDTO(BoardDTOMapper.map(engineBoard), null);
+        return new BoardDTO(BoardDTOMapper.map(engineBoard), null, gameId);
     }
 
     public BoardDTO makeTestBoard() {
         Board engineBoard = new Board();
         engineBoard.testInit();
 
-        return new BoardDTO(BoardDTOMapper.map(engineBoard), null);
+        return new BoardDTO(BoardDTOMapper.map(engineBoard), null, "test_game");
     }
 
     public AvailableMovesDTO calculateAvailableMoves(AvailableMovesRequestDTO gameState) {
@@ -120,5 +126,9 @@ public class GameService {
         }
 
         return figuresToPromote;
+    }
+
+    public void saveGame(BoardDTO board) {
+        gameRepository.save(new BoardState(board.gameId()));
     }
 }

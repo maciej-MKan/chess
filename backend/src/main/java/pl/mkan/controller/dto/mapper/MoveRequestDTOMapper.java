@@ -6,6 +6,6 @@ import pl.mkan.controller.dto.MoveRequestDTO;
 public class MoveRequestDTOMapper {
 
     public static BoardDTO map(MoveRequestDTO requestDTO) {
-        return new BoardDTO(requestDTO.pieces(), requestDTO.move());
+        return new BoardDTO(requestDTO.pieces(), requestDTO.move(), requestDTO.gameId());
     }
 }

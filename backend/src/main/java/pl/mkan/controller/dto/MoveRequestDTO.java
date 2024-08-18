@@ -9,5 +9,6 @@ import pl.mkan.controller.dto.validators.UniquePiecesPosition;
 import java.util.List;
 
 @UniquePiecesPosition
-public record MoveRequestDTO(@Valid @NotEmpty List<PieceDTO> pieces, MoveDTO move, @NotNull PieceColor playerColor) {
+public record MoveRequestDTO(@Valid @NotEmpty List<PieceDTO> pieces, MoveDTO move, @NotNull PieceColor playerColor,
+                             String gameId) {
 }
