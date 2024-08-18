@@ -7,5 +7,5 @@ import pl.mkan.controller.dto.validators.UniquePiecesPosition;
 import java.util.List;
 
 @UniquePiecesPosition
-public record BoardDTO(@Valid @NotEmpty List<PieceDTO> pieces, MoveDTO move) {
+public record BoardDTO(@Valid @NotEmpty List<PieceDTO> pieces, MoveDTO move, String gameId) {
 }

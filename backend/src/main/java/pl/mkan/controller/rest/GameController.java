@@ -55,4 +55,10 @@ public class GameController {
         log.info("Handle game state request with state [{}]", board);
         return ResponseEntity.ok(gameService.checkGameState(board));
     }
+
+    @PostMapping(value = "/game/history")
+    public void saveGameStateHistory(@RequestBody @Valid BoardDTO board) {
+        log.info("Handle game history request with state [{}]", board);
+        gameService.saveGame(board);
+    }
 }
