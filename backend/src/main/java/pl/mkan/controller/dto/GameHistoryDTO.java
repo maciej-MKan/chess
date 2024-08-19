@@ -1,0 +1,9 @@
+package pl.mkan.controller.dto;
+
+import pl.mkan.controller.dto.enums.PieceColor;
+
+import java.util.List;
+
+public record GameHistoryDTO(String gameId, BoardDTO actualBoardState, List<MoveHistoryDTO> movesHistory,
+                             PieceColor playerColor) {
+}
