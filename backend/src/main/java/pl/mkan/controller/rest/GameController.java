@@ -57,8 +57,8 @@ public class GameController {
     }
 
     @PostMapping(value = "/game/history")
-    public void saveGameStateHistory(@RequestBody @Valid BoardDTO board) {
-        log.info("Handle game history request with state [{}]", board);
-        gameService.saveGame(board);
+    public void saveGameStateHistory(@RequestBody @Valid GameHistoryDTO gameHistory) {
+        log.info("Handle game history request with state [{}]", gameHistory);
+        gameService.saveGame(gameHistory);
     }
 }

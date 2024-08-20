@@ -10,7 +10,8 @@ import pl.mkan.controller.dto.mapper.*;
 import pl.mkan.game.engine.Move;
 import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.figures.Figure;
-import pl.mkan.persistence.model.BoardState;
+import pl.mkan.persistence.model.GameHistory;
+import pl.mkan.persistence.model.MoveHistory;
 import pl.mkan.persistence.repository.GameRepository;
 
 import java.util.*;
@@ -128,7 +129,20 @@ public class GameService {
         return figuresToPromote;
     }
 
-    public void saveGame(BoardDTO board) {
-        gameRepository.save(new BoardState(board.gameId()));
+    public void saveGame(GameHistoryDTO gameHistory) {
+        GameHistory history = new GameHistory(
+                gameHistory.playerColor().toString(),
+                gameHistory.actualBoardState()
+        );
+        List<MoveHistoryDTO> moveHistoryDTOS = gameHistory.movesHistory();
+        for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOS) {
+            history.getMovesHistory().add(new MoveHistory(
+                    moveHistoryDTO.desc(),
+                    moveHistoryDTO.boardState(),
+                    moveHistoryDTO.move(),
+                    moveHistoryDTO.whoseMove()
+            ));
+        }
+        gameRepository.save(history);
     }
 }
