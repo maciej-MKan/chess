@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import pl.mkan.controller.dto.BoardDTO;
 import pl.mkan.persistence.serializer.BoardStateSerializer;
@@ -26,18 +27,19 @@ public class GameHistory {
     private String gameId;
 
     private String playerColor;
-
     @Lob
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String boardState;
-
     @ElementCollection
     @CollectionTable(name = "move_histories", joinColumns = @JoinColumn(name = "game_history_id"))
     private List<MoveHistory> movesHistory = new ArrayList<>();
 
-    public GameHistory(String playerColor, BoardDTO boardState) {
-        this.gameId = boardState.gameId();
+    public GameHistory(@NonNull String gameId, String playerColor) {
+        this.gameId = gameId;
         this.playerColor = playerColor;
+    }
+
+    public void setBoardState(BoardDTO boardState) {
         this.boardState = BoardStateSerializer.serializeBoardDTO(boardState);
     }
 }

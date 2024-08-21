@@ -23,6 +23,10 @@ public class MoveHistory {
     private String move;
     private String whoseMove;
 
+    public MoveDTO getMove() {
+        return MoveSerializer.deserializeMoveDTO(move);
+    }
+
     public MoveHistory(String description, BoardDTO boardState, MoveDTO move, String whoseMove) {
         this.description = description;
         this.boardState = BoardStateSerializer.serializeBoardDTO(boardState);
