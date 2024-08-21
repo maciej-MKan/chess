@@ -130,15 +130,25 @@ public class GameService {
     }
 
     public void saveGame(GameHistoryDTO gameHistory) {
-        GameHistory history = new GameHistory(
-                gameHistory.playerColor().toString(),
-                gameHistory.actualBoardState()
-        );
+        String gameId = gameHistory.actualBoardState().gameId();
+        log.info("Saving game history with game ID [{}]", gameId);
+        GameHistory history = gameRepository.findByGameId(gameId);
+        if (history == null) {
+            log.info("Game history not found");
+            history = new GameHistory(
+                    gameId,
+                    gameHistory.playerColor().toString()
+            );
+        }
+        history.setBoardState(gameHistory.actualBoardState());
+        List<MoveHistory> movesHistory = history.getMovesHistory();
+        movesHistory.clear();
         List<MoveHistoryDTO> moveHistoryDTOS = gameHistory.movesHistory();
         for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOS) {
-            history.getMovesHistory().add(new MoveHistory(
+            log.info("Found historical move [{}]", moveHistoryDTO);
+            movesHistory.add(new MoveHistory(
                     moveHistoryDTO.desc(),
-                    moveHistoryDTO.boardState(),
+                    moveHistoryDTO.state(),
                     moveHistoryDTO.move(),
                     moveHistoryDTO.whoseMove()
             ));

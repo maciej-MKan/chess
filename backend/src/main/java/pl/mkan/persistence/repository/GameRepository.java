@@ -6,4 +6,5 @@ import pl.mkan.persistence.model.GameHistory;
 
 @Repository
 public interface GameRepository extends JpaRepository<GameHistory, Long> {
+    GameHistory findByGameId(String gameId);
 }
