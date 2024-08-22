@@ -9,6 +9,8 @@ import pl.mkan.controller.dto.*;
 import pl.mkan.controller.dto.enums.PieceColor;
 import pl.mkan.service.GameService;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -60,5 +62,12 @@ public class GameController {
     public void saveGameStateHistory(@RequestBody @Valid GameHistoryDTO gameHistory) {
         log.info("Handle game history request with state [{}]", gameHistory);
         gameService.saveGame(gameHistory);
+    }
+
+    @GetMapping(value = "/game/history")
+    public ResponseEntity<List<GameHistoryDTO>> getGamesHistory() {
+        log.info("Handle game history request");
+        List<GameHistoryDTO> gamesHistory = gameService.getUserHistoricalGames();
+        return ResponseEntity.ok(gamesHistory);
     }
 }

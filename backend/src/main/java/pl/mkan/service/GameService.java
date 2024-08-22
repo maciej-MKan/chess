@@ -155,4 +155,8 @@ public class GameService {
         }
         gameRepository.save(history);
     }
+
+    public List<GameHistoryDTO> getUserHistoricalGames() {
+        return null;
+    }
 }
