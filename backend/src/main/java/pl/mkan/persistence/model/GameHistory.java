@@ -26,6 +26,10 @@ public class GameHistory {
     @Column(unique = true)
     private String gameId;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     private String playerColor;
     @Lob
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -34,8 +38,9 @@ public class GameHistory {
     @CollectionTable(name = "move_histories", joinColumns = @JoinColumn(name = "game_history_id"))
     private List<MoveHistory> movesHistory = new ArrayList<>();
 
-    public GameHistory(@NonNull String gameId, String playerColor) {
+    public GameHistory(@NonNull String gameId, @NonNull User user, String playerColor) {
         this.gameId = gameId;
+        this.user = user;
         this.playerColor = playerColor;
     }
 

@@ -12,7 +12,10 @@ import pl.mkan.game.engine.board.Board;
 import pl.mkan.game.engine.figures.Figure;
 import pl.mkan.persistence.model.GameHistory;
 import pl.mkan.persistence.model.MoveHistory;
+import pl.mkan.persistence.model.User;
 import pl.mkan.persistence.repository.GameRepository;
+import pl.mkan.persistence.repository.UserRepository;
+import pl.mkan.service.tools.UserIdFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,6 +28,7 @@ import static pl.mkan.game.engine.board.Utils.generatePossibleMoves;
 public class GameService {
 
     private final GameRepository gameRepository;
+    private final UserRepository userRepository;
 
     public BoardDTO getMove(MoveRequestDTO request) {
         GameOverDTO gameOver = checkGameOver(MoveRequestDTOMapper.map(request));
@@ -131,12 +135,14 @@ public class GameService {
 
     public void saveGame(GameHistoryDTO gameHistory) {
         String gameId = gameHistory.actualBoardState().gameId();
+        User user = userRepository.findByUserId(UserIdFactory.generateId().getUserId());
         log.info("Saving game history with game ID [{}]", gameId);
         GameHistory history = gameRepository.findByGameId(gameId);
         if (history == null) {
             log.info("Game history not found");
             history = new GameHistory(
                     gameId,
+                    user,
                     gameHistory.playerColor().toString()
             );
         }
