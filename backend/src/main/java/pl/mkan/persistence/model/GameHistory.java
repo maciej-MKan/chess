@@ -47,5 +47,9 @@ public class GameHistory {
     public void setBoardState(BoardDTO boardState) {
         this.boardState = BoardStateSerializer.serializeBoardDTO(boardState);
     }
+
+    public BoardDTO getBoardState() {
+        return BoardStateSerializer.deserializeBoardDTO(boardState);
+    }
 }
 

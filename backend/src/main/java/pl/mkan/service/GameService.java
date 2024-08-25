@@ -134,35 +134,64 @@ public class GameService {
     }
 
     public void saveGame(GameHistoryDTO gameHistory) {
-        String gameId = gameHistory.actualBoardState().gameId();
         User user = userRepository.findByUserId(UserIdFactory.generateId().getUserId());
-        log.info("Saving game history with game ID [{}]", gameId);
-        GameHistory history = gameRepository.findByGameId(gameId);
-        if (history == null) {
-            log.info("Game history not found");
-            history = new GameHistory(
-                    gameId,
-                    user,
-                    gameHistory.playerColor().toString()
-            );
+        if (user != null) {
+            String gameId = gameHistory.actualBoardState().gameId();
+            log.info("Saving game history with game ID [{}]", gameId);
+            GameHistory history = gameRepository.findByGameId(gameId);
+            if (history == null) {
+                log.info("Game history not found");
+                history = new GameHistory(
+                        gameId,
+                        user,
+                        gameHistory.playerColor().toString()
+                );
+            }
+            history.setBoardState(gameHistory.actualBoardState());
+            List<MoveHistory> movesHistory = history.getMovesHistory();
+            movesHistory.clear();
+            List<MoveHistoryDTO> moveHistoryDTOS = gameHistory.movesHistory();
+            for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOS) {
+                log.info("Found historical move [{}]", moveHistoryDTO);
+                movesHistory.add(new MoveHistory(
+                        moveHistoryDTO.desc(),
+                        moveHistoryDTO.state(),
+                        moveHistoryDTO.move(),
+                        moveHistoryDTO.whoseMove()
+                ));
+            }
+            gameRepository.save(history);
+        } else {
+            log.info("User not found. Cannot save game history");
         }
-        history.setBoardState(gameHistory.actualBoardState());
-        List<MoveHistory> movesHistory = history.getMovesHistory();
-        movesHistory.clear();
-        List<MoveHistoryDTO> moveHistoryDTOS = gameHistory.movesHistory();
-        for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOS) {
-            log.info("Found historical move [{}]", moveHistoryDTO);
-            movesHistory.add(new MoveHistory(
-                    moveHistoryDTO.desc(),
-                    moveHistoryDTO.state(),
-                    moveHistoryDTO.move(),
-                    moveHistoryDTO.whoseMove()
-            ));
-        }
-        gameRepository.save(history);
     }
 
     public List<GameHistoryDTO> getUserHistoricalGames() {
-        return null;
+        User user = userRepository.findByUserId(UserIdFactory.generateId().getUserId());
+        Optional<List<GameHistory>> allGamesByUser = Optional.empty();
+        if (user != null) {
+            allGamesByUser = gameRepository.findAllByUser(user);
+        }
+        log.info(allGamesByUser.orElse(List.of()).toString());
+
+        return allGamesByUser.map(gameHistories -> {
+            List<GameHistoryDTO> gameHistoryDTOS = new ArrayList<>();
+            for (GameHistory gameHistory : gameHistories) {
+                List<MoveHistoryDTO> moveHistoryDTOS = new ArrayList<>();
+                for (MoveHistory moveHistory : gameHistory.getMovesHistory()) {
+                    moveHistoryDTOS.add(new MoveHistoryDTO(
+                            moveHistory.getDescription(),
+                            moveHistory.getBoard(),
+                            moveHistory.getMove(),
+                            moveHistory.getWhoseMove()
+                    ));
+                }
+                gameHistoryDTOS.add(new GameHistoryDTO(
+                        gameHistory.getBoardState(),
+                        moveHistoryDTOS,
+                        PieceColor.valueOf(gameHistory.getPlayerColor())));
+            }
+            return gameHistoryDTOS;
+        }).orElse(List.of());
     }
 }

@@ -11,20 +11,24 @@ import pl.mkan.persistence.serializer.BoardStateSerializer;
 import pl.mkan.persistence.serializer.MoveSerializer;
 
 @Embeddable
-@Getter
 @NoArgsConstructor
 public class MoveHistory {
 
+    @Getter
     private String description;
-
     @Lob
     @Column(columnDefinition = "TEXT")
     private String boardState;
     private String move;
+    @Getter
     private String whoseMove;
 
     public MoveDTO getMove() {
         return MoveSerializer.deserializeMoveDTO(move);
+    }
+
+    public BoardDTO getBoard() {
+        return BoardStateSerializer.deserializeBoardDTO(boardState);
     }
 
     public MoveHistory(String description, BoardDTO boardState, MoveDTO move, String whoseMove) {
