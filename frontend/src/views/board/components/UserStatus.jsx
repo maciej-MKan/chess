@@ -40,6 +40,8 @@ const UserStatus = () => {
     }
     const handleGamesHistory = () => {
     }
+    const handleSaveGame = () => {
+    }
     const handleUserPreferences = () => {
         setPreferencesVisible(true);
     }
@@ -53,6 +55,7 @@ const UserStatus = () => {
                             name={username}
                             onLogout={handleLogout}
                             onViewHistory={handleGamesHistory}
+                            onSaveGame={handleSaveGame}
                             onViewPreferences={handleUserPreferences}
                         />
                     </div>
