@@ -105,3 +105,26 @@ export const getGameState = async (boardState) => {
         throw error;
     }
 };
+
+export const sendGameHistory = async (boardState, playerColor) => {
+    const url = `${backendUri}/api/game/history`;
+    try {
+        await fetch(url, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Origin': `${frontUri}`
+            },
+            body: JSON.stringify({
+                actualBoardState: boardState,
+                movesHistory: null,
+                playerColor: playerColor
+            }),
+        });
+    } catch (error) {
+        console.log('Error saving game state: ', error);
+        throw error;
+    }
+}
