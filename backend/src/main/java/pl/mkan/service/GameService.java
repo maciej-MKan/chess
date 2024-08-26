@@ -151,14 +151,16 @@ public class GameService {
             List<MoveHistory> movesHistory = history.getMovesHistory();
             movesHistory.clear();
             List<MoveHistoryDTO> moveHistoryDTOS = gameHistory.movesHistory();
-            for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOS) {
-                log.info("Found historical move [{}]", moveHistoryDTO);
-                movesHistory.add(new MoveHistory(
-                        moveHistoryDTO.desc(),
-                        moveHistoryDTO.state(),
-                        moveHistoryDTO.move(),
-                        moveHistoryDTO.whoseMove()
-                ));
+            if (moveHistoryDTOS != null) {
+                for (MoveHistoryDTO moveHistoryDTO : moveHistoryDTOS) {
+                    log.info("Found historical move [{}]", moveHistoryDTO);
+                    movesHistory.add(new MoveHistory(
+                            moveHistoryDTO.desc(),
+                            moveHistoryDTO.state(),
+                            moveHistoryDTO.move(),
+                            moveHistoryDTO.whoseMove()
+                    ));
+                }
             }
             gameRepository.save(history);
         } else {

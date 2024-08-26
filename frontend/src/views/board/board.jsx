@@ -11,10 +11,11 @@ import UserStatus from "./components/UserStatus";
 import {sendUserColor} from "../../api/user";
 import {useDispatch, useSelector} from "react-redux";
 import {setUserGameColor} from "../../redux/userSlice";
+import {setGameState} from "../../redux/gameSlice";
 
 const Chessboard = () => {
     const dispatch = useDispatch();
-    const [boardState, setBoardState] = useState();
+    // const [boardState, setBoardState] = useState();
     const [availableMoves, setAvailableMoves] = useState({});
     const [error, setError] = useState('');
     const [waitApi, setWaitApi] = useState(false);
@@ -29,13 +30,14 @@ const Chessboard = () => {
     const [selectedMoveIndex, setSelectedMoveIndex] = useState(0);
     const loginIn = useSelector((state) => state.auth.isLoginIn);
     const playerColor = useSelector((state) => state.user.userGameColor);
+    const boardState = useSelector((state) => state.game.gameState);
 
     useEffect(() => {
         setWaitApi(true);
         const savedGameState = sessionStorage.getItem('chessGameState');
         if (savedGameState) {
             const {boardState, movesHistory, playerColor} = JSON.parse(savedGameState);
-            setBoardState(boardState);
+            dispatch(setGameState(boardState));
             setMovesHistory(movesHistory);
             dispatch(setUserGameColor(playerColor));
             move(boardState);
@@ -50,7 +52,7 @@ const Chessboard = () => {
                 setSelectedMoveIndex(0);
                 initGame(playerColor)
                     .then(boardData => {
-                        setBoardState(boardData);
+                        dispatch(setGameState(boardData));
                         move(boardData);
                     })
                     .catch(error => {
@@ -221,7 +223,7 @@ const Chessboard = () => {
             destColumn: selectedSquare.column,
             destRow: selectedSquare.row,
         };
-        setBoardState(updatedBoard);
+        dispatch(setGameState(updatedBoard));
         setSelectedPiece({});
         setSelectedSquare({});
         const moveDescription = `${piece.color} moved ${piece.type} from ${String.fromCharCode(65 + selectedPiece.column)}${8 - selectedPiece.row} to ${String.fromCharCode(65 + selectedSquare.column)}${8 - selectedSquare.row}`;
@@ -242,7 +244,7 @@ const Chessboard = () => {
             setWaitApi(true);
             getComputerMove(board, playerColor || "BLACK")
                 .then(boardData => {
-                    setBoardState({pieces: boardData.pieces, move: boardData.move});
+                    dispatch(setGameState({pieces: boardData.pieces, move: boardData.move}));
                     const piece = findPiece(boardData.move.srcRow, boardData.move.srcColumn, board);
                     const moveDescription = `${piece.color} moved ${piece.type} from ${String.fromCharCode(65 + boardData.move.srcColumn)}${8 - boardData.move.srcRow} to ${String.fromCharCode(65 + boardData.move.destColumn)}${8 - boardData.move.destRow}`;
                     setMovesHistory(prevHistory => [...prevHistory, {
@@ -344,7 +346,7 @@ const Chessboard = () => {
         setGameOver(false);
         const selectedMove = movesHistory[selectedMoveIndex];
         const boarsStateToRevert = JSON.parse(JSON.stringify(selectedMove.state));
-        setBoardState(boarsStateToRevert);
+        dispatch(setGameState(boarsStateToRevert));
         let length = movesHistory.length;
         console.log(selectedMove.desc)
         movesHistory.splice(selectedMoveIndex + 1, length - selectedMoveIndex);

@@ -7,6 +7,7 @@ import PreferencesModal from "../../userMenu/PreferencesModal";
 import {useDispatch, useSelector} from "react-redux";
 import {logIn, logOut} from "../../../redux/authSlice";
 import {setUsername} from "../../../redux/userSlice";
+import {sendGameHistory} from "../../../api/game";
 
 const UserStatus = () => {
     const navigate = useNavigate();
@@ -14,6 +15,8 @@ const UserStatus = () => {
     const dispatch = useDispatch();
     const isLoginIn = useSelector((state) => state.auth.isLoginIn);
     const username = useSelector((state) => state.user.username);
+    const playerColor = useSelector((state) => state.user.userGameColor);
+    const gameState = useSelector((state) => state.game.gameState);
 
     useEffect(() => {
         fetchUserDetails().then(user => {
@@ -40,6 +43,12 @@ const UserStatus = () => {
     }
     const handleGamesHistory = () => {
     }
+    const handleSaveGame = () => {
+        sendGameHistory(gameState, playerColor)
+            .catch(error => {
+                console.log('error ' + error);
+            })
+    }
     const handleUserPreferences = () => {
         setPreferencesVisible(true);
     }
@@ -53,6 +62,7 @@ const UserStatus = () => {
                             name={username}
                             onLogout={handleLogout}
                             onViewHistory={handleGamesHistory}
+                            onSaveGame={handleSaveGame}
                             onViewPreferences={handleUserPreferences}
                         />
                     </div>
