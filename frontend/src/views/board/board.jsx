@@ -15,7 +15,6 @@ import {setGameState} from "../../redux/gameSlice";
 
 const Chessboard = () => {
     const dispatch = useDispatch();
-    // const [boardState, setBoardState] = useState();
     const [availableMoves, setAvailableMoves] = useState({});
     const [error, setError] = useState('');
     const [waitApi, setWaitApi] = useState(false);
