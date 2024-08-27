@@ -15,7 +15,6 @@ import {setGameState} from "../../redux/gameSlice";
 
 const Chessboard = () => {
     const dispatch = useDispatch();
-    // const [boardState, setBoardState] = useState();
     const [availableMoves, setAvailableMoves] = useState({});
     const [error, setError] = useState('');
     const [waitApi, setWaitApi] = useState(false);
@@ -212,17 +211,27 @@ const Chessboard = () => {
     };
 
     const playerMove = useCallback(() => {
-        const piece = findPiece(selectedPiece.row, selectedPiece.column, boardState);
-        const updatedBoard = removePiece(findPiece(selectedSquare.row, selectedSquare.column, boardState));
-        piece.position.row = selectedSquare.row;
-        piece.position.column = selectedSquare.column;
-        piece.moved = true;
-        updatedBoard.move = {
-            srcColumn: selectedPiece.column,
-            srcRow: selectedPiece.row,
-            destColumn: selectedSquare.column,
-            destRow: selectedSquare.row,
-        };
+        let piece = findPiece(selectedPiece.row, selectedPiece.column, boardState);
+        let updatedBoard = removePiece(findPiece(selectedSquare.row, selectedSquare.column, boardState));
+        piece = {
+            ...piece,
+            position: {
+                row: selectedSquare.row,
+                column: selectedSquare.column
+            },
+            move: true
+        }
+        updatedBoard = removePiece(findPiece(selectedPiece.row, selectedPiece.column, updatedBoard));
+        updatedBoard.pieces.push(piece);
+        updatedBoard = {
+            ...updatedBoard,
+            move: {
+                srcColumn: selectedPiece.column,
+                srcRow: selectedPiece.row,
+                destColumn: selectedSquare.column,
+                destRow: selectedSquare.row,
+            }
+        }
         dispatch(setGameState(updatedBoard));
         setSelectedPiece({});
         setSelectedSquare({});
@@ -244,7 +253,7 @@ const Chessboard = () => {
             setWaitApi(true);
             getComputerMove(board, playerColor || "BLACK")
                 .then(boardData => {
-                    dispatch(setGameState({pieces: boardData.pieces, move: boardData.move}));
+                    dispatch(setGameState({pieces: boardData.pieces, move: boardData.move, gameId: boardData.gameId}));
                     const piece = findPiece(boardData.move.srcRow, boardData.move.srcColumn, board);
                     const moveDescription = `${piece.color} moved ${piece.type} from ${String.fromCharCode(65 + boardData.move.srcColumn)}${8 - boardData.move.srcRow} to ${String.fromCharCode(65 + boardData.move.destColumn)}${8 - boardData.move.destRow}`;
                     setMovesHistory(prevHistory => [...prevHistory, {
