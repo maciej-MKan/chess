@@ -219,7 +219,7 @@ const Chessboard = () => {
                 row: selectedSquare.row,
                 column: selectedSquare.column
             },
-            move: true
+            moved: true
         }
         updatedBoard = removePiece(findPiece(selectedPiece.row, selectedPiece.column, updatedBoard));
         updatedBoard.pieces.push(piece);
