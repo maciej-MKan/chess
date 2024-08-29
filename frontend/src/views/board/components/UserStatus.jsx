@@ -7,7 +7,7 @@ import PreferencesModal from "../../userMenu/PreferencesModal";
 import {useDispatch, useSelector} from "react-redux";
 import {logIn, logOut} from "../../../redux/authSlice";
 import {setUsername} from "../../../redux/userSlice";
-import {sendGameHistory} from "../../../api/game";
+import {getGamesHistory, sendGameHistory} from "../../../api/game";
 
 const UserStatus = () => {
     const navigate = useNavigate();
@@ -42,6 +42,9 @@ const UserStatus = () => {
         navigate("/");
     }
     const handleGamesHistory = () => {
+        getGamesHistory()
+            .then(result => console.log(result))
+            .catch(error => console.log(error))
     }
     const handleSaveGame = () => {
         sendGameHistory(gameState, playerColor)

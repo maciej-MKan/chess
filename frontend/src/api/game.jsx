@@ -128,3 +128,25 @@ export const sendGameHistory = async (boardState, playerColor) => {
         throw error;
     }
 }
+
+export const getGamesHistory = async () => {
+    const url = `${backendUri}/api/game/history`;
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Origin': `${frontUri}`
+            }
+        });
+        if (response.ok) {
+            return await response.json();
+        } else {
+            return Promise.reject('bad response');
+        }
+    } catch (error) {
+        console.error('Error fetching init game: ', error);
+        throw error;
+    }
+}
