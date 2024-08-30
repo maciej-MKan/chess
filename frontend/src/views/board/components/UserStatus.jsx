@@ -8,15 +8,19 @@ import {useDispatch, useSelector} from "react-redux";
 import {logIn, logOut} from "../../../redux/authSlice";
 import {setUsername} from "../../../redux/userSlice";
 import {getGamesHistory, sendGameHistory} from "../../../api/game";
+import GamesHistory from "./GamesHistory";
+import {setHistoricalGames} from "../../../redux/gameSlice";
 
 const UserStatus = () => {
     const navigate = useNavigate();
     const [preferencesVisible, setPreferencesVisible] = useState(false);
+    const [historyModalVisible, setHistoryModalVisible] = useState(false);
     const dispatch = useDispatch();
     const isLoginIn = useSelector((state) => state.auth.isLoginIn);
     const username = useSelector((state) => state.user.username);
     const playerColor = useSelector((state) => state.user.userGameColor);
     const gameState = useSelector((state) => state.game.gameState);
+    const games = useSelector((state) => state.game.historicalGames);
 
     useEffect(() => {
         fetchUserDetails().then(user => {
@@ -43,7 +47,10 @@ const UserStatus = () => {
     }
     const handleGamesHistory = () => {
         getGamesHistory()
-            .then(result => console.log(result))
+            .then(result => {
+                dispatch(setHistoricalGames(result));
+                setHistoryModalVisible(true);
+            })
             .catch(error => console.log(error))
     }
     const handleSaveGame = () => {
@@ -76,6 +83,11 @@ const UserStatus = () => {
             <PreferencesModal
                 isOpen={preferencesVisible}
                 onClose={() => setPreferencesVisible(false)}
+            />
+            <GamesHistory
+                games={games}
+                isOpen={false}
+                onClose={() => setHistoryModalVisible(false)}
             />
         </>
     );
