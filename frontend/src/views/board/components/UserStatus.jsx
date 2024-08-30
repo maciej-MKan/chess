@@ -20,7 +20,6 @@ const UserStatus = () => {
     const username = useSelector((state) => state.user.username);
     const playerColor = useSelector((state) => state.user.userGameColor);
     const gameState = useSelector((state) => state.game.gameState);
-    const games = useSelector((state) => state.game.historicalGames);
 
     useEffect(() => {
         fetchUserDetails().then(user => {
@@ -85,8 +84,7 @@ const UserStatus = () => {
                 onClose={() => setPreferencesVisible(false)}
             />
             <GamesHistory
-                games={games}
-                isOpen={false}
+                isOpen={historyModalVisible}
                 onClose={() => setHistoryModalVisible(false)}
             />
         </>
