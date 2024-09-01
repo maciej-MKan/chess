@@ -106,7 +106,7 @@ export const getGameState = async (boardState) => {
     }
 };
 
-export const sendGameHistory = async (boardState, playerColor) => {
+export const sendGameHistory = async (boardState, movesHistory, playerColor) => {
     const url = `${backendUri}/api/game/history`;
     try {
         await fetch(url, {
@@ -119,7 +119,7 @@ export const sendGameHistory = async (boardState, playerColor) => {
             },
             body: JSON.stringify({
                 actualBoardState: boardState,
-                movesHistory: null,
+                movesHistory: movesHistory,
                 playerColor: playerColor
             }),
         });

@@ -80,7 +80,7 @@ const Chessboard = () => {
         if (boardState && movesHistory.length) {
             const gameState = {boardState, movesHistory, playerColor};
             sessionStorage.setItem('chessGameState', JSON.stringify(gameState));
-            sendGameHistory(boardState, playerColor)
+            sendGameHistory(boardState, movesHistory, playerColor)
                 .catch(error => {
                     console.log('error ' + error);
                 })

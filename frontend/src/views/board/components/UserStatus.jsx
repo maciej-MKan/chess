@@ -53,7 +53,7 @@ const UserStatus = () => {
             .catch(error => console.log(error))
     }
     const handleSaveGame = () => {
-        sendGameHistory(gameState, playerColor)
+        sendGameHistory(gameState, null, playerColor)
             .catch(error => {
                 console.log('error ' + error);
             })
