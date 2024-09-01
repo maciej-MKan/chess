@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Square} from './components/Square';
 import './Chessboard.css';
-import {getAvailableMoves, getComputerMove, getGameState, initGame} from '../../api/game';
+import {getAvailableMoves, getComputerMove, getGameState, initGame, sendGameHistory} from '../../api/game';
 import {isEmpty} from '../utils/utils';
 import PawnPromotionModal from './components/PawnPromotion';
 import MoveOptionsModal from "./components/MoveOptionsModal";
@@ -80,6 +80,10 @@ const Chessboard = () => {
         if (boardState && movesHistory.length) {
             const gameState = {boardState, movesHistory, playerColor};
             sessionStorage.setItem('chessGameState', JSON.stringify(gameState));
+            sendGameHistory(boardState, playerColor)
+                .catch(error => {
+                    console.log('error ' + error);
+                })
         }
     }, [boardState, movesHistory, playerColor]);
 
