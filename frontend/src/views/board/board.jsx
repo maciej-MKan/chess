@@ -151,13 +151,15 @@ const Chessboard = () => {
         }
     }, [loginIn, playerColor]);
 
-    const removePiece = useCallback((piece) => {
+    const removePiece = (piece, board) => {
         if (piece) {
-            const newPieces = boardState.pieces.filter(p => p !== piece);
-            return {...boardState, pieces: newPieces};
+            console.log("board to remove piece: ", board);
+            console.log("piece to remove: ", piece);
+            const newPieces = board.pieces.filter(p => p !== piece);
+            return {...board, pieces: newPieces};
         }
-        return boardState;
-    }, [boardState]);
+        return board;
+    };
 
     const animatePieceMovement = useCallback((piece) => {
         if (piece) {
@@ -212,7 +214,7 @@ const Chessboard = () => {
 
     const playerMove = useCallback(() => {
         let piece = findPiece(selectedPiece.row, selectedPiece.column, boardState);
-        let updatedBoard = removePiece(findPiece(selectedSquare.row, selectedSquare.column, boardState));
+        let updatedBoard = removePiece(findPiece(selectedSquare.row, selectedSquare.column, boardState), boardState);
         piece = {
             ...piece,
             position: {
@@ -221,7 +223,7 @@ const Chessboard = () => {
             },
             moved: true
         }
-        updatedBoard = removePiece(findPiece(selectedPiece.row, selectedPiece.column, updatedBoard));
+        updatedBoard = removePiece(findPiece(selectedPiece.row, selectedPiece.column, updatedBoard), updatedBoard);
         updatedBoard.pieces.push(piece);
         updatedBoard = {
             ...updatedBoard,
