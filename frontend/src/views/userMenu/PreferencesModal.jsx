@@ -54,7 +54,11 @@ const PreferencesModal = ({isOpen, onClose}) => {
 
     if (!color || !username) {
         return (
-            <h2>wait</h2>
+            <Modal
+                isOpen={isOpen}
+            >
+                <h2>wait</h2>
+            </Modal>
         )
     } else {
         return (

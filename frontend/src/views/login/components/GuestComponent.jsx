@@ -14,7 +14,7 @@ const GuestComponent = () => {
         <div className="guest-container">
             <h2>Or</h2>
             <div className="guest-box">
-                <button className="button-guest" onClick={() => handleGuestPlay('google')}>Play as guest</button>
+                <button className="button-guest" onClick={() => handleGuestPlay()}>Play as guest</button>
             </div>
         </div>
     );
