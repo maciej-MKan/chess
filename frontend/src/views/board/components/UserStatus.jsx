@@ -54,6 +54,10 @@ const UserStatus = () => {
         setPreferencesVisible(true);
     }
 
+    const handleNewGame = () => {
+
+    }
+
     return (
         <>
             <div className="user-status-container">
@@ -67,7 +71,10 @@ const UserStatus = () => {
                         />
                     </div>
                 ) : (
-                    <button className="login-button" onClick={handleLogin}>Login</button>
+                    <div className="button-container">
+                        <button className="login-button" onClick={handleLogin}>Login</button>
+                        <button className="new-game-button" onClick={handleNewGame}>Restart Game</button>
+                    </div>
                 )}
             </div>
             <PreferencesModal
