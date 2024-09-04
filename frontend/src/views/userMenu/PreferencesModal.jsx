@@ -6,6 +6,7 @@ import {setUserDefaultColor, setUserGameColor, setUsername} from "../../redux/us
 import {sendUserColor, sendUserName} from "../../api/user";
 import GameDialog from "../utils/components/GameDialog";
 import {useNavigate} from "react-router-dom";
+import {startNewGame} from "../utils/utils";
 
 const PreferencesModal = ({isOpen, onClose}) => {
     const dispatch = useDispatch();
@@ -113,11 +114,9 @@ const PreferencesModal = ({isOpen, onClose}) => {
                 </Modal>
                 <GameDialog
                     isOpen={dialogOpen}
-                    onClose={() => setDialogOpen(false)}
                     onContinue={() => setDialogOpen(false)}
                     onNewGame={() => {
-                        sessionStorage.clear();
-                        navigate("/game");
+                        startNewGame(navigate);
                         setDialogOpen(false);
                         dispatch(setUserGameColor(color));
                     }}

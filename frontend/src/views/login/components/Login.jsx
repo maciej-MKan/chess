@@ -3,31 +3,34 @@ import {useNavigate} from 'react-router-dom'
 import "./Login.css"
 import Oauth2Component from "./Oauth2Component";
 import GuestComponent from "./GuestComponent";
+import {useSelector} from "react-redux";
+import {fetchUserDetails} from "../../../api/user";
 
 const Login = () => {
     const navigate = useNavigate();
     const [hasToken, setHasToken] = useState(null);
+    const username = useSelector((state) => state.user.username);
 
     useEffect(() => {
-        const token = document.cookie.split('; ').find(row => row.startsWith('token='));
-        sessionStorage.clear();
-
-        if (token) {
-            setHasToken(true);
-            navigate("/game");
-            console.log("found token")
-        } else {
-            setHasToken(false);
-            console.log("token not found render login page")
-        }
+        fetchUserDetails()
+            .then(user => {
+                if (user.name === username) {
+                    setHasToken(true);
+                    console.log("Token valid. User login in");
+                    navigate("/game");
+                } else {
+                    setHasToken(false);
+                    console.log("Token not valid.")
+                }
+            })
+            .catch(error => {
+                console.log('error : ' + error);
+                setHasToken(false);
+            })
     }, [navigate]);
 
     if (hasToken === null) {
         return <div>checking token...</div>;
-    }
-
-    if (hasToken) {
-        return null; // or a loading indicator
     }
 
     return (

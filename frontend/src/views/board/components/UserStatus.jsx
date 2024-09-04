@@ -10,6 +10,7 @@ import {setUsername} from "../../../redux/userSlice";
 import {getGamesHistory} from "../../../api/game";
 import GamesHistory from "./GamesHistory";
 import {setHistoricalGames} from "../../../redux/gameSlice";
+import {startNewGame} from "../../utils/utils";
 
 const UserStatus = () => {
     const navigate = useNavigate();
@@ -55,7 +56,8 @@ const UserStatus = () => {
     }
 
     const handleNewGame = () => {
-
+        startNewGame(null);
+        window.location.reload();
     }
 
     return (
