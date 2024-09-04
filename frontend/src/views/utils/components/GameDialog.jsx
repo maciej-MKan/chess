@@ -13,7 +13,7 @@ const GameDialog = ({isOpen, onContinue, onNewGame, onClose}) => {
                     <button className="continue-button" onClick={onContinue}>Continue Game</button>
                     <button className="newgame-button" onClick={onNewGame}>Start New Game</button>
                 </div>
-                <button className="close-button" onClick={onClose}>Cancel</button>
+                {/*<button className="close-button" onClick={onClose}>Cancel</button>*/}
             </div>
         </div>
     );
