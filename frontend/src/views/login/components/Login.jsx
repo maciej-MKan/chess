@@ -12,21 +12,25 @@ const Login = () => {
     const username = useSelector((state) => state.user.username);
 
     useEffect(() => {
-        fetchUserDetails()
-            .then(user => {
-                if (user.name === username) {
-                    setHasToken(true);
-                    console.log("Token valid. User login in");
-                    navigate("/game");
-                } else {
+        if (username !== '') {
+            fetchUserDetails()
+                .then(user => {
+                    if (user.name === username) {
+                        setHasToken(true);
+                        console.log("Token valid. User login in");
+                        navigate("/game");
+                    } else {
+                        setHasToken(false);
+                        console.log("Token not valid.")
+                    }
+                })
+                .catch(error => {
+                    console.log('error : ' + error);
                     setHasToken(false);
-                    console.log("Token not valid.")
-                }
-            })
-            .catch(error => {
-                console.log('error : ' + error);
-                setHasToken(false);
-            })
+                })
+        } else {
+            setHasToken(false);
+        }
     }, [navigate]);
 
     if (hasToken === null) {
