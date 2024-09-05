@@ -6,7 +6,7 @@ import DropDownMenu from "../../userMenu/DropDownMenu";
 import PreferencesModal from "../../userMenu/PreferencesModal";
 import {useDispatch, useSelector} from "react-redux";
 import {logIn, logOut} from "../../../redux/authSlice";
-import {setUsername} from "../../../redux/userSlice";
+import {setUserGameColor, setUsername} from "../../../redux/userSlice";
 import {getGamesHistory} from "../../../api/game";
 import GamesHistory from "./GamesHistory";
 import {setHistoricalGames} from "../../../redux/gameSlice";
@@ -21,10 +21,12 @@ const UserStatus = () => {
     const username = useSelector((state) => state.user.username);
 
     useEffect(() => {
-        fetchUserDetails().then(user => {
-            dispatch(setUsername(user.name));
-            dispatch(logIn());
-        })
+        if (username !== '') {
+            fetchUserDetails().then(user => {
+                dispatch(setUsername(user.name));
+                dispatch(logIn());
+            })
+        }
     }, []);
 
     useEffect(() => {
@@ -38,10 +40,11 @@ const UserStatus = () => {
     const handleLogout = () => {
         dispatch(setUsername(""));
         dispatch(logOut());
+        dispatch(setUserGameColor(''));
         document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
         sendLogout().then(() => {
         });
-        navigate("/");
+        startNewGame(navigate);
     }
     const handleGamesHistory = () => {
         getGamesHistory()
