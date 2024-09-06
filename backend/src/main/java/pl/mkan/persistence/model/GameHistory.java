@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import pl.mkan.controller.dto.BoardDTO;
 import pl.mkan.persistence.serializer.BoardStateSerializer;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class GameHistory {
     @Column(unique = true)
     private String gameId;
 
+    private ZonedDateTime timestamp;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -42,14 +45,15 @@ public class GameHistory {
         this.gameId = gameId;
         this.user = user;
         this.playerColor = playerColor;
-    }
-
-    public void setBoardState(BoardDTO boardState) {
-        this.boardState = BoardStateSerializer.serializeBoardDTO(boardState);
+        this.timestamp = ZonedDateTime.now();
     }
 
     public BoardDTO getBoardState() {
         return BoardStateSerializer.deserializeBoardDTO(boardState);
+    }
+
+    public void setBoardState(BoardDTO boardState) {
+        this.boardState = BoardStateSerializer.serializeBoardDTO(boardState);
     }
 }
 

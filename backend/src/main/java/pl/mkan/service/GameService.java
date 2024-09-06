@@ -191,7 +191,8 @@ public class GameService {
                 gameHistoryDTOS.add(new GameHistoryDTO(
                         gameHistory.getBoardState(),
                         moveHistoryDTOS,
-                        PieceColor.valueOf(gameHistory.getPlayerColor())));
+                        PieceColor.valueOf(gameHistory.getPlayerColor()),
+                        gameHistory.getTimestamp()));
             }
             return gameHistoryDTOS;
         }).orElse(List.of());
