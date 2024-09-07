@@ -21,13 +21,15 @@ const UserStatus = () => {
     const username = useSelector((state) => state.user.username);
 
     useEffect(() => {
-        if (username !== '') {
+        console.log('Run fetching user details for: ', username);
+        // if (username !== '') {
             fetchUserDetails().then(user => {
+                console.log('Fetching user');
                 dispatch(setUsername(user.name));
                 dispatch(logIn());
             })
-        }
-    }, []);
+        // }
+    }, [username]);
 
     useEffect(() => {
         console.log("isLoginIn : ", isLoginIn);
