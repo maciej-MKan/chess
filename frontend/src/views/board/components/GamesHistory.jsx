@@ -6,6 +6,7 @@ import {toNormalDate} from "../../utils/utils";
 
 const GamesHistory = ({isOpen, onClose}) => {
     const games = useSelector((state) => state.game.historicalGames);
+    const gameState = useSelector((state) => state.game.gameState);
 
     if (!isOpen) {
         return null;
@@ -25,6 +26,7 @@ const GamesHistory = ({isOpen, onClose}) => {
                             <li key={index} onClick={() => console.log(game)} className="historical-game">
                                 <div>
                                     {game ? toNormalDate(game.gameStartDate) : "No gameId available"}
+                                    {game.actualBoardState.gameId === gameState.gameId ? " <-- current gameplay" : " <-- [status]"}
                                 </div>
                             </li>
                         ))}
