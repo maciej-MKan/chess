@@ -2,9 +2,11 @@ import React from "react";
 import './GamesHistory.css';
 import Modal from "react-modal";
 import {useSelector} from "react-redux";
+import {toNormalDate} from "../../utils/utils";
 
 const GamesHistory = ({isOpen, onClose}) => {
     const games = useSelector((state) => state.game.historicalGames);
+    const gameState = useSelector((state) => state.game.gameState);
 
     if (!isOpen) {
         return null;
@@ -23,7 +25,8 @@ const GamesHistory = ({isOpen, onClose}) => {
                         {games.map((game, index) => (
                             <li key={index} onClick={() => console.log(game)} className="historical-game">
                                 <div>
-                                    {game.actualBoardState.gameId ? game.actualBoardState.gameId : "No gameId available"}
+                                    {game ? toNormalDate(game.gameStartDate) : "No gameId available"}
+                                    {game.actualBoardState.gameId === gameState.gameId ? " <-- current gameplay" : " <-- [status]"}
                                 </div>
                             </li>
                         ))}

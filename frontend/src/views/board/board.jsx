@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Square} from './components/Square';
 import './Chessboard.css';
 import {getAvailableMoves, getComputerMove, getGameState, initGame, sendGameHistory} from '../../api/game';
 import {isEmpty} from '../utils/utils';
@@ -11,11 +10,13 @@ import UserStatus from "./components/UserStatus";
 import {sendUserColor} from "../../api/user";
 import {useDispatch, useSelector} from "react-redux";
 import {setUserGameColor} from "../../redux/userSlice";
-import {setGameState} from "../../redux/gameSlice";
+import {setAvailableMoves, setGameState} from "../../redux/gameSlice";
+import {renderSquare} from "./utils/renderer";
+import {findPiece} from "./utils/tools";
 
 const Chessboard = () => {
     const dispatch = useDispatch();
-    const [availableMoves, setAvailableMoves] = useState({});
+    // const [availableMoves, setAvailableMoves] = useState({});
     const [error, setError] = useState('');
     const [waitApi, setWaitApi] = useState(false);
     const [gameOver, setGameOver] = useState(false);
@@ -30,6 +31,7 @@ const Chessboard = () => {
     const loginIn = useSelector((state) => state.auth.isLoginIn);
     const playerColor = useSelector((state) => state.user.userGameColor);
     const boardState = useSelector((state) => state.game.gameState);
+    const availableMoves = useSelector((state) => state.game.availableMoves);
 
     useEffect(() => {
         setWaitApi(true);
@@ -44,7 +46,7 @@ const Chessboard = () => {
             if ((playerColor !== '') && (playerColor !== undefined)) {
                 setWaitApi(true);
                 console.log("init new game with player color : " + playerColor);
-                setAvailableMoves({});
+                dispatch(setAvailableMoves({}));
                 setSelectedSquare({});
                 setSelectedPiece({});
                 setMovesHistory([]);
@@ -98,7 +100,7 @@ const Chessboard = () => {
                     if (gameStateData.gameOver.isGameOver) {
                         setGameOver(true);
                         setWinner(gameStateData.gameOver.winner);
-                        setAvailableMoves({});
+                        dispatch(setAvailableMoves({}));
                         needOnExit = false;
                     } else if (gameStateData.pawnPromotion.pawn) {
                         setPawnPromotionOpen(true);
@@ -121,7 +123,9 @@ const Chessboard = () => {
         if (board && !isEmpty(board) && !gameOver) {
             setWaitApi(true);
             getAvailableMoves(board, color)
-                .then(availableMovesData => setAvailableMoves(!gameOver ? availableMovesData.availableMoves : {}))
+                .then(availableMovesData => dispatch(
+                    setAvailableMoves(!gameOver ? availableMovesData.availableMoves : {}))
+                )
                 .catch(error => {
                     console.log('error ' + error);
                     setError(error.toString());
@@ -140,9 +144,9 @@ const Chessboard = () => {
         } // eslint-disable-next-line
     }, [selectedSquare, selectedPiece]);
 
-    const findPiece = ((row, column, boardData) =>
-            boardData?.pieces?.find(piece => piece.position.row === row && piece.position.column === column)
-    );
+    // const findPiece = ((row, column, boardData) =>
+    //         boardData?.pieces?.find(piece => piece.position.row === row && piece.position.column === column)
+    // );
 
     useEffect(() => {
         if (loginIn && playerColor) {
@@ -199,7 +203,7 @@ const Chessboard = () => {
                 setSelectedPiece({id, row, column}) :
                 setSelectedSquare({row, column});
         }
-    }, [selectedSquare, selectedPiece, playerColor, findPiece]);
+    }, [selectedSquare, selectedPiece, playerColor]);
 
     const checkSquareSelected = (row, column) =>
         selectedSquare.row === row && selectedSquare.column === column;
@@ -281,27 +285,27 @@ const Chessboard = () => {
         }
     }, [gameOver, waitApi, fetchGameState, fetchAvailableMoves]);
 
-    const renderSquare = useCallback((row, column, piece, checkActive, markSquare) => {
-        const isBlack = (row + column) % 2 === 1;
-        const isSelected = checkSquareSelected(row, column);
-        const isSelectedPiece = checkPieceSelected(row, column);
-        const isActive = checkActive ? checkSquareActive(row, column) : false;
-        return (
-            <Square
-                id={`${row}-${column}`}
-                key={`${row}-${column}`}
-                color={isBlack ? 'black' : 'white'}
-                piece={piece}
-                onClick={() => {
-                    if (!waitApi && isActive) onSquareClick(row, column);
-                }}
-                selected={isSelected}
-                selectedPiece={isSelectedPiece}
-                active={isActive}
-                mark={markSquare}
-            />
-        );
-    }, [waitApi, checkSquareSelected, checkPieceSelected, checkSquareActive, onSquareClick]);
+    // const renderSquare = useCallback((row, column, piece, checkActive, markSquare) => {
+    //     const isBlack = (row + column) % 2 === 1;
+    //     const isSelected = checkSquareSelected(row, column);
+    //     const isSelectedPiece = checkPieceSelected(row, column);
+    //     const isActive = checkActive ? checkSquareActive(row, column) : false;
+    //     return (
+    //         <Square
+    //             id={`${row}-${column}`}
+    //             key={`${row}-${column}`}
+    //             color={isBlack ? 'black' : 'white'}
+    //             piece={piece}
+    //             onClick={() => {
+    //                 if (!waitApi && isActive) onSquareClick(row, column);
+    //             }}
+    //             selected={isSelected}
+    //             selectedPiece={isSelectedPiece}
+    //             active={isActive}
+    //             mark={markSquare}
+    //         />
+    //     );
+    // }, [waitApi, checkSquareSelected, checkPieceSelected, checkSquareActive, onSquareClick]);
 
     const renderBoard = useCallback((boardData, isActive, showMove) => {
         const board = [];
@@ -324,6 +328,12 @@ const Chessboard = () => {
             for (let column = 0; column < 8; column++) {
                 const piece = findPiece(row, column, boardData);
                 let markSquare = false;
+                const onClick = () => {
+                    if (!waitApi && isActive) onSquareClick(row, column);
+                };
+                const isSelected = checkSquareSelected(row, column);
+                const isSelectedPiece = checkPieceSelected(row, column);
+                const isSquareActive = isActive ? checkSquareActive(row, column) : false;
                 if (showMove) {
                     if (
                         (row === showMove.srcRow && column === showMove.srcColumn) ||
@@ -332,7 +342,7 @@ const Chessboard = () => {
                         markSquare = true;
                     }
                 }
-                board.push(renderSquare(row, column, piece ? piece : null, isActive, markSquare));
+                board.push(renderSquare(row, column, piece ? piece : null, markSquare, onClick, isSelected, isSelectedPiece, isSquareActive));
             }
         }
 
