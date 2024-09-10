@@ -5,7 +5,7 @@ import {findPiece} from "./tools";
 
 export function renderSquare(row, column, piece, markSquare, onClick, isSelected, isSelectedPiece, isActive) {
     const isBlack = (row + column) % 2 === 1;
-
+    console.log('render square : ', row, '  ', column, ' is active: ', isActive);
     return (
         <Square
             id={`${row}-${column}`}

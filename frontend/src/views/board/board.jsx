@@ -11,8 +11,8 @@ import {sendUserColor} from "../../api/user";
 import {useDispatch, useSelector} from "react-redux";
 import {setUserGameColor} from "../../redux/userSlice";
 import {setAvailableMoves, setGameState} from "../../redux/gameSlice";
-import {renderSquare} from "./utils/renderer";
 import {findPiece} from "./utils/tools";
+import {Square} from "./components/Square";
 
 const Chessboard = () => {
     const dispatch = useDispatch();
@@ -123,8 +123,10 @@ const Chessboard = () => {
         if (board && !isEmpty(board) && !gameOver) {
             setWaitApi(true);
             getAvailableMoves(board, color)
-                .then(availableMovesData => dispatch(
-                    setAvailableMoves(!gameOver ? availableMovesData.availableMoves : {}))
+                .then(availableMovesData => {
+                        console.log('available moves effect')
+                        dispatch(setAvailableMoves(!gameOver ? availableMovesData.availableMoves : {}));
+                    }
                 )
                 .catch(error => {
                     console.log('error ' + error);
@@ -185,11 +187,14 @@ const Chessboard = () => {
     }, []);
 
     const onSquareClick = useCallback((row, column) => {
+        console.log('on square click')
         const piece = findPiece(row, column, boardState);
         if (!isEmpty(selectedSquare) && row === selectedSquare.row && column === selectedSquare.column) {
             setSelectedSquare({});
+            console.log('unselect square')
         } else if (!isEmpty(selectedPiece) && row === selectedPiece.row && column === selectedPiece.column) {
             setSelectedPiece({});
+            console.log('unselect piece')
         } else if (
             checkAvailableMove(selectedPiece.id, row, column) &&
             piece?.type === "ROOK" &&
@@ -198,12 +203,13 @@ const Chessboard = () => {
             console.log("castling");
             setSelectedSquare({row, column});
         } else {
+            console.log('piece move')
             const id = piece?.id;
             piece && (piece.color === playerColor) ?
                 setSelectedPiece({id, row, column}) :
                 setSelectedSquare({row, column});
         }
-    }, [selectedSquare, selectedPiece, playerColor]);
+    }, [selectedSquare, selectedPiece, playerColor, availableMoves, boardState]);
 
     const checkSquareSelected = (row, column) =>
         selectedSquare.row === row && selectedSquare.column === column;
@@ -285,27 +291,27 @@ const Chessboard = () => {
         }
     }, [gameOver, waitApi, fetchGameState, fetchAvailableMoves]);
 
-    // const renderSquare = useCallback((row, column, piece, checkActive, markSquare) => {
-    //     const isBlack = (row + column) % 2 === 1;
-    //     const isSelected = checkSquareSelected(row, column);
-    //     const isSelectedPiece = checkPieceSelected(row, column);
-    //     const isActive = checkActive ? checkSquareActive(row, column) : false;
-    //     return (
-    //         <Square
-    //             id={`${row}-${column}`}
-    //             key={`${row}-${column}`}
-    //             color={isBlack ? 'black' : 'white'}
-    //             piece={piece}
-    //             onClick={() => {
-    //                 if (!waitApi && isActive) onSquareClick(row, column);
-    //             }}
-    //             selected={isSelected}
-    //             selectedPiece={isSelectedPiece}
-    //             active={isActive}
-    //             mark={markSquare}
-    //         />
-    //     );
-    // }, [waitApi, checkSquareSelected, checkPieceSelected, checkSquareActive, onSquareClick]);
+    const renderSquare = useCallback((row, column, piece, checkActive, markSquare) => {
+        const isBlack = (row + column) % 2 === 1;
+        const isSelected = checkSquareSelected(row, column);
+        const isSelectedPiece = checkPieceSelected(row, column);
+        const isActive = checkActive ? checkSquareActive(row, column) : false;
+        return (
+            <Square
+                id={`${row}-${column}`}
+                key={`${row}-${column}`}
+                color={isBlack ? 'black' : 'white'}
+                piece={piece}
+                onClick={() => {
+                    if (!waitApi && isActive) onSquareClick(row, column);
+                }}
+                selected={isSelected}
+                selectedPiece={isSelectedPiece}
+                active={isActive}
+                mark={markSquare}
+            />
+        );
+    }, [waitApi, checkSquareSelected, checkPieceSelected, checkSquareActive, onSquareClick]);
 
     const renderBoard = useCallback((boardData, isActive, showMove) => {
         const board = [];
@@ -328,8 +334,9 @@ const Chessboard = () => {
             for (let column = 0; column < 8; column++) {
                 const piece = findPiece(row, column, boardData);
                 let markSquare = false;
-                const onClick = () => {
-                    if (!waitApi && isActive) onSquareClick(row, column);
+                const onClick = (boardState) => {
+                    if (!waitApi && isActive) onSquareClick(row, column, boardState);
+                    console.log('square clicked')
                 };
                 const isSelected = checkSquareSelected(row, column);
                 const isSelectedPiece = checkPieceSelected(row, column);
@@ -342,12 +349,12 @@ const Chessboard = () => {
                         markSquare = true;
                     }
                 }
-                board.push(renderSquare(row, column, piece ? piece : null, markSquare, onClick, isSelected, isSelectedPiece, isSquareActive));
+                board.push(renderSquare(row, column, piece ? piece : null, isActive, markSquare));
             }
         }
 
         return board;
-    }, [findPiece, renderSquare]);
+    }, [boardState]);
 
     const promotePawn = useCallback((piece) => {
         const pawn = findPiece(piece.position.row, piece.position.column, boardState);
