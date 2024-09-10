@@ -17,6 +17,7 @@ const gameSlice = createSlice({
         },
         setAvailableMoves: (state, action) => {
             state.availableMoves = action.payload;
+            console.log('availableMoves setup: ', state.availableMoves);
         }
     }
 });
