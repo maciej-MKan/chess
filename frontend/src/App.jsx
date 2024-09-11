@@ -1,6 +1,6 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import Chessboard from "./views/board/board";
+import GameScreen from "./views/board/GameScreen";
 import Login from "./views/login/components/Login";
 import Title from "./views/utils/components/Title";
 import "./App.css"
@@ -12,7 +12,7 @@ const App = () => {
             <Title/>
             <Router>
                 <Routes>
-                    <Route path="/game" element={<Chessboard/>}></Route>
+                    <Route path="/game" element={<GameScreen/>}></Route>
                     <Route path="/" element={<Login/>}></Route>
                 </Routes>
             </Router>

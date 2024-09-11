@@ -1,12 +1,11 @@
-import {describe, test, expect, vi, it} from "vitest";
+import {describe, expect, test, vi} from "vitest";
 import {render, screen} from "@testing-library/react";
-import Chessboard from "../../src/views/board/board";
-import {initGame} from "../../src/api/game";
+import GameScreen from "../../src/views/board/GameScreen";
 
 vi.stubGlobal('fetch', vi.fn());
 describe('Chess board test', () => {
     test('renders wait message before api response', () => {
-        render(<Chessboard/>);
+        render(<GameScreen/>);
 
         expect(screen.getByText(/Wait for API response/i)).toBeDefined();
 

@@ -6,6 +6,9 @@ const gameSlice = createSlice({
         gameState: '',
         historicalGames: [],
         availableMoves: {},
+        waitApi: false,
+        selectedSquare: {},
+        selectedPiece: {},
     },
     reducers: {
         setGameState: (state, action) => {
@@ -17,11 +20,26 @@ const gameSlice = createSlice({
         },
         setAvailableMoves: (state, action) => {
             state.availableMoves = action.payload;
-            console.log('availableMoves setup: ', state.availableMoves);
+        },
+        setWaitApi: (state, action) => {
+            state.waitApi = action.payload;
+        },
+        setSelectedSquare: (state, action) => {
+            state.selectedSquare = action.payload;
+        },
+        setSelectedPiece: (state, action) => {
+            state.selectedPiece = action.payload;
         }
     }
 });
 
-export const {setGameState, setHistoricalGames, setAvailableMoves} = gameSlice.actions;
+export const {
+    setGameState,
+    setHistoricalGames,
+    setAvailableMoves,
+    setWaitApi,
+    setSelectedPiece,
+    setSelectedSquare,
+} = gameSlice.actions;
 
 export default gameSlice.reducer;
