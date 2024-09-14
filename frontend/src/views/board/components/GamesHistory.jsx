@@ -56,7 +56,9 @@ const GamesHistory = ({isOpen, onClose}) => {
                                             <p><strong>Player Color:</strong> {game.playerColor}</p>
                                             <p><strong>Moves:</strong> {game.movesHistory.length}</p>
                                             <p><strong>Pieces:</strong> {game.actualBoardState.pieces.length}</p>
-                                            <button onClick={() => handleLoad(game)}>Load this game</button>
+                                            <button className="load-game-button" onClick={() => handleLoad(game)}>Load
+                                                this game
+                                            </button>
                                         </div>
                                         <div className="game-view">
                                             <div className="chessboard">
