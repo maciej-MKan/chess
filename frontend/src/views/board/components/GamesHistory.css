@@ -1,56 +1,119 @@
-.game-details {
-    display: flex;
-    flex-direction: row;
+/* Modal */
+.history-modal {
+    margin-top: 80px;
+    margin-left: 80px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    height: 82vh;
+    width: 850px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
-.game-description {
-    margin-right: 50px;
-    font-size: 20px;
+/* Games History */
+.games-history {
+    font-family: 'Arial', sans-serif;
 }
 
-.game-view {
-    transform: scale(0.7);
-    transform-origin: top left;
-    margin-top: -40px;
-    margin-bottom: -220px;
+.games-history h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.games-history ul {
+    max-height: 75vh;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-right: -10px;
+}
+
+.games-history ul::-webkit-scrollbar {
+    width: 8px;
+}
+
+.games-history ul::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+/* Game Title (List Items) */
+.historical-game {
+    list-style: none;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.historical-game:hover {
+    background-color: #f0f0f0;
 }
 
 .game-title {
-    font-size: 22px;
-    cursor: pointer;
+    font-size: 18px;
+    color: #444;
     display: flex;
-    width: fit-content;
-    padding-left: 3px;
-    padding-right: 3px;
-    border-radius: 6px;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .game-title:hover {
-    background-color: burlywood;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    background-color: #e6e6e6;
+    color: #000;
+}
+
+/* Selected Game */
+.historical-game.selected {
+    transition: margin-left 0.3s ease, margin-right 0.3s ease;
+    background-color: #e0f7fa;
+    border-left: 4px solid #26a69a;
+    margin-right: 30px;
+    margin-left: 30px;
 }
 
 .historical-game.selected > .game-title {
-    margin-left: 18px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-
-}
-
-.historical-game.selected:hover > .game-title {
+    font-weight: bold;
+    color: #00796b;
     background-color: rgba(255, 255, 255, 0);
 }
 
-.history-modal {
-    margin-top: 80px;
-    margin-left: 20px;
-    background: linear-gradient(135deg, #b58863, rgba(243, 243, 243, 0.8));
-    border-radius: 10px;
-    border-color: rgba(51, 51, 51, 0.22);
-    border-style: solid;
-    height: 90%;
-    width: 75%;
-    padding-left: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+/* Game Details */
+.game-details {
+    padding: 15px;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.game-description {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.game-view {
+    transform: scale(0.6);
+    margin: -200px -185px -200px -180px;
+}
+
+.load-game-button {
+    background-color: #00796b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.load-game-button:hover {
+    background-color: #004d40;
 }

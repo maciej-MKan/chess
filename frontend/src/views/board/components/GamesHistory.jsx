@@ -1,14 +1,14 @@
 import React, {useState} from "react";
 import './GamesHistory.css';
 import Modal from "react-modal";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {toNormalDate} from "../../utils/utils";
-import {setGameState} from "../../../redux/gameSlice";
 import ChessBoard from "./ChessBoard";
+import {useNavigate} from "react-router-dom";
 
 
 const GamesHistory = ({isOpen, onClose}) => {
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const games = useSelector((state) => state.game.historicalGames);
     const gameState = useSelector((state) => state.game.gameState);
     const [expandedGameId, setExpandedGameId] = useState(null);
@@ -21,8 +21,13 @@ const GamesHistory = ({isOpen, onClose}) => {
     }
 
     const handleLoad = (gameData) => {
-        dispatch(setGameState(gameData.actualBoardState));
-        // dispatch(setUserGameColor(gameData.playerColor));
+        const gameState = {
+            boardState: gameData.actualBoardState,
+            movesHistory: gameData.movesHistory,
+            playerColor: gameData.playerColor
+        };
+        sessionStorage.setItem('chessGameState', JSON.stringify(gameState));
+        navigate("/");
         handleClose();
     }
 
@@ -56,7 +61,9 @@ const GamesHistory = ({isOpen, onClose}) => {
                                             <p><strong>Player Color:</strong> {game.playerColor}</p>
                                             <p><strong>Moves:</strong> {game.movesHistory.length}</p>
                                             <p><strong>Pieces:</strong> {game.actualBoardState.pieces.length}</p>
-                                            <button onClick={() => handleLoad(game)}>Load this game</button>
+                                            <button className="load-game-button" onClick={() => handleLoad(game)}>Load
+                                                this game
+                                            </button>
                                         </div>
                                         <div className="game-view">
                                             <div className="chessboard">
