@@ -23,7 +23,12 @@ public class ChessApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(@NonNull CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins(frontUri).allowCredentials(true);
+				registry
+						.addMapping("/**")
+						.allowedOrigins(frontUri)
+						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+						.allowedHeaders("*")
+						.allowCredentials(true);
 			}
 		};
 	}
