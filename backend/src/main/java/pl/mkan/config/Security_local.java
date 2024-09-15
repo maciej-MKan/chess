@@ -22,6 +22,9 @@ public class Security_local {
         http
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
+                            "/api/game/history"
+                    ).authenticated();
+                    auth.requestMatchers(
                             "/api/**",
                             "/api/game/**",
                             "/login/**",
