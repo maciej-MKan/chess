@@ -1,3 +1,5 @@
+import {notify} from "./components/Notify";
+
 export function isEmpty(object){
     return Object.keys(object).length === 0;
 }
@@ -17,4 +19,16 @@ export function toNormalDate(isoDate) {
         hour: '2-digit',
         minute: '2-digit',
     });
+}
+
+export const proxyFetch = async (url, options = {}) => {
+    const response = await fetch(url, options);
+    if (response.status === 401) {
+        notify('Session expired. Please login again');
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 3000);
+    } else {
+        return response;
+    }
 }

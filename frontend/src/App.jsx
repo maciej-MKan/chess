@@ -4,6 +4,7 @@ import GameScreen from "./views/board/GameScreen";
 import Login from "./views/login/components/Login";
 import Title from "./views/utils/components/Title";
 import "./App.css"
+import {ToastContainer} from "react-toastify";
 
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
                     <Route path="/" element={<Login/>}></Route>
                 </Routes>
             </Router>
+            <ToastContainer/>
         </div>
     );
 }
