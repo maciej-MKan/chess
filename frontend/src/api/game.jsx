@@ -1,10 +1,12 @@
+import {proxyFetch} from "../views/utils/utils";
+
 const backendUri = import.meta.env.VITE_BACKEND_URI
 const frontUri = import.meta.env.VITE_FRONTEND_URI
 
 export const initGame = async (playerColor) => {
     const url = `${backendUri}/api/game?playerColor=${playerColor}`;
     try {
-        const response = await fetch(url,{
+        const response = await proxyFetch(url, {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,7 +28,7 @@ export const initGame = async (playerColor) => {
 export const getComputerMove = async (bordState, color) => {
     const url = `${backendUri}/api/game`;
     try {
-        const response = await fetch(url, {
+        const response = await proxyFetch(url, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -50,7 +52,7 @@ export const getComputerMove = async (bordState, color) => {
 export const getAvailableMoves = async (bordState, color) => {
     const url = `${backendUri}/api/game/available_moves`;
     try {
-        const response = await fetch(url, {
+        const response = await proxyFetch(url, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -74,7 +76,7 @@ export const getAvailableMoves = async (bordState, color) => {
 export const getGameState = async (boardState) => {
     const url = `${backendUri}/api/game/state`;
     try {
-        const response = await fetch(url, {
+        const response = await proxyFetch(url, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -109,7 +111,7 @@ export const getGameState = async (boardState) => {
 export const sendGameHistory = async (boardState, movesHistory, playerColor) => {
     const url = `${backendUri}/api/game/history`;
     try {
-        await fetch(url, {
+        await proxyFetch(url, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -132,7 +134,7 @@ export const sendGameHistory = async (boardState, movesHistory, playerColor) => 
 export const getGamesHistory = async () => {
     const url = `${backendUri}/api/game/history`;
     try {
-        const response = await fetch(url, {
+        const response = await proxyFetch(url, {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
