@@ -188,11 +188,14 @@ public class GameService {
                             moveHistory.getWhoseMove()
                     ));
                 }
+                BoardDTO boardState = gameHistory.getBoardState();
                 gameHistoryDTOS.add(new GameHistoryDTO(
-                        gameHistory.getBoardState(),
+                        boardState,
                         moveHistoryDTOS,
                         PieceColor.valueOf(gameHistory.getPlayerColor()),
-                        gameHistory.getTimestamp()));
+                        gameHistory.getTimestamp(),
+                        checkGameOver(boardState)
+                ));
             }
             return gameHistoryDTOS;
         }).orElse(List.of());

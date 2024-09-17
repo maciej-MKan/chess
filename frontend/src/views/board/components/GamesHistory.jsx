@@ -31,6 +31,15 @@ const GamesHistory = ({isOpen, onClose}) => {
         handleClose();
     }
 
+    const generateGameStatus = (game) => {
+        if (game.actualBoardState.gameId === gameState.gameId) return ("Current gameplay");
+        console.log("Game is over. " + game.gameState.winner === game.playerColor ? "You won!" : "Computer won")
+        if (game.gameState.isGameOver) return (
+            `Game is over. ${game.gameState.winner === game.playerColor ? "You won!" : "Computer won"}`
+        );
+        return ("Game is undecided")
+    }
+
     if (!isOpen) {
         return null;
     }
@@ -52,7 +61,7 @@ const GamesHistory = ({isOpen, onClose}) => {
                                 <div className="game-title"
                                      onClick={() => toggleGameDetails(game.actualBoardState.gameId)}>
                                     {game ? toNormalDate(game.gameStartDate) : "No gameId available"}
-                                    {game.actualBoardState.gameId === gameState.gameId ? " <-- current gameplay" : ""}
+                                    {" <-- " + generateGameStatus(game)}
                                 </div>
 
                                 {expandedGameId === game.actualBoardState.gameId && (
