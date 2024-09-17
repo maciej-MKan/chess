@@ -5,7 +5,7 @@ const frontUri = import.meta.env.VITE_FRONTEND_URI
 
 export const fetchUserDetails = async () => {
     try {
-        const response = await proxyFetch(`${backendUri}/user`, {
+        const response = await fetch(`${backendUri}/user`, {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export const fetchUserDetails = async () => {
 
 export const fetchUserColor = async () => {
     try {
-        const response = await proxyFetch(`${backendUri}/user/color`, {
+        const response = await fetch(`${backendUri}/user/color`, {
             credentials: "include",
             method: 'GET',
             headers: {
@@ -81,7 +81,7 @@ export const sendUserName = async (name) => {
 
 export const sendLogout = async () => {
     try {
-        await proxyFetch(`${backendUri}/security/logout`, {
+        await fetch(`${backendUri}/security/logout`, {
             credentials: "include",
             headers: {
                 'Content-Type': 'application/json',
