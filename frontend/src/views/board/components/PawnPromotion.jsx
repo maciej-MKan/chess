@@ -1,9 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { Piece } from './Piece';
+import {Piece} from './Piece';
 import './PawnPromotion.css';
-
-Modal.setAppElement('#root');
 
 const PawnPromotionModal = ({ isOpen, onClose, piecesList, onFigureSelect }) => {
     return (

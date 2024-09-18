@@ -216,11 +216,17 @@ const GameScreen = () => {
     }, [gameOver, waitApi, fetchGameState, fetchAvailableMoves]);
 
     const promotePawn = useCallback((piece) => {
-        const pawn = findPiece(piece.position.row, piece.position.column, boardState);
+        let pawn = findPiece(piece.position.row, piece.position.column, boardState);
+        let updatedBoard = removePiece(pawn, boardState);
         if (pawn) {
-            pawn.type = piece.type;
+            pawn = {
+                ...pawn,
+                type: piece.type,
+            }
+            updatedBoard.pieces.push(pawn);
+            dispatch(setGameState(updatedBoard));
             setPawnPromotionOpen(false);
-            computerMove(boardState);
+            computerMove(updatedBoard);
         } else {
             console.log('no pawn found for ');
             console.log(piece);
