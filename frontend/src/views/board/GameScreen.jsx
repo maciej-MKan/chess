@@ -65,10 +65,11 @@ const GameScreen = () => {
     }, [playerColor]);
 
     const move = (board) => {
-        console.log("player color effect")
+        console.log(playerColor);
         if (playerColor === "BLACK") {
             computerMove({
-                pieces: board.pieces
+                pieces: board.pieces,
+                gameId: board.gameId
             });
         } else {
             console.log(board);
