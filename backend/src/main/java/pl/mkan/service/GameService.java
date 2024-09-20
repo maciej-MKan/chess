@@ -30,6 +30,21 @@ public class GameService {
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
 
+    public BoardDTO initGame(PieceColor playerColor) {
+        UUID userId;
+        try {
+            userId = UserIdFactory.generateId().getUserId();
+        } catch (Exception e) {
+            return makeNewBoard(playerColor);
+        }
+        Optional<List<GameHistory>> allByUser = gameRepository.findAllByUser(userRepository.findByUserId(userId));
+        return allByUser.isPresent() ?
+                allByUser.get().isEmpty() ? makeNewBoard(playerColor) :
+                        allByUser.map(game -> game.get(game.size() - 1)).get().getBoardState() :
+                makeNewBoard(playerColor);
+
+    }
+
     public BoardDTO getMove(MoveRequestDTO request) {
         GameOverDTO gameOver = checkGameOver(MoveRequestDTOMapper.map(request));
         PieceColor playerColor = request.playerColor();

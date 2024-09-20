@@ -31,7 +31,7 @@ public class GameController {
     ) {
         log.info("Handle GET request at '/game'");
         log.info("Player color: '{}'", playerColor);
-        return ResponseEntity.ok(gameService.makeNewBoard(playerColor));
+        return ResponseEntity.ok(gameService.initGame(playerColor));
     }
 
     @GetMapping(value = "/game/test")
