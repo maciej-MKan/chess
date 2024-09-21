@@ -21,6 +21,7 @@ import pl.mkan.controller.dto.enums.PieceColor;
 import pl.mkan.service.UserService;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -35,17 +36,15 @@ public class SecurityController {
     private String frontUrl;
 
     @GetMapping(path = "/login")
-    public ResponseEntity<LoginRedirectDTO> loginPage(HttpServletResponse response, HttpServletRequest request) throws IOException {
+    public ResponseEntity<LoginRedirectDTO> loginPage(HttpServletRequest request) {
         String redirectUrl = frontUrl + "/";
         log.info(request.getRequestURL().toString());
         log.info("redirecting to {}", redirectUrl);
-//        response.addHeader("Access-Control-Allow-Origin", frontUrl);
-//        response.sendRedirect(redirectUrl);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginRedirectDTO("Please login"));
     }
 
     @GetMapping(path = "/login-success")
-    public void login(@AuthenticationPrincipal OAuth2User principal, HttpServletResponse response) throws IOException {
+    public Map<String, String> login(@AuthenticationPrincipal OAuth2User principal, HttpServletResponse response) throws IOException {
         String name = principal.getAttribute("name");
         Optional<PieceColor> userColor = Optional.empty();
         log.info("User [{}] logged in", name);
@@ -53,8 +52,11 @@ public class SecurityController {
         if (!newUser) {
             userColor = userService.getUserColor();
         }
-        log.info("User default color [{}]", userColor.map(Enum::name).orElse("null"));
-        response.sendRedirect(frontUrl + "/game");
+        String playerColor = userColor.map(Enum::name).orElse("null");
+        log.info("User default color [{}]", playerColor);
+//        response.sendRedirect(frontUrl + "/game");
+        assert name != null;
+        return Map.of("username", name, "playerColor", playerColor);
     }
 
     @GetMapping("/logout")
