@@ -8,9 +8,13 @@ const backendUri = import.meta.env.VITE_BACKEND_URI
 const Oauth2Component = () => {
     const dispatch = useDispatch();
     const handleLogin = (provider) => {
-        window.location.href = `${backendUri}/oauth2/authorization/${provider}`;
-        dispatch(setUsername('LOGIN'));
-        console.log('set user name null');
+        try {
+            window.location.href = `${backendUri}/oauth2/authorization/${provider}`;
+            dispatch(setUsername('LOGIN'));
+            console.log('set user name null');
+        } catch (error) {
+            console.log('error : ' + error)
+        }
     };
 
     return (

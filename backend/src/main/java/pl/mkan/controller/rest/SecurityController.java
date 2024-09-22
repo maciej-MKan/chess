@@ -56,7 +56,7 @@ public class SecurityController {
         log.info("User default color [{}]", playerColor);
 //        response.sendRedirect(frontUrl + "/game");
         assert name != null;
-        return Map.of("username", name, "playerColor", playerColor);
+        return Map.of("loginSuccess", "true", "username", name, "playerColor", playerColor);
     }
 
     @GetMapping("/logout")

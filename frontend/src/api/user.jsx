@@ -5,7 +5,7 @@ const frontUri = import.meta.env.VITE_FRONTEND_URI
 
 export const fetchUserDetails = async () => {
     try {
-        const response = await fetch(`${backendUri}/user`, {
+        const response = await proxyFetch(`${backendUri}/user`, {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
