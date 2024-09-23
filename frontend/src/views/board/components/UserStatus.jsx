@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import './UserStatus.css';
-import {fetchUserDetails, sendLogout} from "../../../api/user";
+import {sendLogout} from "../../../api/user";
 import DropDownMenu from "../../userMenu/DropDownMenu";
 import PreferencesModal from "../../userMenu/PreferencesModal";
 import {useDispatch, useSelector} from "react-redux";
-import {logIn, logOut} from "../../../redux/authSlice";
+import {logOut} from "../../../redux/authSlice";
 import {setUserGameColor, setUsername} from "../../../redux/userSlice";
 import {getGamesHistory} from "../../../api/game";
 import GamesHistory from "./GamesHistory";
@@ -21,17 +21,6 @@ const UserStatus = () => {
     const username = useSelector((state) => state.user.username);
 
     useEffect(() => {
-        console.log('Run fetching user details for: ', username);
-        // if (username !== '') {
-            fetchUserDetails().then(user => {
-                console.log('Fetching user');
-                dispatch(setUsername(user.name));
-                dispatch(logIn());
-            })
-        // }
-    }, [username]);
-
-    useEffect(() => {
         console.log("isLoginIn : ", isLoginIn);
     }, [isLoginIn]);
 
@@ -43,6 +32,7 @@ const UserStatus = () => {
         dispatch(setUsername(""));
         dispatch(logOut());
         dispatch(setUserGameColor(''));
+        sessionStorage.removeItem("username");
         document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
         sendLogout().then(() => {
         });

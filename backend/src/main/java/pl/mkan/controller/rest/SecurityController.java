@@ -44,7 +44,7 @@ public class SecurityController {
     }
 
     @GetMapping(path = "/login-success")
-    public Map<String, String> login(@AuthenticationPrincipal OAuth2User principal, HttpServletResponse response) throws IOException {
+    public void login(@AuthenticationPrincipal OAuth2User principal, HttpServletResponse response) throws IOException {
         String name = principal.getAttribute("name");
         Optional<PieceColor> userColor = Optional.empty();
         log.info("User [{}] logged in", name);
@@ -54,9 +54,7 @@ public class SecurityController {
         }
         String playerColor = userColor.map(Enum::name).orElse("null");
         log.info("User default color [{}]", playerColor);
-//        response.sendRedirect(frontUrl + "/game");
-        assert name != null;
-        return Map.of("loginSuccess", "true", "username", name, "playerColor", playerColor);
+        response.sendRedirect(frontUrl + "/login_success");
     }
 
     @GetMapping("/logout")

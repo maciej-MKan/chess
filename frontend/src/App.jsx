@@ -5,6 +5,7 @@ import Login from "./views/login/components/Login";
 import Title from "./views/utils/components/Title";
 import "./App.css"
 import {ToastContainer} from "react-toastify";
+import {LoginSuccess} from "./services/login.service";
 
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
                 <Routes>
                     <Route path="/game" element={<GameScreen/>}></Route>
                     <Route path="/" element={<Login/>}></Route>
+                    <Route path="/login_success" element={<LoginSuccess/>}></Route>
                 </Routes>
             </Router>
             <ToastContainer/>

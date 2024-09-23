@@ -3,21 +3,27 @@ import {useNavigate} from 'react-router-dom'
 import "./Login.css"
 import Oauth2Component from "./Oauth2Component";
 import GuestComponent from "./GuestComponent";
-import {useSelector} from "react-redux";
 import {fetchUserDetails} from "../../../api/user";
+import {setUsername} from "../../../redux/userSlice";
+import {logIn} from "../../../redux/authSlice";
+import {useDispatch} from "react-redux";
 
 const Login = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [hasToken, setHasToken] = useState(null);
-    const username = useSelector((state) => state.user.username);
+    const username = sessionStorage.getItem("username");
 
     useEffect(() => {
+        console.log("user name: ", username);
         if (username !== '') {
             fetchUserDetails()
                 .then(user => {
                     if (user.name === username) {
                         setHasToken(true);
                         console.log("Token valid. User login in");
+                        dispatch(setUsername(user.name));
+                        dispatch(logIn());
                         navigate("/game");
                     } else {
                         setHasToken(false);
@@ -31,7 +37,7 @@ const Login = () => {
         } else {
             setHasToken(false);
         }
-    }, [navigate]);
+    }, []);
 
     if (hasToken === null) {
         return <div>checking token...</div>;

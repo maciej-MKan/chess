@@ -23,16 +23,12 @@ export function toNormalDate(isoDate) {
 
 export const proxyFetch = async (url, options = {}) => {
     const response = await fetch(url, options);
-    const data = await response.json();
     if (response.status === 401) {
         notify('Session expired. Please login again');
         setTimeout(() => {
             window.location.href = '/';
         }, 3000);
-    } else if (data.loginSuccess) {
-        window.location.href = '/game';
     } else {
-        console.log(data);
         return response;
     }
 }
