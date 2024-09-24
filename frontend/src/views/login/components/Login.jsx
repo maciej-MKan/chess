@@ -15,8 +15,7 @@ const Login = () => {
     const username = sessionStorage.getItem("username");
 
     useEffect(() => {
-        console.log("user name: ", username);
-        if (username !== '') {
+        if (username !== '' && username !== null) {
             fetchUserDetails()
                 .then(user => {
                     if (user.name === username) {
