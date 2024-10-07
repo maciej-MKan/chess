@@ -52,6 +52,7 @@ const GameScreen = () => {
                 initGame(playerColor)
                     .then(boardData => {
                         dispatch(setGameState(boardData));
+                        dispatch(setWaitApi(false));
                         move(boardData);
                     })
                     .catch(error => {
@@ -189,8 +190,8 @@ const GameScreen = () => {
         fetchGameState(updatedBoard, computerMove);
     }, [selectedPiece, selectedSquare, findPiece, removePiece, fetchGameState]);
 
-    const computerMove = useCallback((board) => {
-        const moveAvailable = !gameOver && !waitApi;
+    const computerMove = (board) => {
+        const moveAvailable = !gameOver;
         console.log("Computer move is available: " + moveAvailable)
         if (moveAvailable) {
             dispatch(setWaitApi(true));
@@ -214,7 +215,7 @@ const GameScreen = () => {
                 })
                 .finally(() => dispatch(setWaitApi(false)));
         }
-    }, [gameOver, waitApi, fetchGameState, fetchAvailableMoves]);
+    };
 
     const promotePawn = useCallback((piece) => {
         let pawn = findPiece(piece.position.row, piece.position.column, boardState);

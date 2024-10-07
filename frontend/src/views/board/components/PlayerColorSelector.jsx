@@ -1,18 +1,22 @@
 import React, {useEffect} from 'react';
 import './PlayerColorSelector.css';
 import {fetchUserColor} from "../../../api/user";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setUserDefaultColor, setUserGameColor} from "../../../redux/userSlice";
 
 const PlayerColorSelector = () => {
     const dispatch = useDispatch();
+    const isLoginIn = useSelector((state) => state.auth.isLoginIn);
+
     useEffect(() => {
+        if (isLoginIn) {
         fetchUserColor().then(color => {
             if (color != null) {
                 dispatch(setUserDefaultColor(color));
                 dispatch(setUserGameColor(color));
             }
         })
+        }
     }, []);
 
     return (

@@ -26,7 +26,7 @@ export const fetchUserDetails = async () => {
 
 export const fetchUserColor = async () => {
     try {
-        const response = await fetch(`${backendUri}/user/color`, {
+        const response = await proxyFetch(`${backendUri}/user/color`, {
             credentials: "include",
             method: 'GET',
             headers: {
