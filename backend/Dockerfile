@@ -1,4 +1,4 @@
-FROM gradle:latest AS build
+FROM gradle:8.9 AS build
 WORKDIR /usr/app/
 COPY . .
 RUN gradle clean build -x test
