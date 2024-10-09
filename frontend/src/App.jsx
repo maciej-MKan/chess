@@ -7,7 +7,6 @@ import "./App.css"
 import {ToastContainer} from "react-toastify";
 import {LoginSuccess} from "./services/login.service";
 
-
 const App = () => {
     return (
         <div className="screen-container">

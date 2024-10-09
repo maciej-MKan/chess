@@ -10,7 +10,7 @@ import UserStatus from "./components/UserStatus";
 import {sendUserColor} from "../../api/user";
 import {useDispatch, useSelector} from "react-redux";
 import {setUserGameColor} from "../../redux/userSlice";
-import {setAvailableMoves, setGameState, setSelectedPiece, setSelectedSquare, setWaitApi} from "../../redux/gameSlice";
+import {setAvailableMoves, setGameState, setSelectedPiece, setSelectedSquare} from "../../redux/gameSlice";
 import {findPiece, removePiece} from "../../tools/gameTools";
 import ChessBoard from "./components/ChessBoard";
 
@@ -18,6 +18,7 @@ const GameScreen = () => {
     const dispatch = useDispatch();
     const [error, setError] = useState('');
     const [gameOver, setGameOver] = useState(false);
+    const [waitApi, setWaitApi] = useState(false);
     const [winner, setWinner] = useState(null);
     const [pawnPromotionOpen, setPawnPromotionOpen] = useState(false);
     const [piecesToPromote, setPiecesToPromote] = useState([]);
@@ -27,12 +28,12 @@ const GameScreen = () => {
     const loginIn = useSelector((state) => state.auth.isLoginIn);
     const playerColor = useSelector((state) => state.user.userGameColor);
     const boardState = useSelector((state) => state.game.gameState);
-    const waitApi = useSelector((state) => state.game.waitApi);
+    const globalWaitApi = useSelector((state) => state.game.waitApi);
     const selectedSquare = useSelector((state) => state.game.selectedSquare);
     const selectedPiece = useSelector((state) => state.game.selectedPiece);
 
     useEffect(() => {
-        dispatch(setWaitApi(true));
+        setWaitApi(true);
         const savedGameState = sessionStorage.getItem('chessGameState');
         if (savedGameState) {
             const {boardState, movesHistory, playerColor} = JSON.parse(savedGameState);
@@ -42,7 +43,7 @@ const GameScreen = () => {
             move(boardState);
         } else {
             if ((playerColor !== '') && (playerColor !== undefined)) {
-                dispatch(setWaitApi(true));
+                setWaitApi(true);
                 console.log("init new game with player color : " + playerColor);
                 dispatch(setAvailableMoves({}));
                 dispatch(setSelectedSquare({}));
@@ -52,22 +53,27 @@ const GameScreen = () => {
                 initGame(playerColor)
                     .then(boardData => {
                         dispatch(setGameState(boardData));
-                        dispatch(setWaitApi(false));
+                        setWaitApi(false);
                         move(boardData);
                     })
                     .catch(error => {
                         console.log('error ' + error);
                         setError(error.toString());
                     })
-                    .finally(() => dispatch(setWaitApi(false)));
+                    .finally(() => setWaitApi(false));
             }
         }
 
     }, [playerColor]);
 
+    useEffect(() => {
+        setWaitApi(globalWaitApi);
+    }, [globalWaitApi]);
+
     const move = (board) => {
         console.log(playerColor);
         if (playerColor === "BLACK") {
+            dispatch({type: 'REFRESH_COMPONENT'});
             computerMove({
                 pieces: board.pieces,
                 gameId: board.gameId
@@ -92,7 +98,7 @@ const GameScreen = () => {
     }, [boardState, movesHistory, playerColor]);
 
     const fetchGameState = useCallback((board, onExit) => {
-        dispatch(setWaitApi(true));
+        setWaitApi(true);
         let needOnExit = true;
         if (board && !isEmpty(board)) {
             getGameState(board)
@@ -113,7 +119,7 @@ const GameScreen = () => {
                     setError(error.toString());
                 })
                 .finally(() => {
-                    dispatch(setWaitApi(false));
+                    setWaitApi(false);
                     if (onExit && needOnExit) onExit(board);
                 });
         }
@@ -121,14 +127,14 @@ const GameScreen = () => {
 
     const fetchAvailableMoves = useCallback((board, color) => {
         if (board && !isEmpty(board) && !gameOver) {
-            dispatch(setWaitApi(true));
+            setWaitApi(true);
             getAvailableMoves(board, color)
                 .then(availableMovesData => dispatch(setAvailableMoves(!gameOver ? availableMovesData.availableMoves : {})))
                 .catch(error => {
                     console.log('error ' + error);
                     setError(error.toString());
                 })
-                .finally(() => dispatch(setWaitApi(false)));
+                .finally(() => setWaitApi(false));
         }
     }, [gameOver]);
 
@@ -191,10 +197,12 @@ const GameScreen = () => {
     }, [selectedPiece, selectedSquare, findPiece, removePiece, fetchGameState]);
 
     const computerMove = (board) => {
-        const moveAvailable = !gameOver;
+        let moveAvailable = !gameOver && !waitApi;
         console.log("Computer move is available: " + moveAvailable)
+        console.log("waitApi: ", waitApi);
+        console.log("gameOver: ", gameOver);
         if (moveAvailable) {
-            dispatch(setWaitApi(true));
+            setWaitApi(true);
             getComputerMove(board, playerColor || "BLACK")
                 .then(boardData => {
                     dispatch(setGameState({pieces: boardData.pieces, move: boardData.move, gameId: boardData.gameId}));
@@ -213,7 +221,7 @@ const GameScreen = () => {
                     console.log('error ' + error);
                     setError(error.toString());
                 })
-                .finally(() => dispatch(setWaitApi(false)));
+                .finally(() => setWaitApi(false));
         }
     };
 
@@ -299,7 +307,7 @@ const GameScreen = () => {
                 <PawnPromotionModal
                     isOpen={pawnPromotionOpen}
                     onClose={() => {
-                        dispatch(setWaitApi(false));
+                        setWaitApi(false);
                         setPawnPromotionOpen(false);
                     }}
                     piecesList={piecesToPromote}
