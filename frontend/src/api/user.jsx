@@ -15,7 +15,8 @@ export const fetchUserDetails = async () => {
         });
 
         if (!response.ok) {
-            throw new Error('Unauthorized');
+            // throw new Error('Unauthorized');
+            return null;
         }
         return await response.json();
     } catch (error) {

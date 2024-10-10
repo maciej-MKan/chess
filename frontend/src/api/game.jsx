@@ -135,6 +135,7 @@ export const getGamesHistory = async () => {
     const url = `${backendUri}/api/game/history`;
     try {
         const response = await proxyFetch(url, {
+            method: 'GET',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',

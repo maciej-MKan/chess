@@ -22,7 +22,7 @@ export const LoginSuccess = () => {
     useEffect(() => {
         fetchUserDetails()
             .then(data => {
-                data.name ? onLoginCorrect(data) : navigate("/login");
+                if (data) data.name ? onLoginCorrect(data) : navigate("/login");
             })
     }, []);
 
