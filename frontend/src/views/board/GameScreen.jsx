@@ -39,8 +39,9 @@ const GameScreen = () => {
             const {boardState, movesHistory, playerColor} = JSON.parse(savedGameState);
             dispatch(setGameState(boardState));
             setMovesHistory(movesHistory);
+            const whoseMove = movesHistory[movesHistory.length - 1].whoseMove === "computer" ? "player" : "computer";
             dispatch(setUserGameColor(playerColor));
-            move(boardState);
+            move(boardState, whoseMove);
         } else {
             if ((playerColor !== '') && (playerColor !== undefined)) {
                 setWaitApi(true);
@@ -54,7 +55,7 @@ const GameScreen = () => {
                     .then(boardData => {
                         dispatch(setGameState(boardData));
                         setWaitApi(false);
-                        move(boardData);
+                        move(boardData, playerColor === "BLACK" ? "computer" : "player");
                     })
                     .catch(error => {
                         console.log('error ' + error);
@@ -70,9 +71,9 @@ const GameScreen = () => {
         setWaitApi(globalWaitApi);
     }, [globalWaitApi]);
 
-    const move = (board) => {
-        console.log(playerColor);
-        if (playerColor === "BLACK") {
+    const move = (board, whoseMove) => {
+        console.log("move: ", playerColor);
+        if (playerColor === "BLACK" && whoseMove === "computer") {
             dispatch({type: 'REFRESH_COMPONENT'});
             computerMove({
                 pieces: board.pieces,
