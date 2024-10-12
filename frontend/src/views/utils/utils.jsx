@@ -1,6 +1,6 @@
 import {notify} from "./components/Notify";
 
-export function isEmpty(object){
+export function isEmpty(object) {
     return Object.keys(object).length === 0;
 }
 
