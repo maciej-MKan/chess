@@ -30,7 +30,8 @@ export const LoginSuccess = () => {
         getGamesHistory()
             .then(result => {
                 dispatch(setHistoricalGames(result));
-                if (result) loadGame(result.pop());
+                if (result) loadGame(result[result.length - 1]);
+                console.log("loading game", result[result.length - 1]);
             })
             .catch(error => console.log(error))
     }, [loginIn === true])
