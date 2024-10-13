@@ -19,6 +19,7 @@ const UserStatus = () => {
     const dispatch = useDispatch();
     const isLoginIn = useSelector((state) => state.auth.isLoginIn);
     const username = useSelector((state) => state.user.username);
+    const playerColor = useSelector((state) => state.user.userDefaultColor);
 
     useEffect(() => {
         console.log("isLoginIn : ", isLoginIn);
@@ -36,7 +37,7 @@ const UserStatus = () => {
         document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
         sendLogout().then(() => {
         });
-        startNewGame(navigate);
+        startNewGame(navigate, playerColor);
     }
     const handleGamesHistory = () => {
         getGamesHistory()
@@ -51,7 +52,7 @@ const UserStatus = () => {
     }
 
     const handleNewGame = () => {
-        startNewGame(null);
+        startNewGame(null, playerColor);
         window.location.reload();
     }
 
