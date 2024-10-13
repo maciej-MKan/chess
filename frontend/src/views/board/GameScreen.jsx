@@ -39,7 +39,9 @@ const GameScreen = () => {
             const {boardState, movesHistory, playerColor} = JSON.parse(savedGameState);
             dispatch(setGameState(boardState));
             setMovesHistory(movesHistory);
-            const whoseMove = movesHistory[movesHistory.length - 1].whoseMove === "computer" ? "player" : "computer";
+            const whoseMove = !isEmpty(movesHistory) ?
+                movesHistory[movesHistory.length - 1].whoseMove === "computer" ? "player" : "computer" :
+                playerColor === "BLACK" ? "computer" : "player";
             dispatch(setUserGameColor(playerColor));
             move(boardState, whoseMove);
         } else {

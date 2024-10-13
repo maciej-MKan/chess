@@ -1,12 +1,27 @@
 import {notify} from "./components/Notify";
+import {initGame} from "../../api/game";
 
 export function isEmpty(object) {
     return Object.keys(object).length === 0;
 }
 
-export function startNewGame(navigate) {
+export const startNewGame = (navigate, playerColor) => {
     sessionStorage.removeItem('chessGameState');
-    if (navigate != null) navigate("/");
+    const movesHistory = [];
+    if (playerColor) {
+        console.log("init game")
+        initGame(playerColor)
+            .then((boardState) => {
+                    console.log("boardState", boardState);
+                    if (navigate != null) navigate("/");
+                    sessionStorage.setItem('chessGameState', JSON.stringify({boardState, movesHistory, playerColor}));
+                }
+            )
+            .catch(error => {
+            })
+    } else {
+        console.error("player color undefined");
+    }
 }
 
 export function toNormalDate(isoDate) {

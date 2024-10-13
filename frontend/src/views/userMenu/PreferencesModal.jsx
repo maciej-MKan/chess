@@ -116,7 +116,7 @@ const PreferencesModal = ({isOpen, onClose}) => {
                     isOpen={dialogOpen}
                     onContinue={() => setDialogOpen(false)}
                     onNewGame={() => {
-                        startNewGame(navigate);
+                        startNewGame(navigate, color);
                         setDialogOpen(false);
                         dispatch(setUserGameColor(color));
                     }}
