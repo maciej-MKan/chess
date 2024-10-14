@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import './Chessboard.css';
-import {getAvailableMoves, getComputerMove, getGameState, initGame, sendGameHistory} from '../../api/game';
-import {isEmpty} from '../utils/utils';
+import {getAvailableMoves, getComputerMove, getGameState, sendGameHistory} from '../../api/game';
+import {isEmpty, startNewGame} from '../utils/utils';
 import PawnPromotionModal from './components/PawnPromotion';
 import MoveOptionsModal from "./components/MoveOptionsModal";
 import MoveHistory from "./components/MoveHistory";
@@ -27,7 +27,8 @@ const GameScreen = () => {
     const [selectedMoveIndex, setSelectedMoveIndex] = useState(0);
     const loginIn = useSelector((state) => state.auth.isLoginIn);
     const playerColor = useSelector((state) => state.user.userGameColor);
-    const boardState = useSelector((state) => state.game.gameState);
+    const globalBoardState = useSelector((state) => state.game.gameState);
+    const [boardState, setBoardState] = useState(globalBoardState);
     const globalWaitApi = useSelector((state) => state.game.waitApi);
     const selectedSquare = useSelector((state) => state.game.selectedSquare);
     const selectedPiece = useSelector((state) => state.game.selectedPiece);
@@ -53,8 +54,9 @@ const GameScreen = () => {
                 dispatch(setSelectedPiece({}));
                 setMovesHistory([]);
                 setSelectedMoveIndex(0);
-                initGame(playerColor)
+                startNewGame(null, playerColor)
                     .then(boardData => {
+                        setBoardState(boardData);
                         dispatch(setGameState(boardData));
                         setWaitApi(false);
                         move(boardData, playerColor === "BLACK" ? "computer" : "player");
@@ -72,6 +74,10 @@ const GameScreen = () => {
     useEffect(() => {
         setWaitApi(globalWaitApi);
     }, [globalWaitApi]);
+
+    useEffect(() => {
+        setBoardState(globalBoardState);
+    }, [globalBoardState]);
 
     const move = (board, whoseMove) => {
         console.log("move: ", playerColor);

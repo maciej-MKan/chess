@@ -6,22 +6,30 @@ export function isEmpty(object) {
 }
 
 export const startNewGame = (navigate, playerColor) => {
-    sessionStorage.removeItem('chessGameState');
-    const movesHistory = [];
-    if (playerColor) {
-        console.log("init game")
-        initGame(playerColor)
-            .then((boardState) => {
-                    console.log("boardState", boardState);
-                    if (navigate != null) navigate("/");
-                    sessionStorage.setItem('chessGameState', JSON.stringify({boardState, movesHistory, playerColor}));
-                }
-            )
-            .catch(error => {
-            })
-    } else {
-        console.error("player color undefined");
-    }
+    return new Promise((resolve, reject) => {
+        sessionStorage.removeItem('chessGameState');
+        const movesHistory = [];
+        if (playerColor) {
+            console.log("init game")
+            initGame(playerColor)
+                .then((boardState) => {
+                        console.log("boardState", boardState);
+                        const gameState = {boardState, movesHistory, playerColor};
+                        sessionStorage.setItem('chessGameState', JSON.stringify(gameState));
+                        resolve(boardState);
+                        if (navigate != null) {
+                            window.location.reload();
+                            navigate("/");
+                        }
+                    }
+                )
+                .catch(error => {
+                    reject(error);
+                })
+        } else {
+            reject("player color undefined");
+        }
+    })
 }
 
 export function toNormalDate(isoDate) {
