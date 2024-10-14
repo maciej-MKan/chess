@@ -9,7 +9,7 @@ import {logOut} from "../../../redux/authSlice";
 import {setUserGameColor, setUsername} from "../../../redux/userSlice";
 import {getGamesHistory} from "../../../api/game";
 import GamesHistory from "./GamesHistory";
-import {setHistoricalGames} from "../../../redux/gameSlice";
+import {setGameState, setHistoricalGames} from "../../../redux/gameSlice";
 import {startNewGame} from "../../utils/utils";
 
 const UserStatus = () => {
@@ -37,7 +37,13 @@ const UserStatus = () => {
         document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
         sendLogout().then(() => {
         });
-        startNewGame(navigate, playerColor);
+        startNewGame(navigate, playerColor)
+            .then(boardState => {
+                dispatch(setGameState(boardState))
+            })
+            .catch((err) => {
+                console.error(err)
+            });
     }
     const handleGamesHistory = () => {
         getGamesHistory()
@@ -52,7 +58,13 @@ const UserStatus = () => {
     }
 
     const handleNewGame = () => {
-        startNewGame(null, playerColor);
+        startNewGame(null, playerColor)
+            .then(boardState => {
+                dispatch(setGameState(boardState))
+            })
+            .catch((err) => {
+                console.error(err)
+            });
         window.location.reload();
     }
 

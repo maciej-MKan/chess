@@ -12,7 +12,13 @@ const DropdownMenu = ({name, onLogout, onViewHistory, onViewPreferences}) => {
     const handleNewGame = () => {
         dispatch(setGameState(null));
         dispatch(setAvailableMoves(null));
-        startNewGame(navigate, playerColor);
+        startNewGame(navigate, playerColor)
+            .then(boardState => {
+                dispatch(setGameState(boardState))
+            })
+            .catch((err) => {
+                console.error(err)
+            });
     }
     return (
         <div className="dropdown">
