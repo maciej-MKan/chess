@@ -1,6 +1,6 @@
 import {create} from "zustand";
 
-const useStore = create((set) => ({
-    state: {},
-    setState: (newState) => set(() => ({state: newState})),
+export const useStore = create((set) => ({
+    testState: {},
+    setTestState: (newState) => set(() => ({state: newState})),
 }));

@@ -13,6 +13,7 @@ import {setUserGameColor} from "../../redux/userSlice";
 import {setAvailableMoves, setGameState, setSelectedPiece, setSelectedSquare} from "../../redux/gameSlice";
 import {findPiece, removePiece} from "../../tools/gameTools";
 import ChessBoard from "./components/ChessBoard";
+import {setState, state$} from "../../rxjsstore/RxStore";
 
 const GameScreen = () => {
     const dispatch = useDispatch();
@@ -32,6 +33,11 @@ const GameScreen = () => {
     const globalWaitApi = useSelector((state) => state.game.waitApi);
     const selectedSquare = useSelector((state) => state.game.selectedSquare);
     const selectedPiece = useSelector((state) => state.game.selectedPiece);
+
+    useEffect(() => {
+        const subscription = state$.subscribe();
+        return () => subscription.unsubscribe();
+    }, []);
 
     useEffect(() => {
         setWaitApi(true);
@@ -58,6 +64,12 @@ const GameScreen = () => {
                     .then(boardData => {
                         setBoardState(boardData);
                         dispatch(setGameState(boardData));
+                        //
+                        setState({key: "init key"});
+                        console.log(state$.value.key);
+                        setState({key: "updated key"});
+                        console.log(state$.value.key);
+
                         setWaitApi(false);
                         move(boardData, playerColor === "BLACK" ? "computer" : "player");
                     })
