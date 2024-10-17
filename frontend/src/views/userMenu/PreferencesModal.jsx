@@ -7,7 +7,7 @@ import {sendUserColor, sendUserName} from "../../api/user";
 import GameDialog from "../utils/components/GameDialog";
 import {useNavigate} from "react-router-dom";
 import {startNewGame} from "../utils/utils";
-import {setGameState} from "../../redux/gameSlice";
+import {setState, state$} from "../../rxjsstore/RxStore";
 
 const PreferencesModal = ({isOpen, onClose}) => {
     const dispatch = useDispatch();
@@ -18,6 +18,11 @@ const PreferencesModal = ({isOpen, onClose}) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const labelContent = username + "'s preferences";
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const subscription = state$.subscribe();
+        return () => subscription.unsubscribe();
+    }, []);
 
     const handleSave = () => {
         if (username !== newUsername) {
@@ -119,7 +124,8 @@ const PreferencesModal = ({isOpen, onClose}) => {
                     onNewGame={() => {
                         startNewGame(navigate, playerColor)
                             .then(boardState => {
-                                dispatch(setGameState(boardState))
+                                // dispatch(setGameState(boardState))
+                                setState({boardState: boardState});
                             })
                             .catch((err) => {
                                 console.error(err)
