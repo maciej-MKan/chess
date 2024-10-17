@@ -1,20 +1,27 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import './GamesHistory.css';
 import Modal from "react-modal";
 import {useSelector} from "react-redux";
 import {toNormalDate} from "../../utils/utils";
 import ChessBoard from "./ChessBoard";
 import {useNavigate} from "react-router-dom";
+import {state$} from "../../../rxjsstore/RxStore";
 
 
 const GamesHistory = ({isOpen, onClose}) => {
     const navigate = useNavigate();
     const games = useSelector((state) => state.game.historicalGames);
-    const gameState = useSelector((state) => state.game.gameState);
+    const gameState = state$.value.boardState;
     const [expandedGameId, setExpandedGameId] = useState(null);
     const toggleGameDetails = (gameId) => {
         setExpandedGameId(expandedGameId === gameId ? null : gameId);
     };
+
+    useEffect(() => {
+        const subscription = state$.subscribe();
+        return () => subscription.unsubscribe();
+    }, []);
+
     const handleClose = () => {
         setExpandedGameId(null);
         onClose();
