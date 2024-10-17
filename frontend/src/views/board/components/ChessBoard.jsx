@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect} from "react";
 import {
     checkAvailableMove,
     checkPieceSelected,
@@ -10,15 +10,21 @@ import {Square} from "./Square";
 import {useDispatch, useSelector} from "react-redux";
 import {isEmpty} from "../../utils/utils";
 import {setSelectedPiece, setSelectedSquare} from "../../../redux/gameSlice";
+import {state$} from "../../../rxjsstore/RxStore";
 
 const ChessBoard = ({state, isActive, showMove}) => {
     const playerColor = useSelector((state) => state.user.userGameColor);
-    const boardState = useSelector((state) => state.game.gameState);
+    const boardState = state$.value.boardState;
     const waitApi = useSelector((state) => state.game.waitApi);
     const selectedSquare = useSelector((state) => state.game.selectedSquare);
     const selectedPiece = useSelector((state) => state.game.selectedPiece);
     const availableMoves = useSelector((state) => state.game.availableMoves);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const subscription = state$.subscribe();
+        return () => subscription.unsubscribe();
+    }, []);
 
     const onSquareClick = useCallback((row, column) => {
         console.log('on square click')
