@@ -9,8 +9,9 @@ import {logOut} from "../../../redux/authSlice";
 import {setUserGameColor, setUsername} from "../../../redux/userSlice";
 import {getGamesHistory} from "../../../api/game";
 import GamesHistory from "./GamesHistory";
-import {setGameState, setHistoricalGames} from "../../../redux/gameSlice";
+import {setHistoricalGames} from "../../../redux/gameSlice";
 import {startNewGame} from "../../utils/utils";
+import {setState, state$} from "../../../rxjsstore/RxStore";
 
 const UserStatus = () => {
     const navigate = useNavigate();
@@ -20,6 +21,11 @@ const UserStatus = () => {
     const isLoginIn = useSelector((state) => state.auth.isLoginIn);
     const username = useSelector((state) => state.user.username);
     const playerColor = useSelector((state) => state.user.userDefaultColor);
+
+    useEffect(() => {
+        const subscription = state$.subscribe();
+        return () => subscription.unsubscribe();
+    }, []);
 
     useEffect(() => {
         console.log("isLoginIn : ", isLoginIn);
@@ -39,7 +45,8 @@ const UserStatus = () => {
         });
         startNewGame(navigate, playerColor)
             .then(boardState => {
-                dispatch(setGameState(boardState))
+                // dispatch(setGameState(boardState))
+                setState({boardState: boardState})
             })
             .catch((err) => {
                 console.error(err)
@@ -60,7 +67,8 @@ const UserStatus = () => {
     const handleNewGame = () => {
         startNewGame(null, playerColor)
             .then(boardState => {
-                dispatch(setGameState(boardState))
+                // dispatch(setGameState(boardState))
+                setState({boardState: boardState})
             })
             .catch((err) => {
                 console.error(err)

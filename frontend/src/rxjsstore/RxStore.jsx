@@ -1,10 +1,14 @@
 import {BehaviorSubject} from 'rxjs';
 
-const initialState = {key: 'initialValue'};
+const initialState = {
+    key: 'initialValue',
+    boardState: {}
+};
 
 const state$ = new BehaviorSubject(initialState);
 
 const setState = (newState) => {
+    console.log("rx store // set new state", newState);
     state$.next({...state$.value, ...newState});
 };
 

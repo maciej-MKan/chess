@@ -11,10 +11,6 @@ const gameSlice = createSlice({
         selectedPiece: {},
     },
     reducers: {
-        setGameState: (state, action) => {
-            state.gameState = action.payload;
-            console.log("Set new game state: ", action.payload);
-        },
         setHistoricalGames: (state, action) => {
             state.historicalGames = action.payload;
         },
@@ -34,7 +30,6 @@ const gameSlice = createSlice({
 });
 
 export const {
-    setGameState,
     setHistoricalGames,
     setAvailableMoves,
     setWaitApi,

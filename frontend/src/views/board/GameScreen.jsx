@@ -10,7 +10,7 @@ import UserStatus from "./components/UserStatus";
 import {sendUserColor} from "../../api/user";
 import {useDispatch, useSelector} from "react-redux";
 import {setUserGameColor} from "../../redux/userSlice";
-import {setAvailableMoves, setGameState, setSelectedPiece, setSelectedSquare} from "../../redux/gameSlice";
+import {setAvailableMoves, setSelectedPiece, setSelectedSquare} from "../../redux/gameSlice";
 import {findPiece, removePiece} from "../../tools/gameTools";
 import ChessBoard from "./components/ChessBoard";
 import {setState, state$} from "../../rxjsstore/RxStore";
@@ -28,8 +28,8 @@ const GameScreen = () => {
     const [selectedMoveIndex, setSelectedMoveIndex] = useState(0);
     const loginIn = useSelector((state) => state.auth.isLoginIn);
     const playerColor = useSelector((state) => state.user.userGameColor);
-    const globalBoardState = useSelector((state) => state.game.gameState);
-    const [boardState, setBoardState] = useState(globalBoardState);
+    // const globalBoardState = useSelector((state) => state.game.gameState);
+    // const [boardState, setBoardState] = useState(globalBoardState);
     const globalWaitApi = useSelector((state) => state.game.waitApi);
     const selectedSquare = useSelector((state) => state.game.selectedSquare);
     const selectedPiece = useSelector((state) => state.game.selectedPiece);
@@ -44,7 +44,8 @@ const GameScreen = () => {
         const savedGameState = sessionStorage.getItem('chessGameState');
         if (savedGameState) {
             const {boardState, movesHistory, playerColor} = JSON.parse(savedGameState);
-            dispatch(setGameState(boardState));
+            // dispatch(setGameState(boardState));
+            setState({boardState: boardState});
             setMovesHistory(movesHistory);
             const whoseMove = !isEmpty(movesHistory) ?
                 movesHistory[movesHistory.length - 1].whoseMove === "computer" ? "player" : "computer" :
@@ -62,13 +63,11 @@ const GameScreen = () => {
                 setSelectedMoveIndex(0);
                 startNewGame(null, playerColor)
                     .then(boardData => {
-                        setBoardState(boardData);
-                        dispatch(setGameState(boardData));
+                        // setBoardState(boardData);
+                        // dispatch(setGameState(boardData));
+                        setState({boardState: boardData});
                         //
-                        setState({key: "init key"});
-                        console.log(state$.value.key);
-                        setState({key: "updated key"});
-                        console.log(state$.value.key);
+                        console.log("rx board state", state$.value.boardState);
 
                         setWaitApi(false);
                         move(boardData, playerColor === "BLACK" ? "computer" : "player");
@@ -87,9 +86,9 @@ const GameScreen = () => {
         setWaitApi(globalWaitApi);
     }, [globalWaitApi]);
 
-    useEffect(() => {
-        setBoardState(globalBoardState);
-    }, [globalBoardState]);
+    // useEffect(() => {
+    //     setBoardState(globalBoardState);
+    // }, [globalBoardState]);
 
     const move = (board, whoseMove) => {
         console.log("move: ", playerColor);
@@ -106,17 +105,18 @@ const GameScreen = () => {
     };
 
     useEffect(() => {
-        if (boardState && movesHistory.length) {
+        if (state$.value.boardState && movesHistory.length) {
+            const boardState = state$.value.boardState;
             const gameState = {boardState, movesHistory, playerColor};
             sessionStorage.setItem('chessGameState', JSON.stringify(gameState));
             if (loginIn) {
-                sendGameHistory(boardState, movesHistory, playerColor)
+                sendGameHistory(state$.value.boardState, movesHistory, playerColor)
                     .catch(error => {
                         console.log('error ' + error);
                     })
             }
         }
-    }, [boardState, movesHistory, playerColor]);
+    }, [state$.value.boardState, movesHistory, playerColor]);
 
     const fetchGameState = useCallback((board, onExit) => {
         setWaitApi(true);
@@ -183,8 +183,8 @@ const GameScreen = () => {
     }, [loginIn, playerColor]);
 
     const playerMove = useCallback(() => {
-        let piece = findPiece(selectedPiece.row, selectedPiece.column, boardState);
-        let updatedBoard = removePiece(findPiece(selectedSquare.row, selectedSquare.column, boardState), boardState);
+        let piece = findPiece(selectedPiece.row, selectedPiece.column, state$.value.boardState);
+        let updatedBoard = removePiece(findPiece(selectedSquare.row, selectedSquare.column, state$.value.boardState), state$.value.boardState);
         piece = {
             ...piece,
             position: {
@@ -204,7 +204,8 @@ const GameScreen = () => {
                 destRow: selectedSquare.row,
             }
         }
-        dispatch(setGameState(updatedBoard));
+        // dispatch(setGameState(updatedBoard));
+        setState({boardState: updatedBoard});
         dispatch(setSelectedPiece({}));
         dispatch(setSelectedSquare({}));
         const moveDescription = `${piece.color} moved ${piece.type} from ${String.fromCharCode(65 + selectedPiece.column)}${8 - selectedPiece.row} to ${String.fromCharCode(65 + selectedSquare.column)}${8 - selectedSquare.row}`;
@@ -226,7 +227,8 @@ const GameScreen = () => {
             setWaitApi(true);
             getComputerMove(board, playerColor || "BLACK")
                 .then(boardData => {
-                    dispatch(setGameState({pieces: boardData.pieces, move: boardData.move, gameId: boardData.gameId}));
+                    // dispatch(setGameState({pieces: boardData.pieces, move: boardData.move, gameId: boardData.gameId}));
+                    setState({boardState: {pieces: boardData.pieces, move: boardData.move, gameId: boardData.gameId}});
                     const piece = findPiece(boardData.move.srcRow, boardData.move.srcColumn, board);
                     const moveDescription = `${piece.color} moved ${piece.type} from ${String.fromCharCode(65 + boardData.move.srcColumn)}${8 - boardData.move.srcRow} to ${String.fromCharCode(65 + boardData.move.destColumn)}${8 - boardData.move.destRow}`;
                     setMovesHistory(prevHistory => [...prevHistory, {
@@ -247,22 +249,24 @@ const GameScreen = () => {
     };
 
     const promotePawn = useCallback((piece) => {
-        let pawn = findPiece(piece.position.row, piece.position.column, boardState);
-        let updatedBoard = removePiece(pawn, boardState);
+        let pawn = findPiece(piece.position.row, piece.position.column, state$.value.boardState);
+        let updatedBoard = removePiece(pawn, state$.value.boardState);
         if (pawn) {
             pawn = {
                 ...pawn,
                 type: piece.type,
             }
             updatedBoard.pieces.push(pawn);
-            dispatch(setGameState(updatedBoard));
+            // dispatch(setGameState(updatedBoard));
+            setState({boardState: {pieces: updatedBoard}});
+
             setPawnPromotionOpen(false);
             computerMove(updatedBoard);
         } else {
             console.log('no pawn found for ');
             console.log(piece);
         }
-    }, [findPiece, computerMove, boardState]);
+    }, [findPiece, computerMove, state$.value.boardState]);
 
     const handleMoveClick = useCallback((moveIndex) => {
         setSelectedMoveIndex(moveIndex);
@@ -276,7 +280,8 @@ const GameScreen = () => {
         setGameOver(false);
         const selectedMove = movesHistory[selectedMoveIndex];
         const boarsStateToRevert = JSON.parse(JSON.stringify(selectedMove.state));
-        dispatch(setGameState(boarsStateToRevert));
+        // dispatch(setGameState(boarsStateToRevert));
+        setState({boardState: boarsStateToRevert})
         let length = movesHistory.length;
         console.log(selectedMove.desc)
         movesHistory.splice(selectedMoveIndex + 1, length - selectedMoveIndex);
@@ -307,7 +312,7 @@ const GameScreen = () => {
                 <PlayerColorSelector/>
             </>
         );
-    } else if (!boardState) {
+    } else if (!state$.value.boardState) {
         return (
             <div className="game-board">Loading...</div>
         );
@@ -316,7 +321,8 @@ const GameScreen = () => {
             <>
                 <div className="chessboard-container">
                     {!error &&
-                        <div className="chessboard"><ChessBoard state={boardState} isActive={true} showMove={false}/>
+                        <div className="chessboard"><ChessBoard state={state$.value.boardState} isActive={true}
+                                                                showMove={false}/>
                         </div>}
                     {error && <div className="chessboard-error">{error}</div>}
                     <MoveHistory moves={movesHistory} onMoveClick={handleMoveClick}/>
