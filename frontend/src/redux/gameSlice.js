@@ -5,7 +5,7 @@ const gameSlice = createSlice({
     initialState: {
         gameState: '',
         historicalGames: [],
-        availableMoves: {},
+        // availableMoves: {},
         waitApi: false,
         selectedSquare: {},
         selectedPiece: {},
@@ -14,9 +14,9 @@ const gameSlice = createSlice({
         setHistoricalGames: (state, action) => {
             state.historicalGames = action.payload;
         },
-        setAvailableMoves: (state, action) => {
-            state.availableMoves = action.payload;
-        },
+        // setAvailableMoves: (state, action) => {
+        //     state.availableMoves = action.payload;
+        // },
         setWaitApi: (state, action) => {
             state.waitApi = action.payload;
         },
@@ -31,7 +31,7 @@ const gameSlice = createSlice({
 
 export const {
     setHistoricalGames,
-    setAvailableMoves,
+    // setAvailableMoves,
     setWaitApi,
     setSelectedPiece,
     setSelectedSquare,

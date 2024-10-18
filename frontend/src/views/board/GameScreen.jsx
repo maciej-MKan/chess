@@ -10,7 +10,7 @@ import UserStatus from "./components/UserStatus";
 import {sendUserColor} from "../../api/user";
 import {useDispatch, useSelector} from "react-redux";
 import {setUserGameColor} from "../../redux/userSlice";
-import {setAvailableMoves, setSelectedPiece, setSelectedSquare} from "../../redux/gameSlice";
+import {setSelectedPiece, setSelectedSquare} from "../../redux/gameSlice";
 import {findPiece, removePiece} from "../../tools/gameTools";
 import ChessBoard from "./components/ChessBoard";
 import {setState, state$} from "../../rxjsstore/RxStore";
@@ -56,7 +56,7 @@ const GameScreen = () => {
             if ((playerColor !== '') && (playerColor !== undefined)) {
                 setWaitApi(true);
                 console.log("init new game with player color : " + playerColor);
-                dispatch(setAvailableMoves({}));
+                setState({availableMoves: {}});
                 dispatch(setSelectedSquare({}));
                 dispatch(setSelectedPiece({}));
                 setMovesHistory([]);
@@ -127,7 +127,7 @@ const GameScreen = () => {
                     if (gameStateData.gameOver.isGameOver) {
                         setGameOver(true);
                         setWinner(gameStateData.gameOver.winner);
-                        dispatch(setAvailableMoves({}));
+                        setState({availableMoves: {}});
                         needOnExit = false;
                     } else if (gameStateData.pawnPromotion.pawn) {
                         setPawnPromotionOpen(true);
@@ -150,7 +150,10 @@ const GameScreen = () => {
         if (board && !isEmpty(board) && !gameOver) {
             setWaitApi(true);
             getAvailableMoves(board, color)
-                .then(availableMovesData => dispatch(setAvailableMoves(!gameOver ? availableMovesData.availableMoves : {})))
+                .then(availableMovesData => setState(!gameOver ?
+                    {availableMoves: availableMovesData.availableMoves} :
+                    {})
+                )
                 .catch(error => {
                     console.log('error ' + error);
                     setError(error.toString());

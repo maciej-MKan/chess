@@ -18,7 +18,7 @@ const ChessBoard = ({state, isActive, showMove}) => {
     const waitApi = useSelector((state) => state.game.waitApi);
     const selectedSquare = useSelector((state) => state.game.selectedSquare);
     const selectedPiece = useSelector((state) => state.game.selectedPiece);
-    const availableMoves = useSelector((state) => state.game.availableMoves);
+    const availableMoves = state$.value.availableMoves;
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -56,7 +56,7 @@ const ChessBoard = ({state, isActive, showMove}) => {
         const isSelected = checkSquareSelected(row, column, selectedSquare);
         const isSelectedPiece = checkPieceSelected(row, column, selectedPiece);
         const isActive = checkActive ?
-            checkSquareActive(row, column, boardState, playerColor, selectedPiece, availableMoves) : false;
+            checkSquareActive(row, column, state$.value.boardState, playerColor, selectedPiece, availableMoves) : false;
         return (
             <Square
                 id={`${row}-${column}`}
