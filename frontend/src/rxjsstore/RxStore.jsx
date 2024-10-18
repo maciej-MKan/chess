@@ -2,7 +2,8 @@ import {BehaviorSubject} from 'rxjs';
 
 const initialState = {
     key: 'initialValue',
-    boardState: {}
+    boardState: {},
+    availableMoves: {}
 };
 
 const state$ = new BehaviorSubject(initialState);

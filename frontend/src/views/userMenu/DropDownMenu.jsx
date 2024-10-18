@@ -2,18 +2,16 @@ import React, {useEffect} from 'react';
 import './DropDownMenu.css';
 import {startNewGame} from "../utils/utils";
 import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {setAvailableMoves} from "../../redux/gameSlice";
+import {useSelector} from "react-redux";
 import {setState, state$} from "../../rxjsstore/RxStore";
 
 const DropdownMenu = ({name, onLogout, onViewHistory, onViewPreferences}) => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const playerColor = useSelector((state) => state.user.userDefaultColor);
     const handleNewGame = () => {
         // dispatch(setGameState(null));
         setState({boardState: null});
-        dispatch(setAvailableMoves(null));
+        setState({availableMoves: null});
         startNewGame(navigate, playerColor)
             .then(boardState => {
                 // dispatch(setGameState(boardState))
